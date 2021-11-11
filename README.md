@@ -12,3 +12,24 @@ https://github.com/rockytriton/LLD_gbemu/raw/main/docs/The%20Cycle-Accurate%20Ga
 
 https://github.com/rockytriton/LLD_gbemu/raw/main/docs/gbctr.pdf
 
+
+
+Current progress PART 02:
+    NEED TO FIX!!!
+
+    zac@zac-iMac:~/Documents/GbEmu/my_emu/build$ gbemu/gbemu  ../../roms/dmg-acid2.gb 
+    Opened: ../../roms/dmg-acid2.gb
+    Cartridge Loaded:
+            Title    : DMG-ACID2
+            Type     : 00 (ROM ONLY)
+            ROM Size : 32 KB
+            RAM Size : 00
+            LIC Code : 00 (None)
+            ROM Vers : 00
+            Checksum : 9F (PASSED)
+    Cart loaded..
+    SDL INIT
+    TTF INIT
+    Exectuting instruction 00    PC: 0101
+    Not executing yet...
+    Unknown addressing mode: 14
