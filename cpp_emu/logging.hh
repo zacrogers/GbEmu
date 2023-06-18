@@ -26,6 +26,7 @@ void setLevel(Level level) { currentLevel = level; }
 
 void log(Level level, char* fstring, ...)
 {
+#ifdef LOGGING_ENABLED
     va_list args1;
     va_start(args1, fstring);
     va_list args2;
@@ -36,6 +37,7 @@ void log(Level level, char* fstring, ...)
     va_end(args2);
 
     printf("\033[0m\033[1;34m[%s]\033[0m %s", levelNames[level], buf);
+#endif
 }
 
 
