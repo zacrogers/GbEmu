@@ -56,14 +56,13 @@ callback get(Instruction::MN mnemonic)
 class Cpu
 {
 public:
-    Cpu()
-    {}
+    Cpu() {}
 
 
     address_t execute()
     {
         static auto process = Process::get(currInst.mnemonic);
-        process(&currInst, &reg, &f);
+        process(&currInst, &reg, &flags);
         return 0;
     }
 
@@ -103,7 +102,7 @@ public:
     }
 
 
-    void step()
+    bool step()
     {
         auto newOpcode = static_cast<opcode_t>(*bus.read(reg.pcIncr()));
 
@@ -119,15 +118,21 @@ public:
         {
             logging::log(logging::Level::FUCK, "Unknown opcode: %d", newOpcode);
         }
+
+        return true;
     }
 
 private:
     Registers         reg         { };
     Bus               bus         { };
-    Flags             f           { };    // flags
+    Flags             flags       { };
     Instruction::ctx  currInst    { };
     opcode_t          currOpcode  { 0 };
     std::uint16_t     dataFetched { 0 };
+    address_t         memDest     { 0 };
+    bool              destIsMem   { false };
+    bool              halted      { false };
+    bool              stepping    { false };
 };
 
 }

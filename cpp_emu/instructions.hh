@@ -91,7 +91,7 @@ typedef struct {
     Register     regA;
     Register     regB;
     std::uint8_t mCycles; // should actually be t states
-    std::size_t  len;
+    std::uint8_t len;
     std::uint8_t param;
 } ctx ;
 
@@ -134,8 +134,8 @@ static const ctx inst[0x100] = {
     // [0x85] =  { MN::ADD, AM::R_R, R::A,    R::L,    1 }
 };
 
-const ctx fetch(opcode_t op) { return inst[op]; }
-bool exists(opcode_t op) { return &inst[op] != nullptr; }
+const ctx fetch(opcode_t op)  { return inst[op]; }
+bool      exists(opcode_t op) { return &inst[op] != nullptr; }
 
 }
 }

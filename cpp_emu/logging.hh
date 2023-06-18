@@ -5,9 +5,7 @@
 
 namespace logging
 {
-enum Level {
-    NONE, INF, DBG, WRN, ERR, FUCK
-};
+enum Level { NONE, INF, DBG, WRN, ERR, FUCK };
 
 const char* levelNames[] = {
     [Level::NONE] = "None",

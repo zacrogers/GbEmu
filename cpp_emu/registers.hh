@@ -2,6 +2,7 @@
 
 
 #include"common.hh"
+#include <stdio.h>
 
 
 namespace DMG01
@@ -58,6 +59,19 @@ public:
         }
 
     }
+    void print()
+    {
+        printf("Registers\n");
+        printf("A: 0x%02X\n", get8(Register::A));
+        printf("B: 0x%02X\n", get8(Register::B));
+        printf("C: 0x%02X\n", get8(Register::C));
+        printf("D: 0x%02X\n", get8(Register::D));
+        printf("E: 0x%02X\n", get8(Register::E));
+        printf("F: 0x%02X\n", get8(Register::F));
+        printf("H: 0x%02X\n", get8(Register::H));
+        printf("L: 0x%02X\n", get8(Register::L));
+    }
+
 // private:
     static constexpr std::uint8_t regOffset = static_cast<std::uint8_t>(Register::AF);
 
@@ -74,7 +88,7 @@ public:
     }
 
     inline word_t get8(const Register reg) { return buf[static_cast<uint8_t>(reg)]; };
-    inline word_t get16(const Register reg)
+    inline std::uint16_t get16(const Register reg)
     {
         std::uint16_t* p { reinterpret_cast<std::uint16_t*>(buf) };
         return p[static_cast<std::uint8_t>(reg) - regOffset];
