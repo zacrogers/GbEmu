@@ -41,23 +41,27 @@ public:
         paused  = false;
         ticks   = 0;
 
-        // while(running)
-        // {
-        //     if (paused)
-        //     {
-        //         // delay(10);
-        //         continue;
-        //     }
+        auto times = 0;
 
-        //     if (!cpu.step())
-        //     {
-        //         printf("CPU Stopped\n");
-        //         return -3;
-        //     }
-        //     SDL_Delay(5000);
+        while(running)
+        {
+            if (paused)
+            {
+                // delay(10);
+                continue;
+            }
 
-        //     ticks++;
-        // }
+            if (!cpu.step())
+            {
+                printf("CPU Stopped\n");
+                return -3;
+            }
+            SDL_Delay(100);
+
+            if(times++ > 100) return 0;
+
+            ticks++;
+        }
 
         return 0;
     }

@@ -1,6 +1,6 @@
 #include "../inc/dmg01.hh"
 
-#include <iostream>
+#include <stdio.h>
 
 namespace DMG01
 {
@@ -63,12 +63,12 @@ bool Cpu::step()
 {
     auto newOpcode = static_cast<opcode_t>(pBus->read(pReg->pcIncr()));
 
-    std::cout << "PC: " << pReg->pcGet() << " OP: " << newOpcode << std::endl;
-
+    // std::cout << "PC: 0x" << std::hex << (std::uint16_t)pReg->pcGet() << " OP: 0x" << std::hex << newOpcode << std::endl;
     if(Instruction::exists(newOpcode))
     {
         currOpcode = newOpcode;
         currInst   = Instruction::fetch(currOpcode);
+        printf("PC: 0x%04x | OP: 0x%02x | %s\n", pReg->pcGet(), newOpcode, currInst.info);
 
         fetchData();
         execute();
