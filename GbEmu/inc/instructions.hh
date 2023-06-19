@@ -81,7 +81,8 @@ enum class AddrMode {
     MR_D8,
     MR,
     A16_R,
-    R_A16
+    R_A16,
+    None
 };
 
 
@@ -107,15 +108,19 @@ const ctx inst[0x100] = {
     [0x00] =  { MN::NOP, AM::IMP,   R::None, R::None,  4,    1 },
     [0x01] =  { MN::LD,  AM::R_D16, R::BC,   R::None,  12,   3 },
     [0x02] =  { MN::LD,  AM::MR_R,  R::BC,   R::A,     8,    1 },
-
+    [0x03] =  { MN::INC, AM::R,     R::BC,   R::None,  8,    1 },
+    [0x03] =  { MN::INC, AM::R,     R::B,    R::None,  8,    1 },
     [0x05] =  { MN::DEC, AM::R,     R::B,    R::None,  4,    1 },
     [0x06] =  { MN::LD,  AM::R_D8,  R::B,    R::None,  8,    2 },
-
+    [0x07] =  { MN::RLCA,AM::None,  R::None, R::None,  4,    2 },
     [0x08] =  { MN::LD,  AM::A16_R, R::None, R::SP,    20,   3 },
-
+    [0x09] =  { MN::ADD, AM::R_R,   R::HL,   R::BC,    8,    1 },
     [0x0A] =  { MN::LD,  AM::MR_R,  R::A,    R::BC,    8,    1 },
-
+    [0x0B] =  { MN::DEC, AM::R,     R::BC,   R::None,  8,    1 },
+    [0x0C] =  { MN::INC, AM::R,     R::C,    R::None,  4,    1 },
+    [0x0D] =  { MN::DEC, AM::R,     R::C,    R::None,  4,    1 },
     [0x0E] =  { MN::LD,  AM::R_D8,  R::C,    R::None,  8,    2 },
+    [0x0F] =  { MN::RRCA,AM::None,  R::None, R::None,  4,    2 },
 
 //  0x10
     [0x11] =  { MN::LD,  AM::R_D16, R::DE,   R::None,  12,   3 },
