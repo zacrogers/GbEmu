@@ -1,13 +1,20 @@
 #include "../inc/dmg01.hh"
 
+#include <iostream>
 
 namespace DMG01
 {
 
+bool Cpu::init()
+{
+    return true;
+}
+
+
 address_t Cpu::execute()
 {
     static auto process = Process::get(currInst.mnemonic);
-    process(&currInst, &reg, &flags);
+    process(&currInst, pReg, &flags);
     return 0;
 }
 
@@ -18,27 +25,27 @@ void Cpu::fetchData()
     {
     case Instruction::AM::IMP:
     case Instruction::AM::R:
-        dataFetched = reg.get8(currInst.regA);
+        dataFetched = pReg->get8(currInst.regA);
         break;
 
     case Instruction::AM::R_D8:
-        dataFetched = *bus.read(reg.pcGet());
+        dataFetched = pBus->read(pReg->pcGet());
         // emu_cycles(1);
-        reg.pcIncr();
+        pReg->pcIncr();
         break;
 
     case Instruction::AM::R_D16:
     {
-        auto lo = static_cast<std::uint16_t>(*bus.read(reg.pcGet()));
+        auto lo = static_cast<std::uint16_t>(pBus->read(pReg->pcGet()));
         // emu_cycles(1);
 
-        auto hi = static_cast<std::uint16_t>(*bus.read(reg.pcGet() + 1));
+        auto hi = static_cast<std::uint16_t>(pBus->read(pReg->pcGet() + 1));
         // emu_cycles(1);
 
         dataFetched = lo | (hi << 8);
 
-        reg.pcIncr();
-        reg.pcIncr();
+        pReg->pcIncr();
+        pReg->pcIncr();
         break;
     }
     default:
@@ -54,7 +61,9 @@ void Cpu::fetchData()
 
 bool Cpu::step()
 {
-    auto newOpcode = static_cast<opcode_t>(*bus.read(reg.pcIncr()));
+    auto newOpcode = static_cast<opcode_t>(pBus->read(pReg->pcIncr()));
+
+    std::cout << "PC: " << pReg->pcGet() << " OP: " << newOpcode << std::endl;
 
     if(Instruction::exists(newOpcode))
     {

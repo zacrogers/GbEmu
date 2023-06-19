@@ -38,13 +38,13 @@ public:
     const char* licenceName ();
     const char* typeName    ();
     void        printHeader ();
+    bool        loaded() { return isLoaded; }
 
 private:
-
     rom_header    header         {};
     char          filename[1024] {};
     std::uint32_t rom_size       {};
     word_t        *rom_data;
-
+    bool          isLoaded       { false };
 };
 }

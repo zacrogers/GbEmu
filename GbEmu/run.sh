@@ -17,4 +17,4 @@ make
 echo -e "${BLUE}*********************************${NC}"
 echo -e "${RED}**********    ${GREEN}Running   ${RED}*********${NC}"
 echo -e "${BLUE}*********************************${NC}"
-./GbEmu 'roms/05-op rp.gb'
+./GbEmu 'roms/cpu_instrs.gb'

@@ -1,8 +1,11 @@
 #include <iostream>
 
+#include "SDL2/SDL.h"
 // #define LOGGING_ENABLED
 
 #include "../inc/dmg01.hh"
+#include "../inc/registers.hh"
+#include "../inc/bus.hh"
 #include "../inc/cart.hh"
 
 
@@ -27,8 +30,8 @@ public:
 
         printf("Cart loaded..\n");
 
-        // SDL_Init(SDL_INIT_VIDEO);
-        // printf("SDL INIT\n");
+        SDL_Init(SDL_INIT_VIDEO);
+        printf("SDL INIT\n");
         // TTF_Init();
         // printf("TTF INIT\n");
 
@@ -38,32 +41,36 @@ public:
         paused  = false;
         ticks   = 0;
 
-        while(running)
-        {
-            if (paused)
-            {
-                // delay(10);
-                continue;
-            }
+        // while(running)
+        // {
+        //     if (paused)
+        //     {
+        //         // delay(10);
+        //         continue;
+        //     }
 
-            if (!cpu.step())
-            {
-                printf("CPU Stopped\n");
-                return -3;
-            }
+        //     if (!cpu.step())
+        //     {
+        //         printf("CPU Stopped\n");
+        //         return -3;
+        //     }
+        //     SDL_Delay(5000);
 
-            ticks++;
-        }
+        //     ticks++;
+        // }
 
         return 0;
     }
 
 private:
-    DMG01::Cpu  cpu     { };
-    DMG01::Cart cart    { };
-    bool        running { false };
-    bool        paused  { false };
-    uint64_t    ticks   { 0 };
+    DMG01::Cart       cart    { };
+    DMG01::Registers  reg     { };
+    DMG01::Bus        bus     { &cart };
+    DMG01::Cpu        cpu     { &reg, &bus};
+
+    bool              running { false };
+    bool              paused  { false };
+    uint64_t          ticks   { 0 };
 
 };
 

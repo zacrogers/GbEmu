@@ -136,11 +136,22 @@ bool Cart::load(char* fname)
 
     printHeader();
 
+    isLoaded = true;
+
     return true;
 }
 
-word_t read(address_t addr);
-void   write(address_t addr, word_t val);
+word_t Cart::read(address_t addr)
+{
+    return rom_data[addr];
+}
+
+
+void Cart::write(address_t addr, word_t val)
+{
+
+
+}
 
 
 const char *Cart::licenceName()
