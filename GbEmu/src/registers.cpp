@@ -54,15 +54,16 @@ void Registers::set(const Register reg, const std::uint16_t val)
 
 void Registers::print()
 {
-    printf("Registers\n");
-    printf("A: 0x%02X\n", get8(Register::A));
-    printf("B: 0x%02X\n", get8(Register::B));
-    printf("C: 0x%02X\n", get8(Register::C));
-    printf("D: 0x%02X\n", get8(Register::D));
-    printf("E: 0x%02X\n", get8(Register::E));
-    printf("F: 0x%02X\n", get8(Register::F));
-    printf("H: 0x%02X\n", get8(Register::H));
-    printf("L: 0x%02X\n", get8(Register::L));
+        printf("A: 0x%02x F: 0x%02x B: 0x%02x C: 0x%02x D: 0x%02x E: 0x%02x H: 0x%02x L: 0x%02x ",
+            get8(Register::A),
+            get8(Register::F),
+            get8(Register::B),
+            get8(Register::C),
+            get8(Register::D),
+            get8(Register::E),
+            get8(Register::H),
+            get8(Register::L)
+        );
 }
 
 address_t Registers::pcIncr()              { return pc++; }

@@ -13,8 +13,11 @@ bool Cpu::init()
 
 address_t Cpu::execute()
 {
-    static auto process = Process::get(currInst.mnemonic);
-    process(&currInst, pReg, &flags);
+    auto process = Process::get(currInst.mnemonic);
+    if(process != nullptr)
+    {
+        process(&currInst, pReg, &flags);
+    }
     return 0;
 }
 
@@ -68,6 +71,7 @@ bool Cpu::step()
     {
         currOpcode = newOpcode;
         currInst   = Instruction::fetch(currOpcode);
+        pReg->print();
         printf("PC: 0x%04x | OP: 0x%02x | %s\n", pReg->pcGet(), newOpcode, currInst.info);
 
         fetchData();

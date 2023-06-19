@@ -15,10 +15,6 @@ namespace Process
 {
 
 typedef std::function<void(const Instruction::ctx*, Registers*, Flags*)> callback;
-
-void nop(const Instruction::ctx *inst, Registers *reg, Flags *flags);
-void add(const Instruction::ctx *inst, Registers *reg, Flags *flags);
-
 callback get(Instruction::MN mnemonic);
 
 };
