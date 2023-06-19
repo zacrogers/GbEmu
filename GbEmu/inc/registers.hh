@@ -16,18 +16,18 @@ public:
     }
 
 
-    void      setFlags (const Flags *flags);
-    void      set      (const Register reg, const std::uint16_t val);
-    void      print    ();
-    address_t pcIncr   ();
-    void      pcSet    (address_t addr);
-    address_t pcGet    ();
+    void          setFlags  (const Flags *flags);
+    void          set       (const Register reg, const std::uint16_t val);
+    void          print     ();
+    address_t     pcIncr    ();
+    void          pcSet     (address_t addr);
+    address_t     pcGet     ();
 
-    void set8(const Register reg, const std::uint8_t val);
-    void set16(const Register reg, const std::uint16_t val);
+    void          set8      (const Register reg, const std::uint8_t val);
+    void          set16     (const Register reg, const std::uint16_t val);
 
-    word_t get8(const Register reg);
-    std::uint16_t get16(const Register reg);
+    word_t        get8      (const Register reg);
+    std::uint16_t get16     (const Register reg);
 
 
 private:
