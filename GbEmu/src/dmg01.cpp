@@ -250,24 +250,46 @@ void Cpu::fetchData()
 
     case Instruction::AM::R_HLI:
     {
-        auto regBVal = pReg->get16(currInst.regB);
+        pReg->memDest = pReg->get16(Register::HL);
 
         pReg->setOpA(pReg->get8(currInst.regA));
-        pReg->setOpB(*pBus->read16(regBVal));
+        pReg->setOpB(*pBus->read16(pReg->memDest));
 
-        pReg->set16(currInst.regB, regBVal++);
+        pReg->set16(Register::HL, pReg->memDest++);
 
         break;
     }
 
     case Instruction::AM::R_HLD:
     {
-        auto memAddr = pReg->get16(currInst.regB);
+        pReg->memDest = pReg->get16(Register::HL);
 
         pReg->setOpA(pReg->get8(currInst.regA));
-        pReg->setOpB(*pBus->read16(memAddr));
+        pReg->setOpB(*pBus->read16(pReg->memDest));
 
-        pReg->set16(currInst.regB, memAddr--);
+        pReg->set16(Register::HL, pReg->memDest--);
+
+        break;
+    }
+
+    case Instruction::AM::HLI_R:
+    {
+        pReg->memDest = pReg->get16(Register::HL);
+        pReg->setOpB(pReg->get8(currInst.regB));
+
+        pReg->set16(Register::HL, pReg->memDest + 1);
+        pReg->destIsMem = true;
+
+        break;
+    }
+
+    case Instruction::AM::HLD_R:
+    {
+        pReg->memDest = pReg->get16(Register::HL);
+        pReg->setOpB(pReg->get8(currInst.regB));
+
+        pReg->set16(Register::HL, pReg->memDest - 1);
+        pReg->destIsMem = true;
 
         break;
     }
