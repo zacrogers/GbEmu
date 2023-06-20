@@ -54,7 +54,7 @@ void Registers::set(const Register reg, const std::uint16_t val)
 
 void Registers::print()
 {
-        printf("A: 0x%02x F: 0x%02x B: 0x%02x C: 0x%02x D: 0x%02x E: 0x%02x H: 0x%02x L: 0x%02x ",
+        printf("A: 0x%02x F: 0x%02x B: 0x%02x C: 0x%02x D: 0x%02x E: 0x%02x H: 0x%02x L: 0x%02x SP:%04x ",
             get8(Register::A),
             get8(Register::F),
             get8(Register::B),
@@ -62,7 +62,8 @@ void Registers::print()
             get8(Register::D),
             get8(Register::E),
             get8(Register::H),
-            get8(Register::L)
+            get8(Register::L),
+            sp
         );
 }
 

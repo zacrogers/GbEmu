@@ -190,7 +190,7 @@ const ctx inst[0x100] = {
     [0x4E] = { MN::LD,    AM::R_MR,   R::C,     R::HL,    4,    1, 0, "LD C,[HL]"   },
     [0x4F] = { MN::LD,    AM::R_R,    R::C,     R::A,     4,    1, 0, "LD C,A"      },
 
-    // 0x50
+// 0x50
     [0x50] = { MN::LD,    AM::R_R,    R::D,     R::B,     4,    1, 0, "LD D,B"      },
     [0x51] = { MN::LD,    AM::R_R,    R::D,     R::C,     4,    1, 0, "LD D,C"      },
     [0x52] = { MN::LD,    AM::R_R,    R::D,     R::D,     4,    1, 0, "LD D,D"      },
@@ -244,7 +244,7 @@ const ctx inst[0x100] = {
     [0x7E] = { MN::LD,    AM::R_MR,   R::A,     R::HL,    4,    1, 0, "LD A,[HL]"   },
     [0x7F] = { MN::LD,    AM::R_R,    R::A,     R::A,     4,    1, 0, "LD A,A"      },
 
- //0x8X
+ //  0x80
     [0x80] = { MN::ADD,   AM::R_R,    R::A,     R::B,     4,    1, 0, "ADD A,B"     },
     [0x81] = { MN::ADD,   AM::R_R,    R::A,     R::C,     4,    1, 0, "ADD A,C"     },
     [0x82] = { MN::ADD,   AM::R_R,    R::A,     R::D,     4,    1, 0, "ADD A,D"     },
@@ -262,7 +262,7 @@ const ctx inst[0x100] = {
     [0x8E] = { MN::ADC,   AM::R_MR,   R::A,     R::HL,    4,    1, 0, "ADC A,[HL]"  },
     [0x8F] = { MN::ADC,   AM::R_R,    R::A,     R::A,     4,    1, 0, "ADC A,A"     },
 
-    //0x9X
+//  0x90
     [0x90] = { MN::SUB,   AM::R_R,    R::A,     R::B,     4,    1, 0, "SUB A,B"     },
     [0x91] = { MN::SUB,   AM::R_R,    R::A,     R::C,     4,    1, 0, "SUB A,C"     },
     [0x92] = { MN::SUB,   AM::R_R,    R::A,     R::D,     4,    1, 0, "SUB A,D"     },
@@ -280,7 +280,7 @@ const ctx inst[0x100] = {
     [0x9E] = { MN::SBC,   AM::R_MR,   R::A,     R::HL,    4,    1, 0, "SBC A,[HL]"  },
     [0x9F] = { MN::SBC,   AM::R_R,    R::A,     R::A,     4,    1, 0, "SBC A,A"     },
 
-    //0xAX
+//   0xA0
     [0xA0] = { MN::AND,   AM::R_R,    R::A,     R::B,     4,    1, 0, "AND A,B"     },
     [0xA1] = { MN::AND,   AM::R_R,    R::A,     R::C,     4,    1, 0, "AND A,C"     },
     [0xA2] = { MN::AND,   AM::R_R,    R::A,     R::D,     4,    1, 0, "AND A,D"     },
@@ -298,7 +298,7 @@ const ctx inst[0x100] = {
     [0xAE] = { MN::XOR,   AM::R_MR,   R::A,     R::HL,    4,    1, 0, "XOR A,[HL]"  },
     [0xAF] = { MN::XOR,   AM::R_R,    R::A,     R::A,     4,    1, 0, "XOR A,A"     },
 
-    //0xBX
+    //0xB0
     [0xB0] = { MN::OR,    AM::R_R,    R::A,     R::B,     4,    1, 0, "OR A,B"      },
     [0xB1] = { MN::OR,    AM::R_R,    R::A,     R::C,     4,    1, 0, "OR A,C"      },
     [0xB2] = { MN::OR,    AM::R_R,    R::A,     R::D,     4,    1, 0, "OR A,D"      },
@@ -316,65 +316,66 @@ const ctx inst[0x100] = {
     [0xBE] = { MN::CP,    AM::R_MR,   R::A,     R::HL,    4,    1, 0, "CP A,[HL]"   },
     [0xBF] = { MN::CP,    AM::R_R,    R::A,     R::A,     4,    1, 0, "CP A,A"      },
 
-    [0xC0] = { MN::RET,   AM::IMP,    R::None,  R::None },
-    [0xC1] = { MN::POP,   AM::R,      R::BC,    R::None },
-    [0xC2] = { MN::JP,    AM::D16,    R::None,  R::None },
-    [0xC3] = { MN::JP,    AM::D16,    R::None,  R::None },
-    [0xC4] = { MN::CALL,  AM::D16,    R::None,  R::None },
-    [0xC5] = { MN::PUSH,  AM::R,      R::BC,    R::None },
-    [0xC6] = { MN::ADD,   AM::R_D8,   R::A,     R::None },
-    [0xC7] = { MN::RST,   AM::IMP,    R::None,  R::None },
-    [0xC8] = { MN::RET,   AM::IMP,    R::None,  R::None },
-    [0xC9] = { MN::RET,   AM::None,   R::None,  R::None,  4,    2, 0, "RET"  },
-    [0xCA] = { MN::JP,    AM::D16,    R::None,  R::None },
-    [0xCB] = { MN::CB,    AM::D8,     R::None,  R::None,  4,    2, 0, "CB" },
-    [0xCC] = { MN::CALL,  AM::D16,    R::None,  R::None },
-    [0xCD] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL " },
-    [0xCE] = { MN::ADC,   AM::R_D8,   R::A,     R::None },
-    [0xCF] = { MN::RST,   AM::IMP,    R::None,  R::None },
+    [0xC0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0, "RET NZ"      },
+    [0xC1] = { MN::POP,   AM::R,      R::BC,    R::None,  4,    2, 0, "POP BC"      },
+    [0xC2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0, "JP NZ A16"   },
+    [0xC3] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0, "JP A16"      },
+    [0xC4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL NZ A16" },
+    [0xC5] = { MN::PUSH,  AM::R,      R::BC,    R::None,  4,    2, 0, "PUSH BC"     },
+    [0xC6] = { MN::ADD,   AM::R_D8,   R::A,     R::None,  4,    1, 0, "ADD A,#D8"   },
+    [0xC7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    1, 0x00, "RST 00H"  },
+    [0xC8] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0, "RET Z"       },
+    [0xC9] = { MN::RET,   AM::None,   R::None,  R::None,  4,    2, 0, "RET"         },
+    [0xCA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0, "JP Z A16"    },
+    [0xCB] = { MN::CB,    AM::D8,     R::None,  R::None,  4,    2, 0, "CB"          },
+    [0xCC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL Z A16"  },
+    [0xCD] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL "       },
+    [0xCE] = { MN::ADC,   AM::R_D8,   R::A,     R::None,  4,    2, 0, "ADC A,#D8"   },
+    [0xCF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x08, "RST 08H"  },
 
-    [0xD0] = { MN::RET,   AM::IMP,    R::None,  R::None },
-    [0xD1] = { MN::POP,   AM::R,      R::DE,    R::None },
-    [0xD2] = { MN::JP,    AM::D16,    R::None,  R::None },
-    [0xD4] = { MN::CALL,  AM::D16,    R::None,  R::None },
-    [0xD5] = { MN::PUSH,  AM::R,      R::DE,    R::None },
-    [0xD6] = { MN::SUB,   AM::R_D8,   R::A,     R::None },
-    [0xD7] = { MN::RST,   AM::IMP,    R::None,  R::None },
-    [0xD8] = { MN::RET,   AM::IMP,    R::None,  R::None },
-    [0xD9] = { MN::RETI,  AM::None,   R::None,  R::None,  4,    2, 0, "RRCA"  },
-    [0xDA] = { MN::JP,    AM::D16,    R::None,  R::None },
-    [0xDC] = { MN::CALL,  AM::D16,    R::None,  R::None },
-    [0xDE] = { MN::SBC,   AM::R_D8,   R::A,     R::None },
-    [0xDF] = { MN::RST,   AM::IMP,    R::None,  R::None },
+//   0xD0
+    [0xD0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0, "RET NC"      },
+    [0xD1] = { MN::POP,   AM::R,      R::DE,    R::None,  4,    2, 0, "POP DE"      },
+    [0xD2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0, "JP NC A16"   },
+    [0xD4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL NC A16" },
+    [0xD5] = { MN::PUSH,  AM::R,      R::DE,    R::None,  4,    2, 0, "PUSH BC"     },
+    [0xD6] = { MN::SUB,   AM::R_D8,   R::A,     R::None,  4,    2, 0, "SUB A,#D8"   },
+    [0xD7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x00, "RST 00H"  },
+    [0xD8] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0, "RET C"       },
+    [0xD9] = { MN::RETI,  AM::None,   R::None,  R::None,  4,    2, 0, "RETI"        },
+    [0xDA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0, "JP C A16"    },
+    [0xDC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0, "CALL C A16"  },
+    [0xDE] = { MN::SBC,   AM::R_D8,   R::A,     R::None,  4,    2, 0, "SBC A,#D8"   },
+    [0xDF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x18, "RST 18H"  },
 
-    //0xEX
-    [0xE0] = { MN::LDH,   AM::A8_R,   R::None,  R::A    },
-    [0xE1] = { MN::POP,   AM::R,      R::HL,    R::None },
-    [0xE2] = { MN::LD,    AM::MR_R,   R::C,     R::A    },
-    [0xE5] = { MN::PUSH,  AM::R,      R::HL,    R::None },
-    [0xE6] = { MN::AND,   AM::R_D8,   R::A,     R::None },
-    [0xE7] = { MN::RST,   AM::IMP,    R::None,  R::None },
-    [0xE8] = { MN::ADD,   AM::R_D8,   R::SP,    R::None },
-    [0xE9] = { MN::JP,    AM::R,      R::HL,    R::None },
-    [0xEA] = { MN::LD,    AM::A16_R,  R::None,  R::A    },
-    [0xEE] = { MN::XOR,   AM::R_D8,   R::A,     R::None },
-    [0xEF] = { MN::RST,   AM::IMP,    R::None,  R::None },
+//   0xE0
+    [0xE0] = { MN::LDH,   AM::A8_R,   R::None,  R::A,     4,    2, 0, "LDH [A8],A"   },
+    [0xE1] = { MN::POP,   AM::R,      R::HL,    R::None,  4,    2, 0, "POP HL"       },
+    [0xE2] = { MN::LD,    AM::MR_R,   R::C,     R::A,     4,    1, 0, "LD [C]],A"    },
+    [0xE5] = { MN::PUSH,  AM::R,      R::HL,    R::None,  4,    2, 0, "PUSH HL"      },
+    [0xE6] = { MN::AND,   AM::R_D8,   R::A,     R::None,  4,    1, 0, "AND A,#D8"    },
+    [0xE7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x20, "RST 20H"   },
+    [0xE8] = { MN::ADD,   AM::R_D8,   R::SP,    R::None,  4,    2, 0, "ADD SP,R8"    },
+    [0xE9] = { MN::JP,    AM::R,      R::HL,    R::None,  4,    2, 0, "JP [HL]"      },
+    [0xEA] = { MN::LD,    AM::A16_R,  R::None,  R::A,     4,    1, 0, "LD [A16],A"   },
+    [0xEE] = { MN::XOR,   AM::R_D8,   R::A,     R::None,  4,    2, 0, "XOR A,#D8"    },
+    [0xEF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x28, "RST 28H"   },
 
 
-    //0xFX
-    [0xF0] = { MN::LDH,   AM::R_A8,   R::A,     R::None },
-    [0xF1] = { MN::POP,   AM::R,      R::AF,    R::None },
-    [0xF2] = { MN::LD,    AM::R_MR,   R::A,     R::C    },
-    [0xF3] = { MN::DI,    AM::None,   R::None,  R::None,  4,    2, 0, "RRCA"  },
-    [0xF5] = { MN::PUSH,  AM::R,      R::AF,    R::None },
-    [0xF6] = { MN::OR,    AM::R_D8,   R::A,     R::None },
-    [0xF7] = { MN::RST,   AM::IMP,    R::None,  R::None },
-    [0xF8] = { MN::LD,    AM::HL_SPR, R::HL,    R::SP   },
-    [0xF9] = { MN::LD,    AM::R_R,    R::SP,    R::HL   },
-    [0xFA] = { MN::LD,    AM::R_A16,  R::A,     R::None },
-    [0xFB] = { MN::EI,    AM::None,   R::None,  R::None,  4,    2, 0, "RRCA"  },
-    [0xFE] = { MN::CP,    AM::R_D8,   R::A,     R::None },
-    [0xFF] = { MN::RST,   AM::IMP,    R::None,  R::None },
+//   0xF0
+    [0xF0] = { MN::LDH,   AM::R_A8,   R::A,     R::None,  4,    2, 0, "LDH A,[A8]"   },
+    [0xF1] = { MN::POP,   AM::R,      R::AF,    R::None,  4,    2, 0, "POP AF"       },
+    [0xF2] = { MN::LD,    AM::R_MR,   R::A,     R::C,     4,    1, 0, "LD A,[C]"     },
+    [0xF3] = { MN::DI,    AM::None,   R::None,  R::None,  4,    2, 0, "DI"           },
+    [0xF5] = { MN::PUSH,  AM::R,      R::AF,    R::None,  4,    2, 0, "PUSH AF"      },
+    [0xF6] = { MN::OR,    AM::R_D8,   R::A,     R::None,  4,    2, 0, "OR A,#D8"     },
+    [0xF7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x30, "RST 30H"   },
+    [0xF8] = { MN::LD,    AM::HL_SPR, R::HL,    R::SP,    4,    1, 0, "LD HL,SP+R8"  },
+    [0xF9] = { MN::LD,    AM::R_R,    R::SP,    R::HL,    4,    1, 0, "LD SP,HL"     },
+    [0xFA] = { MN::LD,    AM::R_A16,  R::A,     R::None,  4,    1, 0, "LD A,[A16]"   },
+    [0xFB] = { MN::EI,    AM::None,   R::None,  R::None,  4,    2, 0, "EI"           },
+    [0xFE] = { MN::CP,    AM::R_D8,   R::A,     R::None,  4,    2, 0, "CP A,#D8"     },
+    [0xFF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x38, "RST 38H"   },
 };
 
 }
