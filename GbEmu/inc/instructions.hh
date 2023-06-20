@@ -349,8 +349,8 @@ const ctx inst[0x100] = {
     [0xDF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x18, "RST 18H"     },
 
 //   0xE0
-    [0xE0] = { MN::LDH,   AM::A8_R,   R::None,  R::A,     4,    2, 0,   "LDH [A8],A"   },
-    [0xE1] = { MN::POP,   AM::R,      R::HL,    R::None,  4,    2, 0,   "POP HL"       },
+    [0xE0] = { MN::LDH,   AM::A8_R,   R::None,  R::A,     4,    2, 0,    "LDH [A8],A"  },
+    [0xE1] = { MN::POP,   AM::R,      R::HL,    R::None,  4,    2, 0,    "POP HL"      },
     [0xE2] = { MN::LD,    AM::MR_R,   R::C,     R::A,     4,    1, 0,    "LD [C]],A"   },
     [0xE5] = { MN::PUSH,  AM::R,      R::HL,    R::None,  4,    2, 0,    "PUSH HL"     },
     [0xE6] = { MN::AND,   AM::R_D8,   R::A,     R::None,  4,    1, 0,    "AND A,#D8"   },

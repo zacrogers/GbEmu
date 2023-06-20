@@ -195,7 +195,6 @@ void Cpu::fetchData()
 
     switch (currInst.addrMode)
     {
-    case Instruction::AM::IMP:
     case Instruction::AM::R_D16:
     {
         auto lo = static_cast<std::uint16_t>(pBus->read(pReg->pcIncr()));
@@ -237,9 +236,10 @@ void Cpu::fetchData()
 
     case Instruction::AM::R_MR:
     {
-        pReg->setOpA(pReg->get8(currInst.regA));
         pReg->memDest = pReg->get8(currInst.regB);
         pReg->destIsMem = true;
+
+        pReg->setOpA(pReg->get8(currInst.regA));
 
         if (currInst.regB == Instruction::R::C)
         {
@@ -253,8 +253,7 @@ void Cpu::fetchData()
         pReg->memDest = pReg->get16(Register::HL);
 
         pReg->setOpA(pReg->get8(currInst.regA));
-        pReg->setOpB(*pBus->read16(pReg->memDest));
-
+        pReg->setOpB(pBus->read16(pReg->memDest));
         pReg->set16(Register::HL, pReg->memDest++);
 
         break;
@@ -265,8 +264,7 @@ void Cpu::fetchData()
         pReg->memDest = pReg->get16(Register::HL);
 
         pReg->setOpA(pReg->get8(currInst.regA));
-        pReg->setOpB(*pBus->read16(pReg->memDest));
-
+        pReg->setOpB(pBus->read16(pReg->memDest));
         pReg->set16(Register::HL, pReg->memDest--);
 
         break;
@@ -275,10 +273,10 @@ void Cpu::fetchData()
     case Instruction::AM::HLI_R:
     {
         pReg->memDest = pReg->get16(Register::HL);
-        pReg->setOpB(pReg->get8(currInst.regB));
-
-        pReg->set16(Register::HL, pReg->memDest + 1);
         pReg->destIsMem = true;
+
+        pReg->setOpB(pReg->get8(currInst.regB));
+        pReg->set16(Register::HL, pReg->memDest + 1);
 
         break;
     }
@@ -286,14 +284,56 @@ void Cpu::fetchData()
     case Instruction::AM::HLD_R:
     {
         pReg->memDest = pReg->get16(Register::HL);
-        pReg->setOpB(pReg->get8(currInst.regB));
-
-        pReg->set16(Register::HL, pReg->memDest - 1);
         pReg->destIsMem = true;
+
+        pReg->setOpB(pReg->get8(currInst.regB));
+        pReg->set16(Register::HL, pReg->memDest - 1);
 
         break;
     }
 
+    case Instruction::AM::R_A8:
+        address_t memAddr = pBus->read(pReg->pcIncr());
+
+        pReg->setOpA(pReg->get8(currInst.regA));
+        pReg->setOpB(pBus->read(memAddr));
+
+        // emu_cycles(1);
+        break;
+
+    case Instruction::AM::A8_R:
+        pReg->memDest   = pBus->read(pReg->pcIncr());
+        pReg->destIsMem = true;
+
+        pReg->setOpA(pReg->get8(currInst.regB));
+        pReg->setOpB(pBus->read(pReg->memDest));
+
+        // emu_cycles(1);
+        break;
+
+    case Instruction::AM::HL_SPR:
+    case Instruction::AM::D16:
+            pReg->setOpA(pBus->read16(pReg->pcIncr()));
+            // emu_cycles(1);
+            break;
+
+    case Instruction::AM::D8:
+            pReg->setOpA(pBus->read(pReg->pcIncr()));
+            // emu_cycles(1);
+            break;
+
+    case Instruction::AM::D16_R:
+            pReg->setOpA(pBus->read16(pReg->pcIncr()));
+            pReg->setOpB(pReg->get8(currInst.regB));
+            // emu_cycles(1);
+            break;
+
+    case Instruction::AM::MR_D8:
+    case Instruction::AM::MR:
+    case Instruction::AM::A16_R:
+    case Instruction::AM::R_A16:
+    case Instruction::AM::IMP:
+    case Instruction::AM::None:
     default:
     {
         // char* msg = "Unknown addressing mode: %d";
