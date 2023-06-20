@@ -293,6 +293,7 @@ void Cpu::fetchData()
     }
 
     case Instruction::AM::R_A8:
+    {
         address_t memAddr = pBus->read(pReg->pcIncr());
 
         pReg->setOpA(pReg->get8(currInst.regA));
@@ -300,6 +301,7 @@ void Cpu::fetchData()
 
         // emu_cycles(1);
         break;
+    }
 
     case Instruction::AM::A8_R:
         pReg->memDest   = pBus->read(pReg->pcIncr());

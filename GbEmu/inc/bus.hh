@@ -39,9 +39,10 @@ word_t read(address_t address)
 
     return bus[address];
 }
-const std::uint16_t read16(address_t addr)
+const std::uint16_t read16(address_t address)
 {
-    return (std::uint16_t)&bus[addr];
+    std::uint16_t* p { reinterpret_cast<std::uint16_t*>(bus) };
+    return p[static_cast<std::uint8_t>(address)];
 }
 
 void write(const address_t addr, const word_t val)
