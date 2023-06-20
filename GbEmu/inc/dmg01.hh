@@ -35,9 +35,7 @@ private:
     Instruction::ctx  currInst    { };
     opcode_t          currOpcode  { 0 };
     std::uint16_t     dataFetched { 0 };
-    address_t         memDest     { 0 };
 
-    bool              destIsMem   { false };
     bool              halted      { false };
     bool              stepping    { false };
 

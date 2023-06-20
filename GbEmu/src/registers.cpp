@@ -5,6 +5,9 @@
 
 namespace DMG01
 {
+// offset to apply when accessing the 16 bit registers
+static constexpr std::uint8_t regOffset = static_cast<std::uint8_t>(Register::AF);
+
 /* Public */
 void Registers::setFlags(const Flags *flags)
 {

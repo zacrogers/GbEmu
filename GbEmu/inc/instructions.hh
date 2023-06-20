@@ -62,11 +62,11 @@ enum class Mnemonic {
 
 enum class AddrMode {
     IMP,
-    R_D16, // src: d16, dest: r16
-    R_R,   // src: r8,  dest: r8
+    R_D16,
+    R_R,
     MR_R,
     R,
-    R_D8,  // src: d8,  dest: r8
+    R_D8,
     R_MR,
     R_HLI,
     R_HLD,
@@ -108,11 +108,11 @@ bool      exists(opcode_t op);
 
 
 const ctx inst[0x100] = {
-/*  OP     :    TYPE    | ADDR MODE  |   R1   |    R2   | MC | LEN */
+/*  OP     :    TYPE    | ADDR MODE  |   R1   |    R2   |  MC | LEN */
 /*  0x00 */
     [0x00] =  { MN::NOP,  AM::IMP,    R::None,  R::None,  4,    1, 0,    "NOP"         },
     [0x01] =  { MN::LD,   AM::R_D16,  R::BC,    R::None,  12,   3, 0,    "LD BC,#D16"  },
-    [0x02] =  { MN::LD,   AM::MR_R,   R::BC,    R::A,     8,    1, 0,    "LD BC,A"     },
+    [0x02] =  { MN::LD,   AM::MR_R,   R::BC,    R::A,     8,    1, 0,    "LD [BC],A"   },
     [0x03] =  { MN::INC,  AM::R,      R::BC,    R::None,  8,    1, 0,    "INC BC"      },
     [0x04] =  { MN::INC,  AM::R,      R::B,     R::None,  8,    1, 0,    "INC B"       },
     [0x05] =  { MN::DEC,  AM::R,      R::B,     R::None,  4,    1, 0,    "DEC B"       },

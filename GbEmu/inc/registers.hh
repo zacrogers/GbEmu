@@ -29,13 +29,24 @@ public:
     word_t        get8      (const Register reg);
     std::uint16_t get16     (const Register reg);
 
+    void setOpA(std::uint16_t val) { opA = val; }
+    void setOpB(std::uint16_t val) { opB = val; }
+    std::uint16_t getOpA() { return opA; }
+    std::uint16_t getOpB() { return opB; }
+
+    // to keep track if the dest of the current instruction is a memory address
+    // set when fetching data, and checked executing when executing an instruction
+    address_t         memDest     { 0 };
+    bool              destIsMem   { false };
 
 private:
-    static constexpr std::uint8_t regOffset = static_cast<std::uint8_t>(Register::AF);
-
     std::uint8_t  buf[static_cast<int>(Register::Count)] { }; // registers
-    address_t     pc  { 0x100 };
-    address_t     sp  { 0xFFFE };
+    address_t     pc  { 0x100 };  // Program counter
+    address_t     sp  { 0xFFFE }; // Stack pointer
+
+    // Place to store the fetched operand results corresponding to regA & regB in Instruction::ctx
+    std::uint16_t opA { 0 };
+    std::uint16_t opB { 0 };
 
 };
 }
