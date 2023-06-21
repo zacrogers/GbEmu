@@ -73,6 +73,8 @@ void Registers::print()
 address_t Registers::pcIncr()              { return pc++; }
 void      Registers::pcSet(address_t addr) { pc = addr; }
 address_t Registers::pcGet()               { return pc; }
+void      Registers::spSet(address_t addr) { sp = addr; }
+address_t Registers::spGet()               { return sp; }
 
 
 /* Private */

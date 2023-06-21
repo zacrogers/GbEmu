@@ -197,14 +197,8 @@ void Cpu::fetchData()
     {
     case Instruction::AM::R_D16:
     {
-        auto lo = static_cast<std::uint16_t>(pBus->read(pReg->pcIncr()));
-        // emu_cycles(1);
-
-        auto hi = static_cast<std::uint16_t>(pBus->read(pReg->pcIncr()));
-        // emu_cycles(1);
-
         pReg->setOpA(pReg->get8(currInst.regA));
-        pReg->setOpB(lo | (hi << 8));
+        pReg->setOpB(pBus->read16(pReg->pcIncr())); pReg->pcIncr(); // increment pc twice for 16 bit
 
         break;
     }
@@ -314,8 +308,12 @@ void Cpu::fetchData()
         break;
 
     case Instruction::AM::HL_SPR:
+            pReg->setOpA(pReg->get16(Register::HL));
+            pReg->setOpB(pBus->read(pReg->pcIncr()) + pReg->spGet());
+            break;
+
     case Instruction::AM::D16:
-            pReg->setOpA(pBus->read16(pReg->pcIncr()));
+            pReg->setOpA(pBus->read16(pReg->pcIncr())); pReg->pcIncr(); // increment pc twice for 16 bit
             // emu_cycles(1);
             break;
 
@@ -325,15 +323,37 @@ void Cpu::fetchData()
             break;
 
     case Instruction::AM::D16_R:
-            pReg->setOpA(pBus->read16(pReg->pcIncr()));
+            pReg->setOpA(pBus->read16(pReg->pcIncr())); pReg->pcIncr(); // increment pc twice for 16 bit
             pReg->setOpB(pReg->get8(currInst.regB));
             // emu_cycles(1);
             break;
 
     case Instruction::AM::MR_D8:
+        pReg->memDest = pReg->get8(currInst.regA);
+        pReg->destIsMem = true;
+        pReg->setOpB(pBus->read(pReg->pcIncr()));
+
+        break;
+
     case Instruction::AM::MR:
+        pReg->memDest = pReg->get8(currInst.regA);
+        pReg->destIsMem = true;
+
+        break;
+
     case Instruction::AM::A16_R:
+        pReg->memDest = pBus->read16(pReg->pcIncr());
+        pReg->destIsMem = true;
+        pReg->setOpB(pReg->get8(currInst.regB));
+
+        break;
+
     case Instruction::AM::R_A16:
+        pReg->setOpA(pReg->get8(currInst.regA));
+        pReg->setOpB(pBus->read16(pReg->pcIncr()));pReg->pcIncr();
+
+        break;
+
     case Instruction::AM::IMP:
     case Instruction::AM::None:
     default:

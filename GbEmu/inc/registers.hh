@@ -22,6 +22,8 @@ public:
     address_t     pcIncr    ();
     void          pcSet     (address_t addr);
     address_t     pcGet     ();
+    void          spSet     (address_t addr);
+    address_t     spGet     ();
 
     void          set8      (const Register reg, const std::uint8_t val);
     void          set16     (const Register reg, const std::uint16_t val);

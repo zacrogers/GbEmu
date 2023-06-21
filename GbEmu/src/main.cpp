@@ -70,7 +70,7 @@ private:
     DMG01::Cart       cart    { };
     DMG01::Registers  reg     { };
     DMG01::Bus        bus     { &cart };
-    DMG01::Cpu        cpu     { &reg, &bus};
+    DMG01::Cpu        cpu     { &reg, &bus };
 
     bool              running { false };
     bool              paused  { false };
