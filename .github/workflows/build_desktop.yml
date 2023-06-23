@@ -22,4 +22,4 @@ jobs:
       - name: Build for Desktop
         run: |
           chmod -x run.sh
-          ./run.sh DESKTOP
+          bash run.sh DESKTOP
