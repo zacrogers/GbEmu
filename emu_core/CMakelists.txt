@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.7)
+set (CMAKE_CXX_STANDARD 17)
+
+project(emu_core)
+
+find_package(SDL2 REQUIRED)
+include_directories(emu_core ${SDL2_INCLUDE_DIRS})
+include_directories(
+    /inc
+    /src
+)
+
+add_executable(GameboyEmulatorCore
+    src/main.cpp
+    src/cpu.cpp
+    src/cart.cpp
+    src/registers.cpp
+    src/process.cpp
+    src/instructions.cpp
+)
+target_link_libraries(GameboyEmulatorCore ${SDL2_LIBRARIES})
