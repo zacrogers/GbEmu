@@ -7,12 +7,14 @@
 #include "../../emu_core/inc/registers.hh"
 #include "../../emu_core/inc/bus.hh"
 #include "../../emu_core/inc/cart.hh"
+#include "../../emu_core/inc/graphics.hh"
 
+#include "../inc/graphics.hh"
 
 class Emulator
 {
 public:
-    Emulator(){}
+    Emulator(Graphics *g): pGraphics(g){}
 
     int run(int argc, char **argv)
     {
@@ -67,6 +69,8 @@ public:
     }
 
 private:
+    Graphics          *pGraphics;
+
     DMG01::Cart       cart    { };
     DMG01::Registers  reg     { };
     DMG01::Bus        bus     { &cart };
@@ -78,7 +82,10 @@ private:
 
 };
 
-Emulator emu { };
+GraphicsDesktop dtGraphics { };
+
+
+Emulator emu { &dtGraphics };
 
 
 int main(int argc, char **argv)
