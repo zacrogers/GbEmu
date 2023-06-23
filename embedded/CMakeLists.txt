@@ -7,7 +7,7 @@ include_directories(
     ../emu_core/src
     )
 
-    target_sources(app PRIVATE
+target_sources(app PRIVATE
     src/main.cpp
     ../emu_core/src/registers.cpp
 )
