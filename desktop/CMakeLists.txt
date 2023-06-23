@@ -3,6 +3,8 @@ set (CMAKE_CXX_STANDARD 17)
 project(GameboyEmulatorDesktop)
 
 find_package(SDL2 REQUIRED)
+find_package(etl REQUIRED)
+
 include_directories (
     ${SDL2_INCLUDE_DIRS}
     ../emu_core/inc
@@ -18,3 +20,4 @@ add_executable(GameboyEmulatorDesktop
     ../emu_core/src/instructions.cpp
 )
 target_link_libraries(GameboyEmulatorDesktop ${SDL2_LIBRARIES})
+target_link_libraries(GameboyEmulatorDesktop     etl::etl)

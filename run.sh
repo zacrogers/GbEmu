@@ -30,5 +30,11 @@ elif [[ $1 == "EMBEDDED" ]]; then
 
 cd embedded
 west build -p auto -b esp32
+west flash
+# west espressif monitor
+
+else
+
+echo "You have enter something, ya dingus. Select either 'DESKTOP' or 'EMBEDDED'"
 
 fi
