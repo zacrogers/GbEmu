@@ -1,0 +1,35 @@
+source "Kconfig.zephyr"
+
+config METHOD_USE_STAGING
+	bool "Point the device at the staging environment"
+	default n
+
+
+config METHOD_HUB_DEVICE_ENABLED
+	bool "Replace the device implementation with mocks"
+	default n
+
+
+config METHOD_HUB_CLOUD_ENABLED
+	bool "Replace the cloud implementation with mocks"
+	default n
+
+
+config METHOD_HUB_STORAGE_ENABLED
+	bool "Replace the storage implementation with mocks"
+	default n
+
+
+config METHOD_HUB_AUX_ENABLED
+	bool "Replace the aux implementation with mocks"
+	default n
+
+
+config METHOD_MOCK_ELMO
+	bool "Replace the elmo implementation with mocks"
+	default n
+
+
+config METHOD_MOCK_GPB100D
+	bool "Replace the gpb100d implementation with mocks"
+	default n
