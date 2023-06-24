@@ -19,7 +19,7 @@ static void ld(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
     if(reg->destIsMem)         //LD (BC), A for instance...
     {
-        reg->set(inst->regB, reg->getOpA());
+        reg->write(inst->regB, reg->getOpA());
         return;
     }
 
@@ -28,31 +28,29 @@ static void ld(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
 static void inc(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
-    auto opA = static_cast<std::uint16_t>(reg->get8(inst->regA));
-
-    std::uint16_t result = ++opA;
+    std::uint16_t result = reg->getOpA() + 1;
 
     flags->zero  = (result == 0 )   ? true : false;
     flags->carry = (result > 0xFF ) ? true : false;
 
     reg->setFlags(flags);
 
-    reg->set8(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
+    // printf("REG A: %D, 0x%04x\n\n", static_cast<int>(inst->regA), result);
+    reg->write(inst->regA, result);
 }
 
 
 static void dec(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
-    auto opA = static_cast<std::uint16_t>(reg->get8(inst->regA));
-
-    std::uint16_t result = --opA;
+    std::uint16_t result = reg->getOpA() - 1;
 
     flags->zero  = (result == 0 )   ? true : false;
     flags->carry = (result > 0xFF ) ? true : false;
 
     reg->setFlags(flags);
 
-    reg->set8(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
+    // printf("REG A: %D, 0x%04x\n\n", static_cast<int>(inst->regA), result);
+    reg->write(inst->regA, result);
 }
 
 
@@ -63,8 +61,8 @@ static void rcla(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
 static void add(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
-    auto opA = static_cast<std::uint16_t>(reg->get8(inst->regA));
-    auto opB = static_cast<std::uint16_t>(reg->get8(inst->regB));
+    auto opA = static_cast<std::uint16_t>(reg->read(inst->regA));
+    auto opB = static_cast<std::uint16_t>(reg->read(inst->regB));
 
     std::uint16_t result = opA + opB;
 
@@ -73,7 +71,7 @@ static void add(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
     reg->setFlags(flags);
 
-    reg->set8(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
+    reg->write(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
 }
 
 
@@ -134,8 +132,8 @@ static void adc(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
 static void sub(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
-    auto opA = static_cast<std::uint16_t>(reg->get8(inst->regA));
-    auto opB = static_cast<std::uint16_t>(reg->get8(inst->regB));
+    auto opA = static_cast<std::uint16_t>(reg->read(inst->regA));
+    auto opB = static_cast<std::uint16_t>(reg->read(inst->regB));
 
     std::uint16_t result = opA - opB;
 
@@ -144,7 +142,7 @@ static void sub(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
     reg->setFlags(flags);
 
-    reg->set8(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
+    reg->write(inst->regA, static_cast<std::uint8_t>(result & 0xFF00));
 }
 
 
@@ -180,6 +178,7 @@ static void pop(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
 static void jp(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
+
 }
 
 

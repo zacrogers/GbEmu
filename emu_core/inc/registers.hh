@@ -11,15 +11,16 @@ public:
 
     Registers()
     {
-        set16(Register::AF, 0xB001);
-        set16(Register::BC, 0x1300);
-        set16(Register::DE, 0xD800);
-        set16(Register::HL, 0x4D01);
+        write(Register::AF, 0xB001);
+        write(Register::BC, 0x1300);
+        write(Register::DE, 0xD800);
+        write(Register::HL, 0x4D01);
     }
 
 
     void          setFlags  (const Flags *flags);
-    void          set       (const Register reg, const std::uint16_t val);
+    void          write     (const Register reg, const std::uint16_t val);
+    std::uint16_t read      (const Register reg);
     void          print     ();
     address_t     pcIncr    ();
     void          pcSet     (address_t addr);
@@ -27,11 +28,6 @@ public:
     void          spSet     (address_t addr);
     address_t     spGet     ();
 
-    void          set8      (const Register reg, const std::uint8_t val);
-    void          set16     (const Register reg, const std::uint16_t val);
-
-    word_t        get8      (const Register reg);
-    std::uint16_t get16     (const Register reg);
 
     void setOpA(std::uint16_t val) { opA = val; }
     void setOpB(std::uint16_t val) { opB = val; }
@@ -44,7 +40,18 @@ public:
     bool              destIsMem   { false };
 
 private:
-    std::uint8_t  buf[static_cast<int>(Register::Count)] { }; // registers
+    struct registers
+    {
+		union { struct { std::uint8_t f, a; }; std::uint16_t af; };
+		union { struct { std::uint8_t c, b; }; std::uint16_t bc; };
+		union { struct { std::uint8_t e, d; }; std::uint16_t de; };
+		union { struct { std::uint8_t l, h; }; std::uint16_t hl; };
+    };
+
+    struct registers regs {};
+
+
+    // std::uint8_t  buf[static_cast<int>(Register::Count)] { }; // registers
     address_t     pc  { 0x100 };  // Program counter
     address_t     sp  { 0xFFFE }; // Stack pointer
 

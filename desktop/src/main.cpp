@@ -20,7 +20,8 @@ public:
 
     bool init()
     {
-        bool success = false;
+        bool success = true;
+        cpu.init();
         // success = pGraphics->init();
         return success;
     }
