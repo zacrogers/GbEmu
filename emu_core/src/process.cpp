@@ -1,6 +1,9 @@
 #include "../inc/process.hh"
 
 
+#include "etl/map.h"
+
+
 namespace DMG01
 {
 namespace Process
@@ -14,6 +17,12 @@ static void nop(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 
 static void ld(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 {
+    if(reg->destIsMem)         //LD (BC), A for instance...
+    {
+        reg->set(inst->regB, reg->getOpA());
+        return;
+    }
+
 }
 
 
@@ -286,7 +295,7 @@ static void set(const Instruction::ctx *inst, Registers *reg, Flags *flags)
 }
 
 
-const std::map<Instruction::MN, callback> callbacks = {
+const etl::map<Instruction::MN, callback, 346> callbacks = {
     {Instruction::MN::NOP,   nop},
     {Instruction::MN::LD,    ld},
     {Instruction::MN::INC,   inc},
