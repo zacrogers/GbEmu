@@ -27,7 +27,8 @@ public:
     address_t     pcGet     ();
     void          spSet     (address_t addr);
     address_t     spGet     ();
-
+    address_t     spDecrement     () { return sp--;}
+    address_t     spIncrement     () { return sp++;}
 
     void setOpA(std::uint16_t val) { opA = val; }
     void setOpB(std::uint16_t val) { opB = val; }

@@ -41,9 +41,7 @@ word_t read(address_t address)
 }
 const std::uint16_t read16(address_t address)
 {
-    //TODO: check bounds
-    std::uint16_t* p { reinterpret_cast<std::uint16_t*>(bus) };
-    return p[address];
+    return read(address) | (read(address + 1)) << 8;
 }
 
 void write(const address_t addr, const word_t val)

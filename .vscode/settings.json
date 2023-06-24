@@ -89,7 +89,8 @@
         "utility": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "span": "cpp"
     },
     "cmake.sourceDirectory": "/Users/zacharyrogers/Documents/Code/GbEmu/embedded/modules/audio/sof/smex",
     "idf.port": "/dev/cu.usbserial-0001"

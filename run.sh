@@ -31,7 +31,7 @@ elif [[ $1 == "EMBEDDED" ]]; then
 cd embedded
 west build -p auto -b esp32
 west flash
-# west espressif monitor
+west espressif monitor
 
 else
 

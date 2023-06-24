@@ -18,7 +18,7 @@ address_t Cpu::execute()
     auto process = Process::get(currInst.mnemonic);
     if(process != nullptr)
     {
-        process(&currInst, pReg, &flags);
+        process(&currInst, pReg, pBus, &flags);
     }
     return 0;
 }
@@ -83,7 +83,7 @@ void Cpu::fetchData()
 
         pReg->setOpA(pReg->read(currInst.regA));
         pReg->setOpB(pBus->read16(pReg->memDest));
-        pReg->write(Register::HL, pReg->memDest++);
+        pReg->write(Register::HL, pReg->memDest + 1);
 
         break;
     }
@@ -94,7 +94,7 @@ void Cpu::fetchData()
 
         pReg->setOpA(pReg->read(currInst.regA));
         pReg->setOpB(pBus->read16(pReg->memDest));
-        pReg->write(Register::HL, pReg->memDest--);
+        pReg->write(Register::HL, pReg->memDest - 1);
 
         break;
     }
@@ -204,13 +204,16 @@ void Cpu::fetchData()
 
 bool Cpu::step()
 {
-    pReg->print();
     auto newOpcode = static_cast<opcode_t>(pBus->read(pReg->pcIncr()));
 
-    // std::cout << "PC: 0x" << std::hex << (std::uint16_t)pReg->pcGet() << " OP: 0x" << std::hex << newOpcode << std::endl;
     if(Instruction::exists(newOpcode))
     {
         currOpcode = newOpcode;
+        if(currOpcode == 0xCB)
+        {
+            printf("It's a cb instruction yo\n");
+        }
+
         currInst   = Instruction::fetch(currOpcode);
         pReg->print();
         printf("PC: 0x%04x | OP: 0x%02x | %s\n", pReg->pcGet(), newOpcode, currInst.info);
@@ -226,4 +229,5 @@ bool Cpu::step()
 
     return true;
 }
+
 }

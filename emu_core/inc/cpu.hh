@@ -22,10 +22,10 @@ public:
     Cpu() {}
     Cpu(Registers* reg, Bus* bus): pReg(reg), pBus(bus){}
 
-    bool      init();
-    address_t execute();
-    void      fetchData();
-    bool      step();
+    bool          init();
+    address_t     execute();
+    void          fetchData();
+    bool          step();
 
 private:
     Registers         *pReg       { };

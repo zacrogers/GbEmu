@@ -13,7 +13,7 @@ namespace DMG01
 namespace Process
 {
 
-typedef std::function<void(const Instruction::ctx*, Registers*, Flags*)> callback;
+typedef std::function<void(const Instruction::ctx*, Registers*, Bus*, Flags*)> callback;
 callback get(Instruction::MN mnemonic);
 
 };
