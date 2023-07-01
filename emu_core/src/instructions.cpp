@@ -21,17 +21,29 @@ static const ctx inst[0x100] = {
     [0x0B] =  { MN::DEC,  AM::R,      R::BC,    R::None,  8,    1, 0,    "DEC BC"      },
     [0x0C] =  { MN::INC,  AM::R,      R::C,     R::None,  4,    1, 0,    "INC C"       },
     [0x0D] =  { MN::DEC,  AM::R,      R::C,     R::None,  4,    1, 0,    "DEC C"       },
-    [0x0E] =  { MN::LD,   AM::R_D8,   R::C,     R::None,  8,    2, 0,    "LD C"        },
+    [0x0E] =  { MN::LD,   AM::R_D8,   R::C,     R::None,  8,    2, 0,    "LD C,#D8"    },
     [0x0F] =  { MN::RRCA, AM::None,   R::None,  R::None,  4,    2, 0,    "RRCA"        },
 
 
     //TODO: FILL OUT MC and LEN BELOW
 
 /*  0x10 */
-    [0x10] =  { MN::STOP, AM::None,   R::None,  R::None,  4,    2, 0,    "STOP D8"     },
-    [0x11] =  { MN::LD,   AM::R_D16,  R::DE,    R::None,  12,   3, 0,    "LD DE,D16"   },
+    [0x10] =  { MN::STOP, AM::None,   R::None,  R::None,  4,    2, 0,    "STOP 0"      },
+    [0x11] =  { MN::LD,   AM::R_D16,  R::DE,    R::None,  12,   3, 0,    "LD DE,#D16"  },
     [0x12] =  { MN::LD,   AM::MR_R,   R::DE,    R::A,     12,   3, 0,    "LD [DE],A"   },
     [0x13] =  { MN::INC,  AM::R,      R::DE,    R::None,  1,    8, 0,    "INC DE"      },
+    [0x14] =  { MN::INC,  AM::R,      R::D,     R::None,  1,    8, 0,    "INC D"       },
+    [0x15] =  { MN::DEC,  AM::R,      R::D,     R::None,  1,    8, 0,    "DEC D"       },
+    [0x16] =  { MN::LD,   AM::R_D8,   R::D,     R::None,  8,    2, 0,    "LD D,#D8"    },
+    [0x17] =  { MN::RLA,  AM::None,   R::None,  R::None,  4,    2, 0,    "RLA"         },
+    [0x18] =  { MN::JR,   AM::D8,     R::None,  R::None,  4,    1, 0,    "JR #D8"      },
+    [0x19] =  { MN::ADD,  AM::R_R,    R::HL,    R::DE,    4,    1, 0,    "ADD HL,DE"   },
+    [0x1A] =  { MN::LD,   AM::R_MR,   R::A,     R::DE,    12,   3, 0,    "LD A,[DE]"   },
+    [0x1B] =  { MN::DEC,  AM::R,      R::DE,    R::None,  1,    8, 0,    "DEC DE"      },
+    [0x1C] =  { MN::INC,  AM::R,      R::E,     R::None,  1,    8, 0,    "DEC E"       },
+    [0x1D] =  { MN::DEC,  AM::R,      R::E,     R::None,  1,    8, 0,    "DEC D"       },
+    [0x1E] =  { MN::LD,   AM::R_D8,   R::E,     R::None,  8,    2, 0,    "LD E,#D8"    },
+    [0x1F] =  { MN::RRA,  AM::None,   R::None,  R::None,  4,    2, 0,    "RRA"         },
 
 //  0x20
     [0x20] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JR NZ #D8"   },
@@ -275,7 +287,7 @@ static const ctx inst[0x100] = {
     [0xFF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x38, "RST 38H"      },
 };
 
-const ctx fetch(opcode_t op)  { return inst[op]; }
+const ctx fetch(opcode_t op)  { return inst[op <= 0xFF ? op : 0x00]; }
 bool      exists(opcode_t op) { return &inst[op] != nullptr; }
 }
 }
