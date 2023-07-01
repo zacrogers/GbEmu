@@ -22,16 +22,27 @@ public:
     Cpu() {}
     Cpu(Registers* reg, Bus* bus): pReg(reg), pBus(bus){}
 
-    bool          init();
-    address_t     execute();
+    bool          init     ();
+    address_t     execute  ();
     void          fetchData();
-    bool          step();
+    bool          step     ();
+
+    void setHalted(bool halted) { this->halted = halted; }
+    bool getHalted()            { return halted; }
+
+    void handleInterrupt();
+    void checkInterrupt();
+
+    // These are broken out to be used by the processes
+    Bus*       bus()   { return pBus; }
+    Registers* reg()   { return pReg; }
+    Flags*     flags() { return pFlags; }
 
 private:
     Registers         *pReg       { };
     Bus               *pBus       { };
+    Flags             *pFlags     { };
 
-    Flags             flags       { };
     Instruction::ctx  currInst    { };
     opcode_t          currOpcode  { 0 };
     std::uint16_t     dataFetched { 0 };

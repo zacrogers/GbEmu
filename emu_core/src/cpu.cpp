@@ -18,7 +18,7 @@ address_t Cpu::execute()
     auto process = Process::get(currInst.mnemonic);
     if(process != nullptr)
     {
-        process(&currInst, pReg, pBus, &flags);
+        process(&currInst, pReg, pBus, pFlags);
     }
     return 0;
 }

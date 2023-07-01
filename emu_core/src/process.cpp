@@ -1,7 +1,14 @@
 #include "../inc/process.hh"
 
+#include "../inc/cpu.hh"
 
 #include "etl/map.h"
+
+
+void kingOfTheCastle(DMG01::Cpu* cpu)
+{
+    cpu->bus()->read16(0xFF);
+}
 
 
 namespace DMG01
@@ -95,8 +102,20 @@ static void dec(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 }
 
 
-static void rcla(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rlca(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    uint8_t u = reg->read(Register::A);
+    bool c = (u >> 7) & 1;
+
+    u = (u << 1) | c;
+    reg->write(Register::A, u);
+
+    flags->zero      = 0;
+    flags->subtract  = 0;
+    flags->halfCarry = 0;
+    flags->carry     = c;
+
+    reg->setFlags(flags);
 }
 
 
@@ -115,6 +134,18 @@ static void add(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 
 static void rrca(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    uint8_t val = reg->read(Register::A);
+    uint8_t b = val & 1;
+
+    reg->write(Register::A, val >>= 1);
+    reg->write(Register::A, val |= (b << 7));
+
+    flags->zero      = 0;
+    flags->subtract  = 0;
+    flags->halfCarry = 0;
+    flags->carry     = b;
+
+    reg->setFlags(flags);
 }
 
 
@@ -150,6 +181,12 @@ static void cpl(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 
 static void scf(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    flags->zero      = -1;
+    flags->subtract  = 0;
+    flags->halfCarry = 0;
+    flags->carry     = 1;
+
+    reg->setFlags(flags);
 }
 
 
@@ -160,6 +197,7 @@ static void ccf(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 
 static void halt(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    // cpu->setHalted(true);
 }
 
 
@@ -191,16 +229,40 @@ static void sbc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 
 static void _and(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    reg->write(inst->regA, reg->read(inst->regA) & reg->read(inst->regB));
+
+    flags->zero      = 0;
+    flags->subtract  = 0;
+    flags->halfCarry = 1;
+    flags->carry     = 0;
+
+    reg->setFlags(flags);
 }
 
 
 static void _xor(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    reg->write(inst->regA, reg->read(inst->regA) ^ reg->read(inst->regB));
+
+    flags->zero      = 0;
+    flags->subtract  = 0;
+    flags->halfCarry = 0;
+    flags->carry     = 0;
+
+    reg->setFlags(flags);
 }
 
 
 static void _or(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
 {
+    reg->write(inst->regA, reg->read(inst->regA) | reg->read(inst->regB));
+
+    flags->zero      = 0;
+    flags->subtract  = 0;
+    flags->halfCarry = 0;
+    flags->carry     = 0;
+
+    reg->setFlags(flags);
 }
 
 
@@ -364,7 +426,7 @@ const etl::map<Instruction::MN, callback, 346> callbacks = {
     {Instruction::MN::LD,    ld},
     {Instruction::MN::INC,   inc},
     {Instruction::MN::DEC,   dec},
-    {Instruction::MN::RLCA,  rcla},
+    {Instruction::MN::RLCA,  rlca},
     {Instruction::MN::ADD,   add},
     {Instruction::MN::RRCA,  rrca},
     {Instruction::MN::STOP,  stop},

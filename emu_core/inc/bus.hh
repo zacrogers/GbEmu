@@ -3,6 +3,7 @@
 #include "../inc/common.hh"
 #include "../inc/cart.hh"
 
+
 namespace DMG01
 {
 namespace MemMap {
@@ -25,31 +26,66 @@ class Bus
 {
 public:
 Bus(Cart* cart) : pCart(cart){}
+
 word_t read(address_t address)
 {
     if      (address < MemMap::tileRam)      { return pCart->read(address); }         /* ROM Data */
     else if (address < MemMap::cartridgeRam) {  }                                     /* Char/Map Data */
     else if (address < MemMap::workingRam)   { return pCart->read(address); }         /* Cartridge RAM */
-    else if (address < MemMap::echoRam)      { /* return wram_read(address); */ }     /* WRAM (Working RAM) */
+    else if (address < MemMap::echoRam)      { return wramRead(address);  }           /* WRAM (Working RAM) */
     else if (address < MemMap::OAM)          { return 0; }                            /* reserved echo ram... */
     else if (address < 0xFEA0)               { }                                      /* OAM */
     else if (address < 0xFF00)               { return 0; }                            /* reserved unusable... */
     else if (address < 0xFF80)               { }                                      /* IO Registers... */
     else if (address == 0xFFFF)              { /* return cpu_get_ie_register(); */ }  /* CPU ENABLE REGISTER... */
 
-    return bus[address];
+    return hramRead(address);
 }
 const std::uint16_t read16(address_t address)
 {
-    return read(address) | (read(address + 1)) << 8;
+    return read(address) | (read(address + 1) & 0xFF) << 8;
 }
 
 void write(const address_t addr, const word_t val)
 {
     bus[addr] = val;
 }
+
+std::uint8_t wramRead(address_t address) {
+    address -= 0xC000;
+
+    if (address >= 0x2000) {
+        printf("INVALID WRAM ADDR %08X\n", address + 0xC000);
+        exit(-1);
+    }
+
+    return wram[address];
+}
+
+void wramWrite(address_t address, std::uint8_t value) {
+    address -= 0xC000;
+
+    wram[address] = value;
+}
+
+std::uint8_t hramRead(address_t address) {
+    address -= 0xFF80;
+
+    return hram[address];
+}
+
+void hramWrite(address_t address, std::uint8_t value) {
+    address -= 0xFF80;
+
+    hram[address] = value;
+}
+
+
 private:
     word_t bus[MemMap::busSize] { };
     Cart *pCart;
+
+    std::uint8_t wram[0x2000];
+    std::uint8_t hram[0x80];
 };
 } // namespace DMG01
