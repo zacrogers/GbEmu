@@ -4,6 +4,11 @@ namespace DMG01
 namespace Instruction
 {
 
+static constexpr std::uint8_t f(bool z, bool n, bool h, bool c)
+{
+    return (z << 7) | (n << 6) | (h << 5) | (c << 4);
+}
+
 static const ctx inst[0x100] = {
 /*  OP     :    TYPE    | ADDR MODE  |   R1   |    R2   |  MC | LEN */
 /*  0x00 */
@@ -46,7 +51,7 @@ static const ctx inst[0x100] = {
     [0x1F] =  { MN::RRA,  AM::None,   R::None,  R::None,  4,    2, 0,    "RRA"         },
 
 //  0x20
-    [0x20] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JR NZ #D8"   },
+    [0x20] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JR NZ #D8"   ,f(true, false, false, false)},
     [0x21] = { MN::LD,    AM::R_D16,  R::HL,    R::None,  4,    1, 0,    "LD HL,#D16"  },
     [0x22] = { MN::LD,    AM::HLI_R,  R::HL,    R::A,     4,    1, 0,    "LD [HL+],A"  },
     [0x23] = { MN::INC,   AM::R,      R::HL,    R::None,  4,    1, 0,    "INC HL"      },
@@ -64,7 +69,7 @@ static const ctx inst[0x100] = {
     [0x2F] = { MN::CPL,   AM::None,   R::None,  R::None,  4,    1, 0,    "CPL"         },
 
 //  0x30
-    [0x30] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JL NC #D8"   },
+    [0x30] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JL NC #D8"   ,f(false, false, true, false)},
     [0x31] = { MN::LD,    AM::R_D16,  R::SP,    R::None,  4,    1, 0,    "LD SP,#D16"  },
     [0x32] = { MN::LD,    AM::HLD_R,  R::HL,    R::A,     4,    1, 0,    "LD [HL-],A"  },
     [0x33] = { MN::INC,   AM::R,      R::SP,    R::None,  4,    1, 0,    "INC SP"      },
@@ -72,7 +77,7 @@ static const ctx inst[0x100] = {
     [0x35] = { MN::DEC,   AM::MR,     R::HL,    R::None,  4,    1, 0,    "DEC [HL]"    },
     [0x36] = { MN::LD,    AM::MR_D8,  R::HL,    R::None,  4,    1, 0,    "LD [HL],#D8" },
     [0x37] = { MN::SCF,   AM::None,   R::None,  R::None,  4,    2, 0,    "SCF"         },
-    [0x38] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JR c #D8"    },
+    [0x38] = { MN::JR,    AM::D8,     R::None,  R::None,  4,    1, 0,    "JR c #D8"    ,f(false, false, false, true)},
     [0x39] = { MN::ADD,   AM::R_R,    R::HL,    R::SP,    4,    1, 0,    "ADD HL,SP"   },
     [0x3A] = { MN::LD,    AM::R_HLD,  R::A,     R::HL,    4,    1, 0,    "LD A,[HL-]"  },
     [0x3B] = { MN::DEC,   AM::R,      R::SP,    R::None,  4,    1, 0,    "DEC SP"      },
@@ -225,35 +230,35 @@ static const ctx inst[0x100] = {
     [0xBE] = { MN::CP,    AM::R_MR,   R::A,     R::HL,    4,    1, 0,    "CP A,[HL]"   },
     [0xBF] = { MN::CP,    AM::R_R,    R::A,     R::A,     4,    1, 0,    "CP A,A"      },
 
-    [0xC0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET NZ"      },
+    [0xC0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET NZ"      ,f(true, false, false, false)},
     [0xC1] = { MN::POP,   AM::R,      R::BC,    R::None,  4,    2, 0,    "POP BC"      },
-    [0xC2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP NZ A16"   },
+    [0xC2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP NZ A16"   ,f(true, false, false, false)},
     [0xC3] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP A16"      },
-    [0xC4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL NZ A16" },
+    [0xC4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL NZ A16" ,f(true, false, false, false)},
     [0xC5] = { MN::PUSH,  AM::R,      R::BC,    R::None,  4,    2, 0,    "PUSH BC"     },
     [0xC6] = { MN::ADD,   AM::R_D8,   R::A,     R::None,  4,    1, 0,    "ADD A,#D8"   },
     [0xC7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    1, 0x00, "RST 00H"     },
     [0xC8] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET Z"       },
     [0xC9] = { MN::RET,   AM::None,   R::None,  R::None,  4,    2, 0,    "RET"         },
-    [0xCA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP Z A16"    },
+    [0xCA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP Z A16"    ,f(false, true, false, false)},
     [0xCB] = { MN::CB,    AM::D8,     R::None,  R::None,  4,    2, 0,    "CB"          },
-    [0xCC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL Z A16"  },
+    [0xCC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL Z A16"  ,f(false, true, false, false)},
     [0xCD] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL "       },
     [0xCE] = { MN::ADC,   AM::R_D8,   R::A,     R::None,  4,    2, 0,    "ADC A,#D8"   },
     [0xCF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x08, "RST 08H"     },
 
 //   0xD0
-    [0xD0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET NC"      },
+    [0xD0] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET NC"      ,f(false, false, true, false)},
     [0xD1] = { MN::POP,   AM::R,      R::DE,    R::None,  4,    2, 0,    "POP DE"      },
-    [0xD2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP NC A16"   },
-    [0xD4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL NC A16" },
+    [0xD2] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP NC A16"   ,f(false, false, true, false)},
+    [0xD4] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL NC A16" ,f(false, false, true, false)},
     [0xD5] = { MN::PUSH,  AM::R,      R::DE,    R::None,  4,    2, 0,    "PUSH BC"     },
     [0xD6] = { MN::SUB,   AM::R_D8,   R::A,     R::None,  4,    2, 0,    "SUB A,#D8"   },
     [0xD7] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x00, "RST 00H"     },
-    [0xD8] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET C"       },
+    [0xD8] = { MN::RET,   AM::IMP,    R::None,  R::None,  4,    2, 0,    "RET C"       ,f(false, false, false, true)},
     [0xD9] = { MN::RETI,  AM::None,   R::None,  R::None,  4,    2, 0,    "RETI"        },
-    [0xDA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP C A16"    },
-    [0xDC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL C A16"  },
+    [0xDA] = { MN::JP,    AM::D16,    R::None,  R::None,  4,    2, 0,    "JP C A16"    ,f(false, false, false, true)},
+    [0xDC] = { MN::CALL,  AM::D16,    R::None,  R::None,  4,    2, 0,    "CALL C A16"  ,f(false, false, false, true)},
     [0xDE] = { MN::SBC,   AM::R_D8,   R::A,     R::None,  4,    2, 0,    "SBC A,#D8"   },
     [0xDF] = { MN::RST,   AM::IMP,    R::None,  R::None,  4,    2, 0x18, "RST 18H"     },
 
