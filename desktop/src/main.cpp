@@ -22,7 +22,7 @@ public:
     {
         bool success = true;
         cpu.init();
-        // success = pGraphics->init();
+        success = pGraphics->init();
         return success;
     }
 
@@ -78,16 +78,16 @@ public:
     }
 
 private:
-    Graphics          *pGraphics;
+    Graphics          *pGraphics { nullptr };
 
-    DMG01::Cart       cart    { };
-    DMG01::Registers  reg     { };
-    DMG01::Bus        bus     { &cart };
-    DMG01::Cpu        cpu     { &reg, &bus };
+    DMG01::Cart       cart       { };
+    DMG01::Registers  reg        { };
+    DMG01::Bus        bus        { &cart };
+    DMG01::Cpu        cpu        { &reg, &bus };
 
-    bool              running { false };
-    bool              paused  { false };
-    uint64_t          ticks   { 0 };
+    bool              running    { false };
+    bool              paused     { false };
+    uint64_t          ticks      { 0 };
 
 };
 
