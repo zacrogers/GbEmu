@@ -24,7 +24,7 @@ echo -e "${BLUE}*********************************${NC}"
 echo -e "${RED}**********    ${GREEN}Running   ${RED}*********${NC}"
 echo -e "${BLUE}*********************************${NC}"
 
-./GameboyEmulatorDesktop '../roms/cpu_instrs.gb'
+./GameboyEmulatorDesktop '../roms/01-special.gb'
 
 elif [[ $1 == "EMBEDDED" ]]; then
 

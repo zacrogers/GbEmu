@@ -11,30 +11,59 @@ namespace DMG01
 /* Public */
 void Registers::setFlags(const Flags *flags)
 {
+    // printf("SET FLAGS");
     word_t val = 0;
 
-    val |= ((std::uint8_t)flags->carry     << 4);
-    val |= ((std::uint8_t)flags->halfCarry << 5);
-    val |= ((std::uint8_t)flags->subtract  << 6);
-    val |= ((std::uint8_t)flags->zero      << 7);
+    val |= (((std::uint8_t)flags->carry ? 1 : 0 )    << 4);
+    val |= (((std::uint8_t)flags->subtract ? 1 : 0)  << 5);
+    val |= (((std::uint8_t)flags->halfCarry ? 1 : 0) << 6);
+    val |= (((std::uint8_t)flags->zero      ? 1 : 0) << 7);
 
-    write(Register::F, val & 0xFF00); // Lower nibble must always be zeros
+    write(Register::F, val); // Lower nibble must always be zeros
 }
 
 
 
+bool Registers::is16(const Register reg)
+{
+    switch (reg)
+    {
+    case Register::A:
+    case Register::F:
+    case Register::B:
+    case Register::C:
+    case Register::D:
+    case Register::E:
+    case Register::H:
+    case Register::L:
+        return false;
+    case Register::AF:
+    case Register::BC:
+    case Register::DE:
+    case Register::HL:
+        return true;
+
+    case Register::Count:
+    case Register::SP:
+    case Register::PC:
+    case Register::None:
+    default:
+        return false;
+    }
+
+}
 void Registers::write(const Register reg, const std::uint16_t val)
 {
     switch (reg)
     {
-    case Register::A: regs.a = (std::uint8_t)val & 0xFF; break;
-    case Register::F: regs.f = (std::uint8_t)val & 0xFF; break;
-    case Register::B: regs.b = (std::uint8_t)val & 0xFF; break;
-    case Register::C: regs.c = (std::uint8_t)val & 0xFF; break;
-    case Register::D: regs.d = (std::uint8_t)val & 0xFF; break;
-    case Register::E: regs.e = (std::uint8_t)val & 0xFF; break;
-    case Register::H: regs.h = (std::uint8_t)val & 0xFF; break;
-    case Register::L: regs.l = (std::uint8_t)val & 0xFF; break;
+    case Register::A: regs.a = (std::uint8_t)val; break;
+    case Register::F: regs.f = (std::uint8_t)val; break;
+    case Register::B: regs.b = (std::uint8_t)val; break;
+    case Register::C: regs.c = (std::uint8_t)val; break;
+    case Register::D: regs.d = (std::uint8_t)val; break;
+    case Register::E: regs.e = (std::uint8_t)val; break;
+    case Register::H: regs.h = (std::uint8_t)val; break;
+    case Register::L: regs.l = (std::uint8_t)val; break;
 
     case Register::AF:regs.af = val; break;
     case Register::BC:regs.bc = val; break;

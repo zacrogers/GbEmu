@@ -22,7 +22,7 @@ public:
     {
         bool success = true;
         cpu.init();
-        success = pGraphics->init();
+        // success = pGraphics->init();
         return success;
     }
 

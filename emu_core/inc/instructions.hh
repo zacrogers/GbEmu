@@ -95,12 +95,13 @@ typedef struct {
     std::uint8_t len;
     std::uint8_t param;
     const char*  info;
+    std::uint8_t flags;
 } ctx ;
 
 
-typedef Register R;
-typedef AddrMode AM;
-typedef Mnemonic MN;
+using R  =  Register;
+using AM =  AddrMode;
+using MN =  Mnemonic;
 
 
 const ctx fetch(opcode_t op);

@@ -7,19 +7,22 @@
 namespace DMG01
 {
 namespace MemMap {
-    static constexpr address_t busSize          = 0xFFFF;
-    static constexpr address_t bootRom          = 0x0000;
-    static constexpr address_t gameRomBank0     = 0x0000;
-    static constexpr address_t gameRomBankN     = 0x4000;
-    static constexpr address_t tileRam          = 0x8000;
-    static constexpr address_t backgroundMap    = 0x9800;
-    static constexpr address_t cartridgeRam     = 0xA000;
-    static constexpr address_t workingRam       = 0xC000;
-    static constexpr address_t echoRam          = 0xE000;
-    static constexpr address_t OAM              = 0xFE00; // object attribute memory
-    static constexpr address_t IO               = 0xFF00;
-    static constexpr address_t highRam          = 0xFF80;
-    static constexpr address_t interruptEnabled = 0xFFFF;
+    constexpr address_t busSize          = 0xFFFF;
+    constexpr address_t wramSize         = 0x2000;
+    constexpr address_t hramSize         = 0x0080;
+
+    constexpr address_t bootRom          = 0x0000;
+    constexpr address_t gameRomBank0     = 0x0000;
+    constexpr address_t gameRomBankN     = 0x4000;
+    constexpr address_t tileRam          = 0x8000;
+    constexpr address_t backgroundMap    = 0x9800;
+    constexpr address_t cartridgeRam     = 0xA000;
+    constexpr address_t workingRam       = 0xC000;
+    constexpr address_t echoRam          = 0xE000;
+    constexpr address_t OAM              = 0xFE00; // object attribute memory
+    constexpr address_t IO               = 0xFF00;
+    constexpr address_t highRam          = 0xFF80;
+    constexpr address_t interruptEnabled = 0xFFFF;
 };
 
 class Bus
@@ -85,7 +88,7 @@ private:
     word_t bus[MemMap::busSize] { };
     Cart *pCart;
 
-    std::uint8_t wram[0x2000];
-    std::uint8_t hram[0x80];
+    std::uint8_t wram[MemMap::wramSize];
+    std::uint8_t hram[MemMap::wramSize];
 };
 } // namespace DMG01

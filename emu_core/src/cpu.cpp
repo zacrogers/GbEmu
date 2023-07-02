@@ -1,4 +1,5 @@
 #include "../inc/cpu.hh"
+#include "../inc/process.hh"
 
 #include <stdio.h>
 
@@ -7,8 +8,10 @@ namespace DMG01
 
 bool Cpu::init()
 {
-    pReg->print();
-    printf("START\n\n");
+    // pReg->print();
+    // printf("START\n\n");
+            // printf("A:%02x F:%02x B:%02x C:%02x D:%02x E:%02x H:%02x L:%02x SP:%04x PC:%04x PCMEM:%02x,%02x,%02x,%02x\n",pReg->read(Register::A),pReg->read(Register::F),pReg->read(Register::B),pReg->read(Register::C),pReg->read(Register::D),pReg->read(Register::E),pReg->read(Register::H),pReg->read(Register::L),pReg->spGet(),pReg->pcGet(),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()));
+    pFlags = new Flags();
     return true;
 }
 
@@ -18,9 +21,8 @@ address_t Cpu::execute()
     auto process = Process::get(currInst.mnemonic);
     if(process != nullptr)
     {
-        process(&currInst, pReg, pBus, pFlags);
+        process(this);
     }
-    return 0;
 }
 
 void Cpu::fetchData()
@@ -44,8 +46,9 @@ void Cpu::fetchData()
 
     case Instruction::AM::MR_R:
         pReg->setOpB(pReg->read(currInst.regB));
-        pReg->memDest = pReg->read(currInst.regA);
+        pReg->memDest = pReg->read(currInst.regA) << 8;
         pReg->destIsMem = true;
+        // printf("VAL %04X: %02X\n\n",pReg->memDest,  pReg->getOpB());
 
         if (currInst.regA == Instruction::R::C)
         {
@@ -54,8 +57,11 @@ void Cpu::fetchData()
         break;
 
     case Instruction::AM::R:
-        pReg->setOpA(pReg->read(currInst.regA));
+    {
+        auto val = pReg->read(currInst.regA);
+        pReg->setOpA(val);
         break;
+    }
 
     case Instruction::AM::R_D8:
         pReg->setOpA(pReg->read(currInst.regA));
@@ -79,11 +85,15 @@ void Cpu::fetchData()
 
     case Instruction::AM::R_HLI:
     {
-        pReg->memDest = pReg->read(Register::HL);
+        auto memDest = pReg->read(Register::HL);
+        auto result = pBus->read( memDest << 8);
+
+        // printf("RESULT %04X: %02X\n\n", memDest << 8, result);
 
         pReg->setOpA(pReg->read(currInst.regA));
-        pReg->setOpB(pBus->read16(pReg->memDest));
-        pReg->write(Register::HL, pReg->memDest + 1);
+        pReg->setOpB(result);
+
+        pReg->write(Register::HL, (((memDest << 8 )+ 1) >> 8) | ((memDest << 8 )+ 1) << 8);
 
         break;
     }
@@ -204,6 +214,7 @@ void Cpu::fetchData()
 
 bool Cpu::step()
 {
+
     auto newOpcode = static_cast<opcode_t>(pBus->read(pReg->pcIncr()));
 
     if(Instruction::exists(newOpcode))
@@ -215,8 +226,10 @@ bool Cpu::step()
         }
 
         currInst   = Instruction::fetch(currOpcode);
-        pReg->print();
-        printf("PC: 0x%04x | OP: 0x%02x | %s\n", pReg->pcGet(), newOpcode, currInst.info);
+        // pReg->print();
+        // A:00 F:11 B:22 C:33 D:44 E:55 H:66 L:77 SP:8888 PC:9999 PCMEM:AA,BB,CC,DD
+        // printf("PC: 0x%04x | OP: 0x%02x | %s\n", pReg->pcGet(), newOpcode, currInst.info);
+        printf("A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n",pReg->read(Register::A),pReg->read(Register::F),pReg->read(Register::B),pReg->read(Register::C),pReg->read(Register::D),pReg->read(Register::E),pReg->read(Register::H),pReg->read(Register::L),pReg->spGet(),pReg->pcGet()-1,pBus->read(pReg->pcGet()-1),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()+1),pBus->read(pReg->pcGet()+2));
 
         fetchData();
         execute();

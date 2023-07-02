@@ -35,6 +35,8 @@ public:
     std::uint16_t getOpA() { return opA; }
     std::uint16_t getOpB() { return opB; }
 
+    bool is16(const Register reg);
+
     // to keep track if the dest of the current instruction is a memory address
     // set when fetching data, and checked executing when executing an instruction
     address_t         memDest     { 0 };
@@ -43,10 +45,10 @@ public:
 private:
     struct registers
     {
-		union { struct { std::uint8_t f, a; }; std::uint16_t af; };
-		union { struct { std::uint8_t c, b; }; std::uint16_t bc; };
-		union { struct { std::uint8_t e, d; }; std::uint16_t de; };
-		union { struct { std::uint8_t l, h; }; std::uint16_t hl; };
+		union { struct { std::uint8_t a, f; }; std::uint16_t af; };
+		union { struct { std::uint8_t b, c; }; std::uint16_t bc; };
+		union { struct { std::uint8_t d, e; }; std::uint16_t de; };
+		union { struct { std::uint8_t h, l; }; std::uint16_t hl; };
     };
 
     struct registers regs {};

@@ -9,9 +9,7 @@
 #include "logging.hh"
 #include "instructions.hh"
 #include "bus.hh"
-#include "../inc/registers.hh"
-#include "../inc/process.hh"
-#include "../inc/cart.hh"
+#include "registers.hh"
 
 namespace DMG01
 {
@@ -38,7 +36,10 @@ public:
     Registers* reg()   { return pReg; }
     Flags*     flags() { return pFlags; }
 
-private:
+    const std::uint8_t getIeRegister() { return ieRegister; }
+    void setIeRegister(std::uint8_t val) { ieRegister = val; };
+
+// private:
     Registers         *pReg       { };
     Bus               *pBus       { };
     Flags             *pFlags     { };
@@ -46,6 +47,8 @@ private:
     Instruction::ctx  currInst    { };
     opcode_t          currOpcode  { 0 };
     std::uint16_t     dataFetched { 0 };
+    bool              intrEnabled { false };
+    std::uint8_t      ieRegister  { 0 };
 
     bool              halted      { false };
     bool              stepping    { false };

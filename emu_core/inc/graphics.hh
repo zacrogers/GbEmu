@@ -9,6 +9,7 @@ typedef struct {
     std::uint8_t r, g, b, a;
 } colour_vals_t;
 
+
 enum class Colour
 {
     red, green, blue, gameboyGreen

@@ -1,14 +1,5 @@
 #include "../inc/process.hh"
-
-#include "../inc/cpu.hh"
-
 #include "etl/map.h"
-
-
-void kingOfTheCastle(DMG01::Cpu* cpu)
-{
-    cpu->bus()->read16(0xFF);
-}
 
 
 namespace DMG01
@@ -16,287 +7,321 @@ namespace DMG01
 namespace Process
 {
 
-void stackPush8(Registers *reg, Bus *bus, std::uint8_t val)
+void stackPush8(Cpu* cpu, std::uint8_t val)
 {
-    bus->write(reg->spDecrement(), val);
+    cpu->bus()->write(cpu->reg()->spDecrement(), val);
 }
 
 
-void stackPush16(Registers *reg, Bus *bus, std::uint16_t val)
+void stackPush16(Cpu* cpu, std::uint16_t val)
 {
-    bus->write(reg->spDecrement(), (val >> 8) & 0xFF);
-    bus->write(reg->spDecrement(), val & 0xFF);
+    cpu->bus()->write(cpu->reg()->spDecrement(), (val >> 8) & 0xFF);
+    cpu->bus()->write(cpu->reg()->spDecrement(), val & 0xFF);
 }
 
-std::uint8_t stackPop8(Registers *reg, Bus *bus)
+std::uint8_t stackPop8(Cpu* cpu)
 {
-    return bus->read(reg->spIncrement());
+    return cpu->bus()->read(cpu->reg()->spIncrement());
 }
 
 
-std::uint16_t stackPop16(Registers *reg, Bus *bus)
+std::uint16_t stackPop16(Cpu* cpu)
 {
-    auto hi = bus->read(reg->spIncrement());
-    auto lo = bus->read(reg->spIncrement());
+    auto hi = cpu->bus()->read(cpu->reg()->spIncrement());
+    auto lo = cpu->bus()->read(cpu->reg()->spIncrement());
 
     return (hi << 8) | lo;
 }
 
-static void gotoAddress(Registers *reg, Bus *bus, address_t addr, bool pushPc)
+bool check_cond(Cpu *cpu)
 {
-    // if (check_cond(ctx)) {
+    return true;
+}
+
+static void gotoAddress(Cpu* cpu, address_t addr, bool pushPc)
+{
+    if (check_cond(cpu))
+    {
         if (pushPc)
         {
             // emu_cycles(2);
-            stackPush16(reg, bus, reg->pcGet());
+            stackPush16(cpu, cpu->reg()->pcGet());
         }
 
-        reg->pcSet(addr);
+        cpu->reg()->pcSet(addr);
         // emu_cycles(1);
-    // }
+    }
 }
 
 
 
-static void nop(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void nop(Cpu* cpu)
 {
 }
 
 
-static void ld(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void ld(Cpu* cpu)
 {
-    if(reg->destIsMem)         //LD (BC), A for instance...
+    if(cpu->reg()->destIsMem)         //LD (BC), A for instance...
     {
-        reg->write(inst->regB, reg->getOpA());
+        cpu->bus()->write(cpu->reg()->memDest, cpu->reg()->getOpA());
         return;
+    }
+    auto result = cpu->reg()->getOpB();
+
+    if(cpu->reg()->is16(cpu->currInst.regA))
+    {
+        cpu->reg()->write(cpu->currInst.regA , ((result >> 8) &0xFF) | ((result & 0xFF) << 8));
+    }
+    else
+    {
+        cpu->reg()->write(cpu->currInst.regA , result);
     }
 
 }
 
 
-static void inc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void inc(Cpu* cpu)
 {
-    std::uint16_t result = reg->getOpA() + 1;
+    std::uint16_t result = cpu->reg()->getOpA() + 1;
+    cpu->reg()->write(cpu->currInst.regA, result);
 
-    flags->zero  = (result == 0 )   ? true : false;
-    flags->carry = (result > 0xFF ) ? true : false;
+    cpu->pFlags->carry     = true;
+    cpu->pFlags->halfCarry = false;
+    cpu->pFlags->zero      = (result == 0);
+    cpu->pFlags->subtract  = false;
 
-    reg->setFlags(flags);
-
-    // printf("REG A: %D, 0x%04x\n\n", static_cast<int>(inst->regA), result);
-    reg->write(inst->regA, result);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void dec(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void dec(Cpu* cpu)
 {
-    std::uint16_t result = reg->getOpA() - 1;
+    std::uint16_t result = cpu->reg()->getOpA() - 1;
 
-    flags->zero  = (result == 0 )   ? true : false;
-    flags->carry = (result > 0xFF ) ? true : false;
+    cpu->pFlags->zero  = (result == 0 )   ? true : false;
+    cpu->pFlags->carry = (result > 0xFF ) ? true : false;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 
-    // printf("REG A: %D, 0x%04x\n\n", static_cast<int>(inst->regA), result);
-    reg->write(inst->regA, result);
+    // printf("REG A: %D, 0x%04x\n\n", static_cast<int>(cpu->currInst.regA), result);
+    cpu->reg()->write(cpu->currInst.regA, result);
 }
 
 
-static void rlca(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rlca(Cpu* cpu)
 {
-    uint8_t u = reg->read(Register::A);
+    uint8_t u = cpu->reg()->read(Register::A);
     bool c = (u >> 7) & 1;
 
     u = (u << 1) | c;
-    reg->write(Register::A, u);
+    cpu->reg()->write(Register::A, u);
 
-    flags->zero      = 0;
-    flags->subtract  = 0;
-    flags->halfCarry = 0;
-    flags->carry     = c;
+    cpu->pFlags->zero      = 0;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 0;
+    cpu->pFlags->carry     = c;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void add(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void add(Cpu* cpu)
 {
-    std::uint16_t result = reg->getOpA() + reg->getOpB();
+    std::uint16_t result = cpu->reg()->getOpA() + cpu->reg()->getOpB();
 
-    flags->zero  = (result == 0 )   ? true : false;
-    flags->carry = (result > 0xFF ) ? true : false;
+    cpu->pFlags->zero  = (result == 0 )   ? true : false;
+    cpu->pFlags->carry = (result > 0xFF ) ? true : false;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 
-    reg->write(inst->regA, static_cast<std::uint8_t>(result & 0xFF));
+    cpu->reg()->write(cpu->currInst.regA, static_cast<std::uint8_t>(result & 0xFF));
 }
 
 
-static void rrca(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rrca(Cpu* cpu)
 {
-    uint8_t val = reg->read(Register::A);
+    uint8_t val = cpu->reg()->read(Register::A);
     uint8_t b = val & 1;
 
-    reg->write(Register::A, val >>= 1);
-    reg->write(Register::A, val |= (b << 7));
+    cpu->reg()->write(Register::A, val >>= 1);
+    cpu->reg()->write(Register::A, val |= (b << 7));
 
-    flags->zero      = 0;
-    flags->subtract  = 0;
-    flags->halfCarry = 0;
-    flags->carry     = b;
+    cpu->pFlags->zero      = 0;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 0;
+    cpu->pFlags->carry     = b;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void stop(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void stop(Cpu* cpu)
 {
 }
 
 
-static void rla(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rla(Cpu* cpu)
+{
+}
+
+int tosigned(unsigned x)
+{
+    if (x <= INT_MAX)
+        return static_cast<int>(x);
+
+    if (x >= INT_MIN)
+        return static_cast<int>(x - INT_MIN) + INT_MIN;
+
+    throw x; // Or whatever else you like
+}
+static void jr(Cpu* cpu)
+{
+    // printf("PC: %04X, A: %i\n\n",cpu->reg()->pcGet(), static_cast<int>(cpu->reg()->getOpA()));
+    // int vS = static_cast<int>(cpu->reg()->pcGet()) + static_cast<int>(cpu->reg()->getOpA());
+    // printf("VS: %02X\n", vS);
+
+    if(tosigned(cpu->reg()->getOpA()) > 0)
+    {
+        // printf("dgfgfgf");
+    }
+    gotoAddress(cpu, tosigned(cpu->reg()->pcGet())+ tosigned(cpu->reg()->getOpA()), false);
+}
+
+
+static void rra(Cpu* cpu)
 {
 }
 
 
-static void jr(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void daa(Cpu* cpu)
 {
 }
 
 
-static void rra(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void cpl(Cpu* cpu)
 {
 }
 
 
-static void daa(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void scf(Cpu* cpu)
+{
+    cpu->pFlags->zero      = -1;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 0;
+    cpu->pFlags->carry     = 1;
+
+    cpu->reg()->setFlags(cpu->pFlags);
+}
+
+
+static void ccf(Cpu* cpu)
 {
 }
 
 
-static void cpl(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
-{
-}
-
-
-static void scf(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
-{
-    flags->zero      = -1;
-    flags->subtract  = 0;
-    flags->halfCarry = 0;
-    flags->carry     = 1;
-
-    reg->setFlags(flags);
-}
-
-
-static void ccf(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
-{
-}
-
-
-static void halt(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void halt(Cpu* cpu)
 {
     // cpu->setHalted(true);
 }
 
 
-static void adc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void adc(Cpu* cpu)
 {
 }
 
 
-static void sub(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void sub(Cpu* cpu)
 {
-    auto opA = static_cast<std::uint16_t>(reg->read(inst->regA));
-    auto opB = static_cast<std::uint16_t>(reg->read(inst->regB));
+    auto opA = static_cast<std::uint16_t>(cpu->reg()->read(cpu->currInst.regA));
+    auto opB = static_cast<std::uint16_t>(cpu->reg()->read(cpu->currInst.regB));
 
     std::uint16_t result = opA - opB;
 
-    flags->zero  = (result == 0 )   ? true : false;
-    flags->carry = (result > 0xFF ) ? true : false;
+    cpu->pFlags->zero  = (result == 0 )   ? true : false;
+    cpu->pFlags->carry = (result > 0xFF ) ? true : false;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 
-    reg->write(inst->regA, static_cast<std::uint8_t>(result & 0xFF));
+    cpu->reg()->write(cpu->currInst.regA, static_cast<std::uint8_t>(result & 0xFF));
 }
 
 
-static void sbc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void sbc(Cpu* cpu)
 {
 }
 
 
-static void _and(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void _and(Cpu* cpu)
 {
-    reg->write(inst->regA, reg->read(inst->regA) & reg->read(inst->regB));
+    cpu->reg()->write(cpu->currInst.regA, cpu->reg()->read(cpu->currInst.regA) & cpu->reg()->read(cpu->currInst.regB));
 
-    flags->zero      = 0;
-    flags->subtract  = 0;
-    flags->halfCarry = 1;
-    flags->carry     = 0;
+    cpu->pFlags->zero      = 0;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 1;
+    cpu->pFlags->carry     = 0;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void _xor(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void _xor(Cpu* cpu)
 {
-    reg->write(inst->regA, reg->read(inst->regA) ^ reg->read(inst->regB));
+    cpu->reg()->write(cpu->currInst.regA, cpu->reg()->read(cpu->currInst.regA) ^ cpu->reg()->read(cpu->currInst.regB));
 
-    flags->zero      = 0;
-    flags->subtract  = 0;
-    flags->halfCarry = 0;
-    flags->carry     = 0;
+    cpu->pFlags->zero      = 0;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 0;
+    cpu->pFlags->carry     = 0;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void _or(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void _or(Cpu* cpu)
 {
-    reg->write(inst->regA, reg->read(inst->regA) | reg->read(inst->regB));
+    cpu->reg()->write(cpu->currInst.regA, cpu->reg()->read(cpu->currInst.regA) | cpu->reg()->read(cpu->currInst.regB));
 
-    flags->zero      = 0;
-    flags->subtract  = 0;
-    flags->halfCarry = 0;
-    flags->carry     = 0;
+    cpu->pFlags->zero      = 0;
+    cpu->pFlags->subtract  = 0;
+    cpu->pFlags->halfCarry = 0;
+    cpu->pFlags->carry     = 0;
 
-    reg->setFlags(flags);
+    cpu->reg()->setFlags(cpu->pFlags);
 }
 
 
-static void cp(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void cp(Cpu* cpu)
 {
 }
 
 
-static void pop(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void pop(Cpu* cpu)
 {
-    auto val = stackPop16(reg, bus);
-    reg->write(inst->regA, val);
+    auto val = stackPop16(cpu);
+    cpu->reg()->write(cpu->currInst.regA, val);
 
-    if (inst->regA == Register::AF)
+    if (cpu->currInst.regA == Register::AF)
     {
-        reg->write(inst->regA, val & 0xFFF0);
+        cpu->reg()->write(cpu->currInst.regA, val & 0xFFF0);
     }
 }
 
 
-static void jp(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void jp(Cpu* cpu)
 {
-    gotoAddress(reg, bus, (address_t)reg->getOpA(), false);
+    gotoAddress(cpu, (address_t)cpu->reg()->getOpA(), false);
 }
 
 
-static void push(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void push(Cpu* cpu)
 {
 }
 
 
-static void ret(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void ret(Cpu* cpu)
 {
-    // if (ctx->cur_inst->cond != CT_NONE)
+    // if (ctx->cur_cpu->currInst.cond != CT_NONE)
     // {
     //     emu_cycles(1);
     // }
@@ -308,7 +333,7 @@ static void ret(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
         // emu_cycles(1);
 
         // u16 n = (hi << 8) | lo;
-        reg->pcSet(stackPop16(reg, bus));
+        cpu->reg()->pcSet(stackPop16(cpu));
         // ctx->regs.pc = n;
 
         // emu_cycles(1);
@@ -316,107 +341,107 @@ static void ret(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *f
 }
 
 
-static void cb(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void cb(Cpu* cpu)
 {
 }
 
 
-static void call(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void call(Cpu* cpu)
 {
 }
 
 
-static void reti(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void reti(Cpu* cpu)
 {
-    // ctx->int_master_enabled = true;
-
-    ret(inst, reg, bus, flags);
+    cpu->intrEnabled = true;
+    ret(cpu);
 }
 
 
-static void ldh(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
-{
-}
-
-
-static void jphl(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void ldh(Cpu* cpu)
 {
 }
 
 
-static void di(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void jphl(Cpu* cpu)
 {
 }
 
 
-static void ei(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void di(Cpu* cpu)
+{
+    cpu->intrEnabled = false;
+}
+
+
+static void ei(Cpu* cpu)
 {
 }
 
 
-static void rst(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rst(Cpu* cpu)
 {
 }
 
 
-static void err(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void err(Cpu* cpu)
 {
 }
 
 //CB instructions...
 
 
-static void rlc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rlc(Cpu* cpu)
 {
 }
 
 
-static void rrc(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rrc(Cpu* cpu)
 {
 }
 
 
-static void rl(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rl(Cpu* cpu)
 {
 }
 
 
-static void rr(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void rr(Cpu* cpu)
 {
 }
 
 
-static void sla(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void sla(Cpu* cpu)
 {
 }
 
 
-static void sra(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void sra(Cpu* cpu)
 {
 }
 
 
-static void swap(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void swap(Cpu* cpu)
 {
 }
 
 
-static void srl(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void srl(Cpu* cpu)
 {
 }
 
 
-static void bit(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void bit(Cpu* cpu)
 {
 }
 
 
-static void res(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void res(Cpu* cpu)
 {
 }
 
 
-static void set(const Instruction::ctx *inst, Registers *reg, Bus *bus, Flags *flags)
+static void set(Cpu* cpu)
 {
 }
 

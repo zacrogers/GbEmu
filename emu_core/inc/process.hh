@@ -2,18 +2,17 @@
 
 #include <functional>
 
-#include "../inc/common.hh"
-#include "../inc/logging.hh"
-#include "../inc/instructions.hh"
-#include "../inc/bus.hh"
-#include "../inc/registers.hh"
+#include "common.hh"
+#include "instructions.hh"
+#include "cpu.hh"
+
 
 namespace DMG01
 {
 namespace Process
 {
 
-typedef std::function<void(const Instruction::ctx*, Registers*, Bus*, Flags*)> callback;
+using callback = std::function<void(Cpu *)>;
 callback get(Instruction::MN mnemonic);
 
 };

@@ -14,15 +14,18 @@ typedef struct  {
 class GraphicsDesktop: public Graphics
 {
 public:
-    static const constexpr std::uint16_t screenWidth     = 500;
-    static const constexpr std::uint16_t screenHeight    = 500;
-    static const constexpr std::uint16_t debugPanelWidth = 280;
+    static const constexpr std::uint16_t screenWidth      { 500 };
+    static const constexpr std::uint16_t screenHeight     { 500 };
+    static const constexpr std::uint16_t debugPanelWidth  { 280 };
+
+    static const constexpr SDL_Color debugBgcolor = { 0, 0, 255 };
+    static const constexpr SDL_Color debugFgcolor = { 255, 255, 255 };
 
     GraphicsDesktop(){}
 
     void drawDebugPanel()
     {
-        TTF_Font * font = TTF_OpenFont("fonts/arial.ttf", 20);
+        TTF_Font* font = TTF_OpenFont("fonts/arial.ttf", 20);
 
         if(!font)
         {
@@ -32,12 +35,7 @@ public:
 
         const int lineHeight = 25;
         int nLines = int(screenHeight/lineHeight);
-        SDL_Color bgcolor = {0, 0, 255};
-        SDL_Color fgcolor = { 255, 255, 255 };
-
         char* debugInfoString = "0123456789ABC";
-
-
 
         SDL_Rect     rects[nLines];
         SDL_Texture* textures[nLines];
@@ -45,13 +43,13 @@ public:
 
         for(int i = 0; i < nLines; ++i)
         {
-            surfaces[i] = TTF_RenderText_Shaded_Wrapped(font, debugInfoString, fgcolor, bgcolor, 150);
+            surfaces[i] = TTF_RenderText_Shaded_Wrapped(font, debugInfoString, debugFgcolor, debugBgcolor, 150);
             textures[i] = SDL_CreateTextureFromSurface(renderer, surfaces[i]);
 
-            rects[i].x = screenWidth;  //controls the rect's x coordinate
+            rects[i].x = screenWidth;       // controls the rect's x coordinate
             rects[i].y = int(lineHeight*i); // controls the rect's y coordinte
-            rects[i].w = debugPanelWidth; // controls the width of the rect
-            rects[i].h = lineHeight; // controls the height of the rect
+            rects[i].w = debugPanelWidth;   // controls the width of the rect
+            rects[i].h = lineHeight;        // controls the height of the rect
 
             SDL_RenderCopy(renderer, textures[i], NULL, &rects[i]);
         }
@@ -65,8 +63,8 @@ public:
         }
 
         SDL_RenderPresent(renderer);
-
     }
+
 
     bool init() override
     {
@@ -79,7 +77,6 @@ public:
         {
             printf( "TTF could not initialize! TTF_Error: %s\n", TTF_GetError() );
             return false;
-
         }
 
         printf("SDL INIT\n");
@@ -107,8 +104,6 @@ public:
         // SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
         drawDebugPanel();
-
-
 
         SDL_Event event;
         bool quit = false;
