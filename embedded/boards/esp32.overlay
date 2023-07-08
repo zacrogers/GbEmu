@@ -11,15 +11,12 @@
 };
 
 &spi2 {
-	status = "okay";
-	cs-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;	/* D10 */
-
 	st7735r_st7735r_ada_160x128: st7735r@0 {
 		compatible = "sitronix,st7735r";
 		spi-max-frequency = <20000000>;
 		reg = <0>;
-		cmd-data-gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;	/* D9 */
-		reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;	/* D8 */
+		cmd-data-gpios = <&gpio0 27 GPIO_ACTIVE_LOW>;	/* D9 */
+		reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;	/* D8 */
 		width = <160>;
 		height = <128>;
 		x-offset = <0>;
@@ -37,5 +34,19 @@
 		frmctr3 = [01 2c 2d 01 2c 2d];
 		gamctrp1 = [02 1c 07 12 37 32 29 2d 29 25 2b 39 00 01 03 10];
 		gamctrn1 = [03 1d 07 06 2e 2c 29 2d 2e 2e 37 3f 00 00 02 10];
+	};
+};
+
+&pinctrl {
+	spim2_default: spim2_default {
+		group1 {
+			pinmux = <SPIM2_MISO_GPIO12>,
+				 <SPIM2_SCLK_GPIO14>,
+				 <SPIM2_CSEL_GPIO15>;
+		};
+		group2 {
+			pinmux = <SPIM2_MOSI_GPIO13>;
+			output-low;
+		};
 	};
 };
