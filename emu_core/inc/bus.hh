@@ -9,6 +9,7 @@ namespace DMG01
 namespace MemMap {
     constexpr address_t busSize          = 0xFFFF;
     constexpr address_t wramSize         = 0x2000;
+    constexpr address_t vramSize         = 0x2000;
     constexpr address_t hramSize         = 0x0080;
 
     constexpr address_t bootRom          = 0x0000;
@@ -33,7 +34,7 @@ Bus(Cart* cart) : pCart(cart){}
 word_t read(address_t address)
 {
     if      (address < MemMap::tileRam)      { return pCart->read(address); }         /* ROM Data */
-    else if (address < MemMap::cartridgeRam) {  }                                     /* Char/Map Data */
+    else if (address < MemMap::cartridgeRam) { return vramRead(address); }            /* Char/Map Data */
     else if (address < MemMap::workingRam)   { return pCart->read(address); }         /* Cartridge RAM */
     else if (address < MemMap::echoRam)      { return wramRead(address);  }           /* WRAM (Working RAM) */
     else if (address < MemMap::OAM)          { return 0; }                            /* reserved echo ram... */
@@ -77,11 +78,21 @@ std::uint8_t hramRead(address_t address) {
     return hram[address];
 }
 
-void hramWrite(address_t address, std::uint8_t value) {
-    address -= 0xFF80;
-
-    hram[address] = value;
+void hramWrite(address_t address, std::uint8_t value)
+{
+    hram[address - 0xFF80] = value;
 }
+
+void vramWrite(address_t address, std::uint8_t value)
+{
+    vram[address - 0x8000] = value;
+}
+
+std::uint8_t vramRead(address_t address)
+{
+    return vram[address - 0x8000];
+}
+
 
 
 private:
@@ -89,6 +100,7 @@ private:
     Cart *pCart;
 
     std::uint8_t wram[MemMap::wramSize];
-    std::uint8_t hram[MemMap::wramSize];
+    std::uint8_t vram[MemMap::vramSize];
+    std::uint8_t hram[MemMap::hramSize];
 };
 } // namespace DMG01
