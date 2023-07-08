@@ -69,7 +69,7 @@ static uint16_t get_rgb565_color(enum corner corner, uint8_t grey)
 	return 0x8D61;
 }
 
-int tile_size = 32;
+int tile_size = 8;
 
 
 static void fill_buffer_rgb565(enum corner corner, uint8_t grey, uint8_t *buf, size_t buf_size)
@@ -77,23 +77,48 @@ static void fill_buffer_rgb565(enum corner corner, uint8_t grey, uint8_t *buf, s
 	uint16_t color = get_rgb565_color(corner, grey);
 
 	bool t = false;
+	int row = 0;
+	bool rr = false;
 
 	for (size_t idx = 0; idx < buf_size; idx += 2)
 	{
 		if((idx % tile_size) == 0)
 		{
 			t = !t;
+
+			if((++row % (tile_size*30)) == 0)
+			{
+				rr = !rr;
+				row=0;
+			}
 		}
 
 		if(t)
 		{
-			*(buf + idx + 0) = (0x8D61 >> 8) & 0xFFu;
-			*(buf + idx + 1) = (0x8D61 >> 0) & 0xFFu;
+			if(rr)
+			{
+				*(buf + idx + 0) = (0x8D61 >> 8) & 0xFFu;
+				*(buf + idx + 1) = (0x8D61 >> 0) & 0xFFu;
+			}
+			else
+			{
+				*(buf + idx + 0) = (0x07E0u >> 8) & 0xFFu;
+				*(buf + idx + 1) = (0x07E0u >> 0) & 0xFFu;
+
+			}
 		}
 		else
 		{
-			*(buf + idx + 0) = (0x7461 >> 8) & 0xFFu;
-			*(buf + idx + 1) = (0x7461 >> 0) & 0xFFu;
+			if(rr)
+			{
+				*(buf + idx + 0) = (0x7461 >> 8) & 0xFFu;
+				*(buf + idx + 1) = (0x7461 >> 0) & 0xFFu;
+			}
+			else
+			{
+				*(buf + idx + 0) = (0xF800u >> 8) & 0xFFu;
+				*(buf + idx + 1) = (0xF800u >> 0) & 0xFFu;
+			}
 		}
 	}
 }
