@@ -43,57 +43,7 @@ static void posix_exit_main(int exit_code)
 }
 #endif
 
-static void fill_buffer_argb8888(enum corner corner, uint8_t grey, uint8_t *buf,
-				 size_t buf_size)
-{
-	uint32_t color = 0;
-
-	switch (corner) {
-	case TOP_LEFT:
-		color = 0x00FF0000u;
-		break;
-	case TOP_RIGHT:
-		color = 0x0000FF00u;
-		break;
-	case BOTTOM_RIGHT:
-		color = 0x000000FFu;
-		break;
-	case BOTTOM_LEFT:
-		color = grey << 16 | grey << 8 | grey;
-		break;
-	}
-
-	for (size_t idx = 0; idx < buf_size; idx += 4) {
-		*((uint32_t *)(buf + idx)) = color;
-	}
-}
-
-static void fill_buffer_rgb888(enum corner corner, uint8_t grey, uint8_t *buf,
-			       size_t buf_size)
-{
-	uint32_t color = 0;
-
-	switch (corner) {
-	case TOP_LEFT:
-		color = 0x00FF0000u;
-		break;
-	case TOP_RIGHT:
-		color = 0x0000FF00u;
-		break;
-	case BOTTOM_RIGHT:
-		color = 0x000000FFu;
-		break;
-	case BOTTOM_LEFT:
-		color = grey << 16 | grey << 8 | grey;
-		break;
-	}
-
-	for (size_t idx = 0; idx < buf_size; idx += 3) {
-		*(buf + idx + 0) = color >> 16;
-		*(buf + idx + 1) = color >> 8;
-		*(buf + idx + 2) = color >> 0;
-	}
-}
+// Rgb565 = (((red & 0b11111000)<<8) + ((green & 0b11111100)<<3) + (blue>>3))
 
 static uint16_t get_rgb565_color(enum corner corner, uint8_t grey)
 {
@@ -116,45 +66,36 @@ static uint16_t get_rgb565_color(enum corner corner, uint8_t grey)
 		color = grey_5bit << 11 | grey_5bit << (5 + 1) | grey_5bit;
 		break;
 	}
-	return color;
+	return 0x8D61;
 }
 
-static void fill_buffer_rgb565(enum corner corner, uint8_t grey, uint8_t *buf,
-			       size_t buf_size)
+int tile_size = 32;
+
+
+static void fill_buffer_rgb565(enum corner corner, uint8_t grey, uint8_t *buf, size_t buf_size)
 {
 	uint16_t color = get_rgb565_color(corner, grey);
 
-	for (size_t idx = 0; idx < buf_size; idx += 2) {
-		*(buf + idx + 0) = (color >> 8) & 0xFFu;
-		*(buf + idx + 1) = (color >> 0) & 0xFFu;
+	bool t = false;
+
+	for (size_t idx = 0; idx < buf_size; idx += 2)
+	{
+		if((idx % tile_size) == 0)
+		{
+			t = !t;
+		}
+
+		if(t)
+		{
+			*(buf + idx + 0) = (0x8D61 >> 8) & 0xFFu;
+			*(buf + idx + 1) = (0x8D61 >> 0) & 0xFFu;
+		}
+		else
+		{
+			*(buf + idx + 0) = (0x7461 >> 8) & 0xFFu;
+			*(buf + idx + 1) = (0x7461 >> 0) & 0xFFu;
+		}
 	}
-}
-
-static void fill_buffer_bgr565(enum corner corner, uint8_t grey, uint8_t *buf,
-			       size_t buf_size)
-{
-	uint16_t color = get_rgb565_color(corner, grey);
-
-	for (size_t idx = 0; idx < buf_size; idx += 2) {
-		*(uint16_t *)(buf + idx) = color;
-	}
-}
-
-static void fill_buffer_mono(enum corner corner, uint8_t grey, uint8_t *buf,
-			     size_t buf_size)
-{
-	uint16_t color;
-
-	switch (corner) {
-	case BOTTOM_LEFT:
-		color = (grey & 0x01u) ? 0xFFu : 0x00u;
-		break;
-	default:
-		color = 0;
-		break;
-	}
-
-	memset(buf, color, buf_size);
 }
 
 int main(void)
@@ -202,6 +143,9 @@ int main(void)
 	rect_w *= scale;
 	rect_h *= scale;
 
+	rect_w = 160;
+	rect_h = 128;
+
 	if (capabilities.screen_info & SCREEN_INFO_EPD) {
 		grey_scale_sleep = 10000;
 	} else {
@@ -215,27 +159,16 @@ int main(void)
 	}
 
 	switch (capabilities.current_pixel_format) {
-	case PIXEL_FORMAT_ARGB_8888:
-		fill_buffer_fnc = fill_buffer_argb8888;
-		buf_size *= 4;
-		break;
-	case PIXEL_FORMAT_RGB_888:
-		fill_buffer_fnc = fill_buffer_rgb888;
-		buf_size *= 3;
-		break;
 	case PIXEL_FORMAT_RGB_565:
+		LOG_ERR("RGB565");
 		fill_buffer_fnc = fill_buffer_rgb565;
 		buf_size *= 2;
 		break;
+	case PIXEL_FORMAT_ARGB_8888:
+	case PIXEL_FORMAT_RGB_888:
 	case PIXEL_FORMAT_BGR_565:
-		fill_buffer_fnc = fill_buffer_bgr565;
-		buf_size *= 2;
-		break;
 	case PIXEL_FORMAT_MONO01:
 	case PIXEL_FORMAT_MONO10:
-		fill_buffer_fnc = fill_buffer_mono;
-		buf_size /= 8;
-		break;
 	default:
 		LOG_ERR("Unsupported pixel format. Aborting sample.");
 #ifdef CONFIG_ARCH_POSIX
@@ -274,16 +207,6 @@ int main(void)
 	fill_buffer_fnc(TOP_LEFT, 0, buf, buf_size);
 	x = 0;
 	y = 0;
-	display_write(display_dev, x, y, &buf_desc, buf);
-
-	fill_buffer_fnc(TOP_RIGHT, 0, buf, buf_size);
-	x = capabilities.x_resolution - rect_w;
-	y = 0;
-	display_write(display_dev, x, y, &buf_desc, buf);
-
-	fill_buffer_fnc(BOTTOM_RIGHT, 0, buf, buf_size);
-	x = capabilities.x_resolution - rect_w;
-	y = capabilities.y_resolution - rect_h;
 	display_write(display_dev, x, y, &buf_desc, buf);
 
 	display_blanking_off(display_dev);
