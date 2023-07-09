@@ -35,6 +35,7 @@ std::uint16_t stackPop16(Cpu* cpu)
 
 bool check_cond(Cpu *cpu)
 {
+    // if(cpu->currInst)
     return true;
 }
 
@@ -177,15 +178,7 @@ int tosigned(unsigned x)
 }
 static void jr(Cpu* cpu)
 {
-    // printf("PC: %04X, A: %i\n\n",cpu->reg()->pcGet(), static_cast<int>(cpu->reg()->getOpA()));
-    // int vS = static_cast<int>(cpu->reg()->pcGet()) + static_cast<int>(cpu->reg()->getOpA());
-    // printf("VS: %02X\n", vS);
-
-    if(tosigned(cpu->reg()->getOpA()) > 0)
-    {
-        // printf("dgfgfgf");
-    }
-    gotoAddress(cpu, tosigned(cpu->reg()->pcGet())+ tosigned(cpu->reg()->getOpA()), false);
+    gotoAddress(cpu, cpu->reg()->pcGet() + static_cast<std::int8_t>((cpu->reg()->getOpA())), false);
 }
 
 
