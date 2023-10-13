@@ -8,6 +8,17 @@
 	chosen {
 		zephyr,display = &st7735r_st7735r_ada_160x128;
 	};
+	buttons {
+		compatible = "gpio-keys";
+		a_button: a_button {
+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+			label = "A Button";
+		};
+		b_button: b_button {
+			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+			label = "B Button";
+		};
+	};
 };
 
 &spi2 {
@@ -41,8 +52,8 @@
 	spim2_default: spim2_default {
 		group1 {
 			pinmux = <SPIM2_MISO_GPIO12>,
-				 <SPIM2_SCLK_GPIO14>,
-				 <SPIM2_CSEL_GPIO15>;
+					<SPIM2_SCLK_GPIO14>,
+					<SPIM2_CSEL_GPIO15>;
 		};
 		group2 {
 			pinmux = <SPIM2_MOSI_GPIO13>;

@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.20.0)
-
-
-# set(LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/modules/etl)
+project(gb_emu)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 find_package(etl REQUIRED)
-project(gb_emu)
 
 FILE(GLOB app_sources src/*.cpp)
 target_sources(app PRIVATE ${app_sources})
