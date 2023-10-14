@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20.0)
-project(gb_emu)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 find_package(etl REQUIRED)
 
 FILE(GLOB app_sources src/*.cpp)
 target_sources(app PRIVATE ${app_sources})
+project(gb_emu)
 
 zephyr_include_directories(../modules/etl)
 # include_directories(
