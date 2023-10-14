@@ -1,76 +1,8 @@
 #pragma once
 
-#include "etl/function.h"
-#include "etl/callback_service.h"
-
 #include "controls.hh"
 #include "display.hh"
-
-
-class StateBase
-{
-public:
-    enum class State { READY_TO_CLOSE, PREPARING_TO_CLOSE };
-
-    virtual ~StateBase() {};
-
-    virtual Display::frame get_frame() = 0;
-
-    bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
-    bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
-
-    void process_input(Controls::InputType& control)
-    {
-        switch (control)
-        {
-        case Controls::InputType::A:     handle_a_button();     break;
-        case Controls::InputType::B:     handle_b_button();     break;
-        case Controls::InputType::UP:    handle_up_button();    break;
-        case Controls::InputType::DOWN:  handle_down_button();  break;
-        case Controls::InputType::LEFT:  handle_left_button();  break;
-        case Controls::InputType::RIGHT: handle_right_button(); break;
-
-        // TODO: maybe use a joystick and implement these
-        case Controls::InputType::UL:
-        case Controls::InputType::UR:
-        case Controls::InputType::DL:
-        case Controls::InputType::DR:
-            break;
-
-        case Controls::InputType::NUM_INPUTS:
-        case Controls::InputType::NONE:
-        default:
-            break;
-        }
-    }
-
-private:
-    virtual void handle_a_button     () = 0;
-    virtual void handle_b_button     () = 0;
-    virtual void handle_up_button    () = 0;
-    virtual void handle_down_button  () = 0;
-    virtual void handle_left_button  () = 0;
-    virtual void handle_right_button () = 0;
-
-    State current_state { };
-};
-
-class MenuState: public StateBase
-{
-public:
-    MenuState(){};
-    ~MenuState() override {};
-
-    Display::frame get_frame           () override  { return 0; }
-
-private:
-    void           handle_a_button     () override {};
-    void           handle_b_button     () override {};
-    void           handle_up_button    () override {};
-    void           handle_down_button  () override {};
-    void           handle_left_button  () override {};
-    void           handle_right_button () override {};
-};
+#include "state.hh"
 
 
 class Engine
@@ -131,6 +63,7 @@ public:
             {
                 delete p_current_state;
                 p_current_state = tmp;
+                current_state = new_state;
             }
         }
     }
@@ -139,11 +72,11 @@ public:
 
 private:
     // Subsystem pointers
-    Controls*    p_controls      { nullptr };
-    Display*     p_display       { nullptr };
+    Controls*     p_controls      { nullptr };
+    Display*      p_display       { nullptr };
 
-    State        current_state   { State::MENU };
-    StateBase*   p_current_state { nullptr };
+    Engine::State current_state   { State::MENU };
+    StateBase*    p_current_state { nullptr };
 };
 
 
