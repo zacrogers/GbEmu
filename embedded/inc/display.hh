@@ -23,9 +23,15 @@ public:
     Display(/* args */);
     ~Display();
 
-    frame draw_frame();
+
+
+    void draw_frame(frame);
 
 private:
+    void init_display();
+    void blank_screen();
+
+
 	size_t                           x;
 	size_t                           y;
 	size_t                           rect_w;

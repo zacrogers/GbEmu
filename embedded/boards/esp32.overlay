@@ -11,11 +11,11 @@
 	buttons {
 		compatible = "gpio-keys";
 		a_button: a_button {
-			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio0 16 GPIO_ACTIVE_LOW GPIO_PULL_UP>;
 			label = "A Button";
 		};
 		b_button: b_button {
-			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio0 17 GPIO_ACTIVE_LOW GPIO_PULL_UP>;
 			label = "B Button";
 		};
 	};

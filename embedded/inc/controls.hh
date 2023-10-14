@@ -21,7 +21,7 @@ class Controls
 public:
     static const size_t INPUT_QUEUE_SIZE = 0xFF;
 
-    enum class InputType { A, B, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, NUM_INPUTS, NONE };
+    enum InputType { A, B, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, NUM_INPUTS, NONE };
 
     Controls(/* args */);
     ~Controls();
@@ -53,7 +53,7 @@ private:
     etl::queue_spsc_locked
         <InputType, INPUT_QUEUE_SIZE>  input_queue { queueLock, queueUnlock };
 
-    void init_gpio();
+    void init_gpio(){}
     void add_to_queue(InputType input) { input_queue.push(input); };
 };
 

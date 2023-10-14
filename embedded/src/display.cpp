@@ -84,77 +84,12 @@ static void fill_buffer_rgb565(enum Display::corner corner, uint8_t grey, uint8_
 }
 
 
-
 Display::Display(/* args */)
 {
+    init_display();
+
 	// lv_obj_t *count_label;
 	char count_str[11] = {0};
-
-	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-
-	if (!device_is_ready(display_dev))
-	{
-		LOG_ERR("Device %s not found. Aborting sample.", display_dev->name);
-
-		// return 0;
-	}
-
-	LOG_INF("Display sample for %s", display_dev->name);
-	display_get_capabilities(display_dev, &capabilities);
-
-	if (capabilities.screen_info & SCREEN_INFO_MONO_VTILED) {
-		rect_w = 16;
-		rect_h = 8;
-	} else {
-		rect_w = 2;
-		rect_h = 1;
-	}
-
-	h_step = rect_h;
-	scale = (capabilities.x_resolution / 8) / rect_h;
-
-	rect_w *= scale;
-	rect_h *= scale;
-
-	rect_w = 160;
-	rect_h = 128;
-
-	if (capabilities.screen_info & SCREEN_INFO_EPD) {
-		grey_scale_sleep = 10000;
-	} else {
-		grey_scale_sleep = 100;
-	}
-
-	buf_size = rect_w * rect_h;
-
-	if (buf_size < (capabilities.x_resolution * h_step)) {
-		buf_size = capabilities.x_resolution * h_step;
-	}
-	buf_size *= 2;
-	// fill_buffer_fnc = fill_buffer_rgb565;
-
-	buf = static_cast<uint8_t*>(k_malloc(buf_size));
-
-	if (buf == NULL)
-	{
-		LOG_ERR("Could not allocate memory. Aborting sample.");
-		// return 0;
-	}
-
-	(void)memset(buf, 0xFFu, buf_size);
-
-	buf_desc.buf_size = buf_size;
-	buf_desc.pitch = capabilities.x_resolution;
-	buf_desc.width = capabilities.x_resolution;
-	buf_desc.height = h_step;
-
-	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step) {
-		display_write(display_dev, 0, idx, &buf_desc, buf);
-	}
-
-	buf_desc.pitch = rect_w;
-	buf_desc.width = rect_w;
-	buf_desc.height = rect_h;
 
 	fill_buffer_rgb565(TOP_LEFT, 0, buf, buf_size);
 	x = 0;
@@ -178,10 +113,95 @@ Display::Display(/* args */)
 	// lv_obj_align(count_label, LV_ALIGN_CENTER, 0, 0);
 	// lv_task_handler();
 	// display_blanking_off(display_dev);
-
-
 }
+
 
 Display::~Display()
 {
+}
+
+
+void Display::draw_frame(frame f)
+{
+
+}
+
+void Display::init_display()
+{
+	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+
+	if (!device_is_ready(display_dev))
+	{
+		LOG_ERR("Device %s not found. Aborting sample.", display_dev->name);
+
+		// return 0;
+	}
+
+	LOG_INF("Display sample for %s", display_dev->name);
+	display_get_capabilities(display_dev, &capabilities);
+
+	if (capabilities.screen_info & SCREEN_INFO_MONO_VTILED)
+    {
+		rect_w = 16;
+		rect_h = 8;
+	}
+    else
+    {
+		rect_w = 2;
+		rect_h = 1;
+	}
+
+	h_step = rect_h;
+	scale = (capabilities.x_resolution / 8) / rect_h;
+
+	rect_w *= scale;
+	rect_h *= scale;
+
+	rect_w = 160;
+	rect_h = 128;
+
+	if (capabilities.screen_info & SCREEN_INFO_EPD)
+    {
+		grey_scale_sleep = 10000;
+	}
+    else
+    {
+		grey_scale_sleep = 100;
+	}
+
+	buf_size = rect_w * rect_h;
+
+	if (buf_size < (capabilities.x_resolution * h_step))
+    {
+		buf_size = capabilities.x_resolution * h_step;
+	}
+	buf_size *= 2;
+	// fill_buffer_fnc = fill_buffer_rgb565;
+
+	buf = static_cast<uint8_t*>(k_malloc(buf_size));
+
+	if (buf == NULL)
+	{
+		LOG_ERR("Could not allocate memory. Aborting sample.");
+		// return 0;
+	}
+
+    blank_screen();
+
+	buf_desc.pitch = rect_w;
+	buf_desc.width = rect_w;
+	buf_desc.height = rect_h;
+}
+
+void Display::blank_screen()
+{
+	buf_desc.buf_size = buf_size;
+	buf_desc.pitch = capabilities.x_resolution;
+	buf_desc.width = capabilities.x_resolution;
+	buf_desc.height = h_step;
+
+	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+    {
+		display_write(display_dev, 0, idx, &buf_desc, buf);
+	}
 }
