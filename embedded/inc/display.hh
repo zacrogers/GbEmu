@@ -19,18 +19,21 @@ typedef void (*fill_buffer)(enum corner corner, uint8_t grey,
                                 uint8_t *buf, size_t buf_size);
 
 public:
-    using frame = int;
+	typedef struct {
+		uint8_t *buffer;
+		size_t  size;
+	} frame_t;
+
     Display(/* args */);
     ~Display();
 
 
 
-    void draw_frame(frame);
+    void draw_frame(const frame_t& frame);
 
 private:
     void init_display();
     void blank_screen();
-
 
 	size_t                           x;
 	size_t                           y;

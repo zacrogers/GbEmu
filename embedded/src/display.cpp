@@ -121,10 +121,19 @@ Display::~Display()
 }
 
 
-void Display::draw_frame(frame f)
+void Display::draw_frame(const frame_t& frame)
 {
+	buf_desc.buf_size = frame.size;
+	buf_desc.pitch = capabilities.x_resolution;
+	buf_desc.width = capabilities.x_resolution;
+	buf_desc.height = h_step;
 
+	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+    {
+		display_write(display_dev, 0, idx, &buf_desc, frame.buffer);
+	}
 }
+
 
 void Display::init_display()
 {
@@ -188,9 +197,9 @@ void Display::init_display()
 
     blank_screen();
 
-	buf_desc.pitch = rect_w;
-	buf_desc.width = rect_w;
-	buf_desc.height = rect_h;
+	// buf_desc.pitch = rect_w;
+	// buf_desc.width = rect_w;
+	// buf_desc.height = rect_h;
 }
 
 void Display::blank_screen()

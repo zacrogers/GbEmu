@@ -11,7 +11,7 @@ public:
 
     virtual ~StateBase() = default;
 
-    virtual Display::frame get_frame() = 0;
+    virtual Display::frame_t get_frame() = 0;
 
     bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
     bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
@@ -42,6 +42,7 @@ public:
     }
 
 private:
+    /* Button handlers */
     virtual void handle_a_button     () = 0;
     virtual void handle_b_button     () = 0;
     virtual void handle_up_button    () = 0;
@@ -59,19 +60,33 @@ public:
     MenuState();
     ~MenuState() override;
 
-    Display::frame get_frame           () override;
+    Display::frame_t get_frame          () override;
 
 private:
+    enum Option { START_GAME = 0, SHUT_DOWN, NUM_OPTIONS, NONE };
+
+    /* Button handlers */
     void           handle_a_button     () override;
     void           handle_b_button     () override;
     void           handle_up_button    () override;
     void           handle_down_button  () override;
     void           handle_left_button  () override;
     void           handle_right_button () override;
-#define NUM_OPTIONS 2
-    const char* main_screen_options[NUM_OPTIONS] = {"start_game", "shut_down"};
+
+    /* Option processing */
+    void incr_option();
+    void decr_option();
+    void process_option(const Option option);
+
+    /* Menu option processes */
+    void start_game();
+    void shut_down();
+
+    Option current_option     { Option::START_GAME };
+    bool   option_is_selected { false };
+
+    const char* menu_option_labels[NUM_OPTIONS] = {"Start Game", "Shut Down"};
 
     uint8_t current_row = 0;
-    uint8_t current_col = 0;
 };
 

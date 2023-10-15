@@ -1,5 +1,9 @@
 #include "../inc/state.hh"
 
+#include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(menu, LOG_LEVEL_ERR);
+
 MenuState::MenuState()
 {
 
@@ -12,45 +16,100 @@ MenuState::~MenuState()
 }
 
 
-Display::frame MenuState::get_frame()
+Display::frame_t MenuState::get_frame()
 {
-    return 0;
+    return {NULL, 0};
 }
 
+/*
+    Button handlers
+*/
 void MenuState::handle_a_button()
 {
-    if(current_row > 0) { current_row--; }
-    else                { current_row = (NUM_OPTIONS - 1); }
+    if(option_is_selected)
+    {
+        process_option(current_option);
+    }
+    else
+    {
+        option_is_selected = true;
+    }
 }
 
 
 void MenuState::handle_b_button()
 {
-    if(current_row < NUM_OPTIONS) current_row++;
+    option_is_selected = false;
 }
 
 
 void MenuState::handle_up_button()
 {
-    if(current_row > 0) { current_row--; }
-    else                { current_row = (NUM_OPTIONS - 1); }
+    incr_option();
 }
 
 
 void MenuState::handle_down_button()
 {
-    if(current_row < NUM_OPTIONS) current_row++;
+    decr_option();
 }
 
 
 void MenuState::handle_left_button()
 {
-    if(current_row > 0) { current_row--; }
-    else                { current_row = (NUM_OPTIONS - 1); }
+
 }
 
 
 void MenuState::handle_right_button()
 {
-    if(current_row < NUM_OPTIONS) current_row++;
+}
+
+
+/*
+    Menu option processing
+*/
+void MenuState::incr_option()
+{
+    uint8_t op_int = (uint8_t)current_option;
+
+    if(op_int > 0)
+    {
+        op_int--;
+    }
+    else
+    {
+        op_int = (NUM_OPTIONS - 1);
+    }
+
+    current_option = (MenuState::Option)op_int;
+}
+
+
+void MenuState::decr_option()
+{
+    // if(current_option < NUM_OPTIONS) current_option++;
+}
+
+
+void MenuState::process_option(const MenuState::Option option)
+{
+    switch(option)
+    {
+        case MenuState::Option::START_GAME: start_game(); break;
+        case MenuState::Option::SHUT_DOWN:  shut_down(); break;
+        default: break;
+    }
+}
+
+
+void MenuState::start_game()
+{
+
+}
+
+
+void MenuState::shut_down()
+{
+
 }
