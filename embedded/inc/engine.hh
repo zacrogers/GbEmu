@@ -15,6 +15,8 @@ public:
     {
         current_state   = State::MENU;
         p_current_state = new MenuState();
+
+        p_display->blank_screen();
     };
 
     ~Engine(){};

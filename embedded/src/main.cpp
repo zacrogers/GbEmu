@@ -26,7 +26,7 @@ int main(void)
 
 	while (1)
 	{
-		engine.process();
+		// engine.process();
 		k_msleep(500);
 	}
 	return 0;

@@ -32,6 +32,28 @@ static uint16_t get_rgb565_color(enum Display::corner corner, uint8_t grey)
 int tile_size = 8;
 
 
+
+
+
+
+void Display::draw_rect(Display::frame_t& frame,
+					int x, int y,
+					int w, int h,
+					graphics::colour_rgb565 col)
+{
+	for(size_t _y = y; _y < y + h; ++_y)
+	{
+		for(size_t _x = x; _x < x + w; ++_x)
+		{
+			uint16_t i = (_y * 10) + _x;
+
+			*(frame.buffer + i + 0) = ((uint16_t)col >> 8) & 0xFFu;
+			*(frame.buffer + i + 1) = ((uint16_t)col >> 0) & 0xFFu;
+		}
+	}
+}
+
+
 static void fill_buffer_rgb565(enum Display::corner corner, uint8_t grey, uint8_t *buf, size_t buf_size)
 {
 	uint16_t color = get_rgb565_color(corner, grey);
@@ -121,18 +143,18 @@ Display::~Display()
 }
 
 
-void Display::draw_frame(const frame_t& frame)
-{
-	buf_desc.buf_size = frame.size;
-	buf_desc.pitch = capabilities.x_resolution;
-	buf_desc.width = capabilities.x_resolution;
-	buf_desc.height = h_step;
+// void Display::draw_frame(const frame_t& frame)
+// {
+// 	buf_desc.buf_size = frame.size;
+// 	buf_desc.pitch = capabilities.x_resolution;
+// 	buf_desc.width = capabilities.x_resolution;
+// 	buf_desc.height = h_step;
 
-	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
-    {
-		display_write(display_dev, 0, idx, &buf_desc, frame.buffer);
-	}
-}
+// 	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+//     {
+// 		display_write(display_dev, 0, idx, &buf_desc, frame.buffer);
+// 	}
+// }
 
 
 void Display::init_display()
@@ -208,6 +230,30 @@ void Display::blank_screen()
 	buf_desc.pitch = capabilities.x_resolution;
 	buf_desc.width = capabilities.x_resolution;
 	buf_desc.height = h_step;
+
+	memset(buf, 0xFF, buf_size);
+
+	for (int i = 0; i < buf_size; i += h_step)
+    {
+		*(buf + i + 0) = ((uint16_t)graphics::colour_rgb565::GREEN >> 8) & 0xFFu;
+		*(buf + i + 1) = ((uint16_t)graphics::colour_rgb565::GREEN >> 0) & 0xFFu;
+	}
+
+
+	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+    {
+		display_write(display_dev, 0, idx, &buf_desc, buf);
+	}
+}
+
+void Display::draw_frame(frame_t& frame)
+{
+	buf_desc.buf_size = buf_size;
+	buf_desc.pitch = capabilities.x_resolution;
+	buf_desc.width = capabilities.x_resolution;
+	buf_desc.height = h_step;
+
+	memset(buf, 0xFF, buf_size);
 
 	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
     {
