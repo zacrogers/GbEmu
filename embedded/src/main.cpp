@@ -22,12 +22,12 @@ int main(void)
 {
 	Controls controls { };
 	Display  display  { };
-	Engine   engine   { &controls, &display };
+	Engine   engine   = Engine( &controls, &display );
 
 	while (1)
 	{
-		// engine.process();
-		k_msleep(500);
+		engine.process();
+		// k_msleep(20);
 	}
 	return 0;
 }

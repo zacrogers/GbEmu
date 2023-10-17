@@ -13,10 +13,11 @@ public:
     Engine(Controls* p_controls, Display* p_display)
             :p_controls(p_controls), p_display(p_display)
     {
-        current_state   = State::MENU;
-        p_current_state = new MenuState();
+        current_state   = State::GAME;
+        p_display->init_display();
+        p_current_state = new PongGame();
 
-        p_display->blank_screen();
+        // p_display->blank_screen();
     };
 
     ~Engine(){};
@@ -43,7 +44,7 @@ public:
 
     void process()
     {
-        process_input();
+        // process_input();
         process_frame();
     }
 
@@ -77,7 +78,7 @@ private:
     Controls*     p_controls      { nullptr };
     Display*      p_display       { nullptr };
 
-    Engine::State current_state   { State::MENU };
+    Engine::State current_state   { State::GAME };
     StateBase*    p_current_state { nullptr };
 };
 

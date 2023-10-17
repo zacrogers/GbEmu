@@ -81,11 +81,18 @@ private:
     void             handle_left_button  () override;
     void             handle_right_button () override;
 
-    entity_t player_a;
-    entity_t player_b;
-    entity_t ball;
+    uint8_t player_a_speed = 5, player_b_speed = 5, ball_speed = 5;
 
-    graphics::frame_t frame {};
+
+    entity_t player_a = {15, 30, 0};
+    entity_t player_b = {150, 30, 0};
+    entity_t ball = {15, 15, 0};
+
+    graphics::frame_t frame { nullptr };
+
+    #define CANVAS_WIDTH  200
+#define CANVAS_HEIGHT  150
+    lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
 };
 
 

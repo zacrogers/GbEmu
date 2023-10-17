@@ -91,18 +91,18 @@ Display::Display(/* args */)
     init_display();
 
 	// lv_obj_t *count_label;
-	char count_str[11] = {0};
+	// char count_str[11] = {0};
 
-	fill_buffer_rgb565(TOP_LEFT, 0, buf, buf_size);
-	x = 0;
-	y = 0;
-	display_write(display_dev, x, y, &buf_desc, buf);
+	// fill_buffer_rgb565(TOP_LEFT, 0, buf, buf_size);
+	// x = 0;
+	// y = 0;
+	// display_write(display_dev, x, y, &buf_desc, buf);
 
-	display_blanking_off(display_dev);
+	// display_blanking_off(display_dev);
 
-	// grey_count = 0;
-	x = 0;
-	y = capabilities.y_resolution - rect_h;
+	// // grey_count = 0;
+	// x = 0;
+	// y = capabilities.y_resolution - rect_h;
 
 	// int count = 0;
 	// static lv_style_t text_style;
@@ -198,7 +198,8 @@ void Display::init_display()
 		// return 0;
 	}
 
-    blank_screen();
+    lv_task_handler();
+	display_blanking_off(display_dev);
 
 	// buf_desc.pitch = rect_w;
 	// buf_desc.width = rect_w;
@@ -208,76 +209,40 @@ void Display::init_display()
 
 void Display::blank_screen()
 {
-	lv_init();
+	// lv_init();
 
 
-    lv_draw_rect_dsc_t rect_dsc;
-    lv_draw_rect_dsc_init(&rect_dsc);
-    rect_dsc.radius = 0;
-    rect_dsc.bg_opa = LV_OPA_COVER;
-    // rect_dsc.bg_grad_dir = LV_GRAD_DIR_HOR;
-    rect_dsc.bg_color = graphics::blue;
-    // rect_dsc.bg_grad_color = LV_COLOR_BLUE;
-    rect_dsc.border_width = 0;
-    rect_dsc.border_opa = LV_OPA_90;
-    rect_dsc.border_color = graphics::blue;
-    rect_dsc.shadow_width = 0;
-    rect_dsc.shadow_ofs_x = 0;
-    rect_dsc.shadow_ofs_y = 0;
+    // lv_draw_rect_dsc_t rect_dsc;
+    // lv_draw_rect_dsc_init(&rect_dsc);
+    // rect_dsc.radius = 0;
+    // rect_dsc.bg_opa = LV_OPA_COVER;
+    // // rect_dsc.bg_grad_dir = LV_GRAD_DIR_HOR;
+    // rect_dsc.bg_color = graphics::blue;
+    // // rect_dsc.bg_grad_color = LV_COLOR_BLUE;
+    // rect_dsc.border_width = 0;
+    // rect_dsc.border_opa = LV_OPA_90;
+    // rect_dsc.border_color = graphics::blue;
+    // rect_dsc.shadow_width = 0;
+    // rect_dsc.shadow_ofs_x = 0;
+    // rect_dsc.shadow_ofs_y = 0;
 
-#define CANVAS_WIDTH  200
-#define CANVAS_HEIGHT  150
-    static lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
+// #define CANVAS_WIDTH  200
+// #define CANVAS_HEIGHT  150
+//     static lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
 
-    lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
-    lv_canvas_set_buffer(canvas, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
-	lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
-	lv_obj_set_scrollbar_mode(canvas, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_align(canvas, LV_ALIGN_CENTER, 0, 0);
-
-
-    lv_canvas_fill_bg(canvas, graphics::red, LV_OPA_COVER);
-
-	// for(size_t i = 0; i < capabilities.x_resolution; ++i)
-	// {
-	// 	for(size_t j = 0; j < capabilities.y_resolution; ++j)
-	// 	{
-	// 		lv_canvas_draw_rect(canvas, i*10, j*10, 10, 10, &rect_dsc);
-	// 	}
-	// }
-
-	// paddles
-	graphics::draw_rect(canvas, 20, 30, 15, 80, graphics::blue);
-	graphics::draw_rect(canvas, capabilities.x_resolution+5, 30, 15, 80, graphics::blue);
-
-	// ball
-	graphics::draw_rect(canvas, capabilities.x_resolution/2, capabilities.y_resolution/2, 15, 15, graphics::green);
+    // lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
+    // lv_canvas_set_buffer(canvas, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
+	// lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
+	// lv_obj_set_scrollbar_mode(canvas, LV_SCROLLBAR_MODE_OFF);
+    // lv_obj_align(canvas, LV_ALIGN_CENTER, 0, 0);
 
 
-
-	// lv_obj_t*	hello_world_label = lv_label_create(lv_scr_act());
-    // lv_label_set_text(hello_world_label, "yoza");
-	// // lv_label_set_text(hello_world_label, "Hello world!");
-	// lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
-
-
-	lv_task_handler();
-
+    // lv_canvas_fill_bg(canvas, graphics::red, LV_OPA_COVER);
 
 }
 
 
 void Display::draw_frame(graphics::frame_t& frame)
 {
-	// buf_desc.buf_size = buf_size;
-	// buf_desc.pitch = capabilities.x_resolution;
-	// buf_desc.width = capabilities.x_resolution;
-	// buf_desc.height = h_step;
-
-	// memset(buf, 0xFF, buf_size);
-
-	// for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
-    // {
-	// 	display_write(display_dev, 0, idx, &buf_desc, buf);
-	// }
+	lv_task_handler();
 }

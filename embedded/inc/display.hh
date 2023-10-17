@@ -33,8 +33,8 @@ public:
     void blank_screen();
 
 void draw_paddle(lv_obj_t* canvas, int x, int y);
-private:
     void init_display();
+private:
 
 	size_t                           x;
 	size_t                           y;
