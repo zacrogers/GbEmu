@@ -22,7 +22,7 @@ int main(void)
 {
 	Controls controls { };
 	Display  display  { };
-	Engine   engine   = Engine( &controls, &display );
+	Engine   engine   { &controls, &display };
 
 	while (1)
 	{

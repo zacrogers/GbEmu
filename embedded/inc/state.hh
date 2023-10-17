@@ -89,16 +89,17 @@ private:
     void move_player_a_up          ();
     void move_player_a_down        ();
     void start_game                ();
+    void continue_game             ();
+    void back_to_start_menu        ();
 
-    // graphics
+    /* Graphics */
     void draw_ready_to_play_state  ();
     void draw_playing_state        ();
     void draw_match_finished_state ();
     void draw_game_finished_state  ();
 
-
+    /* Bounds & collision checking */
     void handle_collision          ();
-
     void check_endgoal_areas       ();
 
     bool x_out_of_bounds           (int x) { return (x < 15 || x > 160); }
@@ -107,32 +108,28 @@ private:
     bool player_b_scored           (int x) { return (x < 15); }
     bool player_a_scored           (int x) { return (x > 160); }
 
-    bool still_in_progress         ()
-        { return (game_info.player_a_score != winning_score) ||
-                (game_info.player_b_score != winning_score); }
+    bool somebody_won              ()
+        { return (game_info.player_a_score == winning_score) ||
+                (game_info.player_b_score == winning_score); }
 
-    uint8_t winning_score  = 5;
+/* Constants */
+    static const uint8_t winning_score  { 5 };
+    static const int     paddle_length  { 70 };
+    static const int     ball_start_x   { 25 };
+    static const int     ball_start_y   { 25 };
 
-    game_info_t game_info = {
-        .player_a_score = 0,
-        .player_b_score = 0,
-        .total_time_ms = 0
-    };
+/* Variables */
+    game_info_t          game_info      { 0, 0, 0 };
 
-    int paddle_length      = 70;
+    /* Entities */
+    graphics::entity_t   player_a       { {15, 50}, 15, paddle_length, 0, {0, 0} };
+    graphics::entity_t   player_b       { {170, 50}, 15, paddle_length, 0, {0, 0} };
+    graphics::entity_t   ball           { {ball_start_x, ball_start_y}, 15, 15, 0, {5, 5} };
 
-    int ball_start_x = 25;
-    int ball_start_y = 25;
-
-    graphics::entity_t player_a = { {15, 50}, 15, paddle_length, 0, {0, 0} };
-    graphics::entity_t player_b = { {170, 50}, 15, paddle_length, 0, {0, 0} };
-    graphics::entity_t ball     = { {ball_start_x, ball_start_y}, 15, 15, 0, {5, 5} };
-
-    PlayState play_state { PlayState::PLAYING };
-
-    graphics::frame_t frame { nullptr };
-    int n_ticks = 0;
-    bool bounced = false;
+    PlayState            play_state     { PlayState::PLAYING };
+    graphics::frame_t    frame          { nullptr };
+    int                  n_ticks        { 0 };
+    bool                 bounced        { false };
 
 #define CANVAS_WIDTH  200
 #define CANVAS_HEIGHT  150

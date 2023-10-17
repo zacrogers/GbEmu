@@ -19,9 +19,7 @@ namespace graphics
 	static lv_color_t black  = lv_color_make(0, 0, 0);
 
 
-	typedef struct {
-		uint8_t x, y;
-	} pos_t;
+	typedef struct { uint8_t x, y; } pos_t;
 
 
 	typedef struct {
@@ -41,7 +39,7 @@ namespace graphics
 
 	// Drawing
 	void draw_rect(frame_t frame, int x, int y, int width, int height, lv_color_t col);
-	void draw_rect(frame_t frame, pos_t pos, int width, int height, lv_color_t col);
+	void draw_rect(frame_t frame, pos_t pos, int width, int height, lv_color_t col=green);
 	void draw_text(frame_t frame, int x, int y, const char* text);
 
 	// Physics

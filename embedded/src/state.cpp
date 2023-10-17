@@ -44,7 +44,7 @@ void PongGame::draw_playing_state()
 	graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
 
     // Draw ball
-    graphics::draw_rect(frame, ball.pos, ball.w, ball.h, graphics::green);
+    graphics::draw_rect(frame, ball.pos, ball.w, ball.h);
 }
 
 
@@ -59,6 +59,8 @@ void PongGame::draw_game_finished_state()
 {
     // Fill background
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+
+    graphics::draw_text(frame, 70, 50, "Game Over Yo");
 }
 
 
@@ -86,14 +88,18 @@ void PongGame::handle_collision()
         if(player_a_scored(ball.pos.x))
         {
             game_info.player_a_score++;
+            ball.pos.x = ball_start_x;
+            ball.pos.y = ball_start_y;
         }
         if(player_b_scored(ball.pos.x))
         {
             game_info.player_b_score++;
+            ball.pos.x = ball_start_x;
+            ball.pos.y = ball_start_y;
         }
-        if(!still_in_progress())
+        if(somebody_won())
         {
-
+            play_state = PlayState::GAME_FINISHED;
         }
     }
 
@@ -123,13 +129,26 @@ void PongGame::handle_collision()
     n_ticks++;
 }
 
+
 void check_endgoal_areas()
 {
 
 }
 
-
+/* Button actions */
 void PongGame::start_game()
+{
+
+}
+
+
+void PongGame::continue_game()
+{
+
+}
+
+
+void PongGame::back_to_start_menu()
 {
 
 }
@@ -140,10 +159,10 @@ void PongGame::handle_a_button()
 {
     switch(play_state)
     {
-        case PlayState::READY_TO_PLAY: start_game(); break;
+        case PlayState::READY_TO_PLAY:  start_game();         break;
+        case PlayState::MATCH_FINISHED: continue_game();      break;
+        case PlayState::GAME_FINISHED:  back_to_start_menu(); break;
         case PlayState::PLAYING:
-        case PlayState::MATCH_FINISHED:
-        case PlayState::GAME_FINISHED:
         default: break;
     }
 }
