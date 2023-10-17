@@ -13,8 +13,8 @@ public:
 
     virtual Display::frame_t get_frame() = 0;
 
-    bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
-    bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
+    inline bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
+    inline bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
 
     void process_input(const Controls::InputType& control)
     {
@@ -56,31 +56,34 @@ private:
 
 class MenuState: public StateBase
 {
+private:
+    enum Option { START_GAME = 0, SHUT_DOWN, NUM_OPTIONS, NONE };
+
 public:
     MenuState();
     ~MenuState() override;
 
-    Display::frame_t get_frame          () override;
+    Display::frame_t get_frame           () override;
 
 private:
-    enum Option { START_GAME = 0, SHUT_DOWN, NUM_OPTIONS, NONE };
+/* Member Functions */
 
     /* Button handlers */
-    void           handle_a_button     () override;
-    void           handle_b_button     () override;
-    void           handle_up_button    () override;
-    void           handle_down_button  () override;
-    void           handle_left_button  () override;
-    void           handle_right_button () override;
+    void             handle_a_button     () override;
+    void             handle_b_button     () override;
+    void             handle_up_button    () override;
+    void             handle_down_button  () override;
+    void             handle_left_button  () override;
+    void             handle_right_button () override;
 
     /* Option processing */
-    void incr_option();
-    void decr_option();
-    void process_option(const Option option);
+    void             incr_option         ();
+    void             decr_option         ();
+    void             process_option      (const Option option);
 
     /* Menu option processes */
-    void start_game();
-    void shut_down();
+    void             start_game          ();
+    void             shut_down           ();
 
     Option current_option     { Option::START_GAME };
     bool   option_is_selected { false };

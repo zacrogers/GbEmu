@@ -4,6 +4,8 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(display, LOG_LEVEL_INF);
 
+#include <lvgl.h>
+
 
 static uint16_t get_rgb565_color(enum Display::corner corner, uint8_t grey)
 {
@@ -41,15 +43,14 @@ void Display::draw_rect(Display::frame_t& frame,
 					int w, int h,
 					graphics::colour_rgb565 col)
 {
-	for(size_t _y = y; _y < y + h; ++_y)
+	for(size_t _y = 120; _y < 140; _y += 2)
 	{
-		for(size_t _x = x; _x < x + w; ++_x)
-		{
-			uint16_t i = (_y * 10) + _x;
-
+		// for(size_t _x = 0; _x < 20; _x += 2)
+		// {
+			uint16_t i = _y;// + _x;
 			*(frame.buffer + i + 0) = ((uint16_t)col >> 8) & 0xFFu;
 			*(frame.buffer + i + 1) = ((uint16_t)col >> 0) & 0xFFu;
-		}
+		// }
 	}
 }
 
@@ -206,6 +207,7 @@ void Display::init_display()
     {
 		buf_size = capabilities.x_resolution * h_step;
 	}
+	buf_size = capabilities.x_resolution * capabilities.y_resolution;
 	buf_size *= 2;
 	// fill_buffer_fnc = fill_buffer_rgb565;
 
@@ -224,6 +226,7 @@ void Display::init_display()
 	// buf_desc.height = rect_h;
 }
 
+
 void Display::blank_screen()
 {
 	buf_desc.buf_size = buf_size;
@@ -233,17 +236,73 @@ void Display::blank_screen()
 
 	memset(buf, 0xFF, buf_size);
 
+	frame_t f = {
+		.buffer = buf,
+		.size = buf_size,
+		.width = capabilities.x_resolution,
+		.height = capabilities.y_resolution
+	};
+
 	for (int i = 0; i < buf_size; i += h_step)
     {
-		*(buf + i + 0) = ((uint16_t)graphics::colour_rgb565::GREEN >> 8) & 0xFFu;
-		*(buf + i + 1) = ((uint16_t)graphics::colour_rgb565::GREEN >> 0) & 0xFFu;
+		*(f.buffer + i + 0) = ((uint16_t)graphics::colour_rgb565::RED >> 8) & 0xFFu;
+		*(f.buffer + i + 1) = ((uint16_t)graphics::colour_rgb565::RED >> 0) & 0xFFu;
+	}
+	// for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+    // {
+	// 	display_write(display_dev, 0, idx, &buf_desc, f.buffer);
+	// }
+
+	lv_init();
+	lv_color_t blue = lv_color_make(255, 0, 0);
+	lv_color_t red = lv_color_make(0, 255, 0);
+	lv_color_t green = lv_color_make(0, 0, 255);
+
+    lv_draw_rect_dsc_t rect_dsc;
+    lv_draw_rect_dsc_init(&rect_dsc);
+    rect_dsc.radius = 2;
+    rect_dsc.bg_opa = LV_OPA_COVER;
+    // rect_dsc.bg_grad_dir = LV_GRAD_DIR_HOR;
+    rect_dsc.bg_color = green;
+    // rect_dsc.bg_grad_color = LV_COLOR_BLUE;
+    rect_dsc.border_width = 1;
+    rect_dsc.border_opa = LV_OPA_90;
+    rect_dsc.border_color = blue;
+    rect_dsc.shadow_width = 0;
+    rect_dsc.shadow_ofs_x = 0;
+    rect_dsc.shadow_ofs_y = 0;
+
+#define CANVAS_WIDTH  200
+#define CANVAS_HEIGHT  150
+    static lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
+
+    lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
+    lv_canvas_set_buffer(canvas, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
+	lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
+	lv_obj_set_scrollbar_mode(canvas, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_align(canvas, LV_ALIGN_CENTER, 0, 0);
+
+
+    lv_canvas_fill_bg(canvas, red, LV_OPA_COVER);
+
+	for(size_t i = 0; i < capabilities.x_resolution; ++i)
+	{
+		for(size_t j = 0; j < capabilities.y_resolution; ++j)
+		{
+			lv_canvas_draw_rect(canvas, i*10, j*10, 10, 10, &rect_dsc);
+		}
 	}
 
 
-	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
-    {
-		display_write(display_dev, 0, idx, &buf_desc, buf);
-	}
+	// lv_obj_t*	hello_world_label = lv_label_create(lv_scr_act());
+    // lv_label_set_text(hello_world_label, "yoza");
+	// // lv_label_set_text(hello_world_label, "Hello world!");
+	// lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
+
+
+	lv_task_handler();
+
+
 }
 
 void Display::draw_frame(frame_t& frame)
