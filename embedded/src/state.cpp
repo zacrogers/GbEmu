@@ -24,7 +24,7 @@ PongGame::~PongGame()
 
 graphics::frame_t PongGame::get_frame()
 {
-
+    handle_collision();
 	// // paddles
 	// graphics::draw_rect(frame, player_a.x, player_a.y, 15, 80, graphics::blue);
 	// graphics::draw_rect(frame, player_b.x, player_b.y, 15, 80, graphics::blue);
@@ -32,10 +32,7 @@ graphics::frame_t PongGame::get_frame()
     // for(int i = 0; i < 50; ++i)
     // {
         lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
-        if(ball.x < 200 && ball.x > 0)
-            ball.x+=5;
-        else
-            ball.x=15;
+
 
         // ball
         graphics::draw_rect(frame, ball.x, ball.y, 15, 15, graphics::green);
@@ -45,7 +42,34 @@ graphics::frame_t PongGame::get_frame()
 
     return frame;
 }
+void PongGame::handle_collision()
+{
+    // if(!going_left && ball.x > 200)
+    // {
+    //     ball.x-=5;
+    //     going_left;
+    // }
 
+    // else if(ball.x < 200 && ball.x > 0)
+    //     ball.x+=5;
+
+    // else
+    //     ball.x=15;
+
+    squareX += squareVelocityX;
+    squareY += squareVelocityY;
+
+    if (squareX < 0 || squareX + 15 > 125) {
+        squareVelocityX = -squareVelocityX;
+    }
+
+    if (squareY < 0 || squareY + 15 > 160) {
+        squareVelocityY = -squareVelocityY;
+    }
+
+    ball.x = squareX;
+    ball.y = squareY;
+}
 
 /* Button handlers */
 void PongGame::handle_a_button()

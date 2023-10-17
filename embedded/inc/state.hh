@@ -81,12 +81,22 @@ private:
     void             handle_left_button  () override;
     void             handle_right_button () override;
 
+    void handle_collision();
+
     uint8_t player_a_speed = 5, player_b_speed = 5, ball_speed = 5;
+
+
+    int squareX = 0;
+    int squareY = 0;
+    int squareVelocityX = 5;
+    int squareVelocityY = 5;
 
 
     entity_t player_a = {15, 30, 0};
     entity_t player_b = {150, 30, 0};
     entity_t ball = {15, 15, 0};
+
+    bool going_left = false;
 
     graphics::frame_t frame { nullptr };
 
