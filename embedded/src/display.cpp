@@ -244,5 +244,5 @@ void Display::blank_screen()
 
 void Display::draw_frame(graphics::frame_t& frame)
 {
-	lv_task_handler();
+	// lv_task_handler();
 }

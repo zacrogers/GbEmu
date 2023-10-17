@@ -11,7 +11,7 @@ public:
 
     virtual ~StateBase() = default;
 
-    virtual graphics::frame_t get_frame() = 0;
+    virtual void draw() = 0;
 
     inline bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
     inline bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
@@ -53,57 +53,89 @@ private:
     StateBase::State current_state { };
 };
 
-typedef struct {
-    int x, y;
-    uint8_t collision_group; // 0 = no collision
-} entity_t;
-
 
 class PongGame: public StateBase
 {
 private:
-    enum Option { START_GAME = 0, SHUT_DOWN, NUM_OPTIONS, NONE };
+    enum class PlayState { READY_TO_PLAY, PLAYING, MATCH_FINISHED, GAME_FINISHED };
+
+    typedef struct {
+        uint32_t total_time_ms;
+        uint8_t player_a_score, player_b_score;
+    } game_info_t;
 
 public:
+    typedef struct {
+        graphics::entity_t entity;
+        uint8_t score;
+    } player_t;
+
     PongGame();
     ~PongGame() override;
 
-    graphics::frame_t get_frame           () override;
+    void draw                      () override;
 
 private:
 /* Member Functions */
-
     /* Button handlers */
-    void             handle_a_button     () override;
-    void             handle_b_button     () override;
-    void             handle_up_button    () override;
-    void             handle_down_button  () override;
-    void             handle_left_button  () override;
-    void             handle_right_button () override;
+    void handle_a_button           () override;
+    void handle_b_button           () override;
+    void handle_up_button          () override;
+    void handle_down_button        () override;
+    void handle_left_button        () override;
+    void handle_right_button       () override;
 
-    void handle_collision();
+    void move_player_a_up          ();
+    void move_player_a_down        ();
 
-    bool x_out_of_bounds(int x) { return (x < 15 || x > 160); }
-    bool y_out_of_bounds(int y) { return (y < 15 || y > 128);}
+    // graphics
+    void draw_ready_to_play_state  ();
+    void draw_playing_state        ();
+    void draw_match_finished_state ();
+    void draw_game_finished_state  ();
+
+    void handle_collision          ();
+
+    void check_endgoal_areas       ();
+
+    bool x_out_of_bounds           (int x) { return (x < 15 || x > 160); }
+    bool y_out_of_bounds           (int y) { return (y < 15 || y > 128); }
+
+    bool player_b_scored           (int x) { return (x < 15); }
+    bool player_a_scored           (int x) { return (x > 160); }
+
+    bool still_in_progress         ()
+        { return (player_a_score != winning_score) || (player_b_score != winning_score); }
+
+    uint8_t winning_score  = 5;
+    game_info_t game_info = {
+        .player_a_score = 0,
+        .player_b_score = 0,
+        .total_time_ms = 0
+    };
+    uint8_t player_a_score = 0;
+    uint8_t player_b_score = 0;
+
+    int squareVelocityX    = 5;
+    int squareVelocityY    = 5;
+    int paddle_length      = 70;
 
     uint8_t player_a_speed = 5, player_b_speed = 5, ball_speed = 5;
+    int ball_start_x =25, ball_start_y = 25;
 
+    graphics::entity_t player_a = { 15, 50, 15, paddle_length };
+    graphics::entity_t player_b = { 170, 50, 15, paddle_length };
+    graphics::entity_t ball     = { ball_start_x, ball_start_y, 15, 15, 1 };
 
-    int squareX = 50;
-    int squareY = 50;
-    int squareVelocityX = 5;
-    int squareVelocityY = 5;
-
-
-    entity_t player_a = {15, 30, 0};
-    entity_t player_b = {150, 30, 0};
-    entity_t ball = {25, 25, 0};
+    PlayState play_state { PlayState::PLAYING };
 
     bool going_left = false;
 
     graphics::frame_t frame { nullptr };
+    int n_ticks = 0;
+    bool bounced = false;
 
-    #define CANVAS_WIDTH  200
+#define CANVAS_WIDTH  200
 #define CANVAS_HEIGHT  150
     lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
 };
@@ -118,7 +150,7 @@ public:
     MenuState();
     ~MenuState() override;
 
-    graphics::frame_t get_frame           () override;
+    void draw           () override;
 
 private:
 /* Member Functions */

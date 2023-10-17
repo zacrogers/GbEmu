@@ -36,8 +36,9 @@ public:
     {
         if(p_current_state && p_display)
         {
-            auto new_frame = p_current_state->get_frame();
-            p_display->draw_frame(new_frame);
+            p_current_state->draw();
+
+            // xp_display->draw_frame(new_frame);
         }
     }
 

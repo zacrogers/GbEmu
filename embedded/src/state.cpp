@@ -22,41 +22,104 @@ PongGame::~PongGame()
 }
 
 
-graphics::frame_t PongGame::get_frame()
+void PongGame::draw_ready_to_play_state()
+{
+    // Fill background
+    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+
+}
+
+
+void PongGame::draw_playing_state()
 {
     handle_collision();
-	// // paddles
-	// graphics::draw_rect(frame, player_a.x, player_a.y, 15, 80, graphics::blue);
-	// graphics::draw_rect(frame, player_b.x, player_b.y, 15, 80, graphics::blue);
 
-    // for(int i = 0; i < 50; ++i)
-    // {
-        lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+    // Fill background
+    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
 
+	// Draw paddles
+	graphics::draw_rect(frame, player_a.x, player_a.y, player_a.w, player_a.h, graphics::red);
+	graphics::draw_rect(frame, player_b.x, player_b.y, player_b.w, player_b.h, graphics::red);
 
-        // ball
-        graphics::draw_rect(frame, ball.x, ball.y, 15, 15, graphics::green);
-        lv_task_handler();
-        // k_msleep(1000);
-    // }
-
-    return frame;
+    // Draw ball
+    graphics::draw_rect(frame, ball.x, ball.y, ball.w, ball.h, graphics::green);
 }
+
+
+void PongGame::draw_match_finished_state()
+{
+    // Fill background
+    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+
+}
+
+
+void PongGame::draw_game_finished_state()
+{
+    // Fill background
+    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+
+}
+
+
+void PongGame::draw()
+{
+    switch(play_state)
+    {
+        case PlayState::READY_TO_PLAY:  draw_ready_to_play_state();  break;
+        case PlayState::PLAYING:        draw_playing_state();        break;
+        case PlayState::MATCH_FINISHED: draw_match_finished_state(); break;
+        case PlayState::GAME_FINISHED:  draw_game_finished_state();  break;
+        default: break;
+    }
+	lv_task_handler();
+}
+
+
 void PongGame::handle_collision()
 {
-    squareX += squareVelocityX;
-    squareY += squareVelocityY;
+    ball.x += squareVelocityX;
+    ball.y += squareVelocityY;
 
-    if (x_out_of_bounds(squareX)) {
-        squareVelocityX = -squareVelocityX;
+    if (x_out_of_bounds(ball.x))
+    {
+        if(player_a_scored(ball.x))
+        {
+            player_a_score++;
+        }
+        if(player_b_scored(ball.x))
+        {
+            player_b_score++;
+        }
+        if(!still_in_progress())
+        {
+
+        }
+    }
+    if(n_ticks > 20) {
+        n_ticks = 0;
+        bounced=false;
     }
 
-    if (y_out_of_bounds(squareY)) {
+    if ((graphics::entities_colliding(ball, player_a) ||
+        graphics::entities_colliding(ball, player_b)) && !bounced)
+    {
+        squareVelocityX = -squareVelocityX;
+        bounced = true;
+    }
+
+    // Bounce off the top and bottom of the screen
+    if (y_out_of_bounds(ball.y))
+    {
         squareVelocityY = -squareVelocityY;
     }
 
-    ball.x = squareX;
-    ball.y = squareY;
+    n_ticks++;
+}
+
+void check_endgoal_areas()
+{
+
 }
 
 /* Button handlers */
@@ -72,9 +135,28 @@ void PongGame::handle_b_button()
 }
 
 
+void PongGame::move_player_a_up()
+{
+
+}
+
+
+void PongGame::move_player_a_down()
+{
+
+}
+
+
+
 void PongGame::handle_up_button()
 {
-    // if(player_a.y > player_a_speed)
+    // if(player_a.y > player_a_
+    switch (play_state)
+    {
+    case PlayState::PLAYING: move_player_a_up(); break;
+
+    default: break;
+    }
     //     player_a.y -= player_a_speed;
 }
 
@@ -114,9 +196,8 @@ MenuState::~MenuState()
 }
 
 
-graphics::frame_t  MenuState::get_frame()
+void  MenuState::draw()
 {
-    return NULL;
 }
 
 /*
