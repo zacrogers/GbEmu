@@ -83,18 +83,21 @@ private:
 
     void handle_collision();
 
+    bool x_out_of_bounds(int x) { return (x < 15 || x > 160); }
+    bool y_out_of_bounds(int y) { return (y < 15 || y > 128);}
+
     uint8_t player_a_speed = 5, player_b_speed = 5, ball_speed = 5;
 
 
-    int squareX = 0;
-    int squareY = 0;
+    int squareX = 50;
+    int squareY = 50;
     int squareVelocityX = 5;
     int squareVelocityY = 5;
 
 
     entity_t player_a = {15, 30, 0};
     entity_t player_b = {150, 30, 0};
-    entity_t ball = {15, 15, 0};
+    entity_t ball = {25, 25, 0};
 
     bool going_left = false;
 

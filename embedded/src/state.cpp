@@ -44,26 +44,14 @@ graphics::frame_t PongGame::get_frame()
 }
 void PongGame::handle_collision()
 {
-    // if(!going_left && ball.x > 200)
-    // {
-    //     ball.x-=5;
-    //     going_left;
-    // }
-
-    // else if(ball.x < 200 && ball.x > 0)
-    //     ball.x+=5;
-
-    // else
-    //     ball.x=15;
-
     squareX += squareVelocityX;
     squareY += squareVelocityY;
 
-    if (squareX < 0 || squareX + 15 > 125) {
+    if (x_out_of_bounds(squareX)) {
         squareVelocityX = -squareVelocityX;
     }
 
-    if (squareY < 0 || squareY + 15 > 160) {
+    if (y_out_of_bounds(squareY)) {
         squareVelocityY = -squareVelocityY;
     }
 
