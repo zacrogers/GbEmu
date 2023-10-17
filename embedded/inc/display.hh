@@ -4,17 +4,7 @@
 #include <zephyr/drivers/display.h>
 #include <lvgl.h>
 
-namespace graphics
-{
-	typedef enum
-	{
-		BLACK = 0x0000,
-		RED   = 0xf800,
-		GREEN = 0x07e0,
-		BLUE  = 0x001f
-	} colour_rgb565;
-
-}
+#include "graphics.hh"
 
 class Display
 {
@@ -30,13 +20,6 @@ typedef void (*fill_buffer)(enum corner corner, uint8_t grey,
                                 uint8_t *buf, size_t buf_size);
 
 public:
-	typedef struct {
-		uint8_t  *buffer;
-		size_t   size;
-		uint16_t width;
-		uint16_t height;
-	} frame_t;
-
 	typedef struct{
 		uint8_t size;
 	} tile_t;
@@ -46,12 +29,10 @@ public:
 
 
 
-    void draw_frame(frame_t& frame);
+    void draw_frame(graphics::frame_t& frame);
     void blank_screen();
-void draw_rect(frame_t& frame,
-					int x, int y,
-					int w, int h,
-					graphics::colour_rgb565 col = graphics::colour_rgb565::GREEN);
+
+void draw_paddle(lv_obj_t* canvas, int x, int y);
 private:
     void init_display();
 

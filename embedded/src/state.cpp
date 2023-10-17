@@ -4,6 +4,65 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(menu, LOG_LEVEL_ERR);
 
+
+PongGame::PongGame()
+{
+
+}
+
+
+PongGame::~PongGame()
+{
+
+}
+
+graphics::frame_t PongGame::get_frame()
+{
+
+}
+
+
+/* Button handlers */
+void PongGame::handle_a_button()
+{
+
+}
+
+
+void PongGame::handle_b_button()
+{
+
+}
+
+
+void PongGame::handle_up_button()
+{
+
+}
+
+
+void PongGame::handle_down_button()
+{
+
+}
+
+
+void PongGame::handle_left_button()
+{
+
+}
+
+
+void PongGame::handle_right_button()
+{
+
+}
+
+
+/*
+    Menu State
+*/
+
 MenuState::MenuState()
 {
 
@@ -16,9 +75,9 @@ MenuState::~MenuState()
 }
 
 
-Display::frame_t MenuState::get_frame()
+graphics::frame_t  MenuState::get_frame()
 {
-    return {NULL, 0};
+    return NULL;
 }
 
 /*

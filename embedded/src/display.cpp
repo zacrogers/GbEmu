@@ -34,27 +34,6 @@ static uint16_t get_rgb565_color(enum Display::corner corner, uint8_t grey)
 int tile_size = 8;
 
 
-
-
-
-
-void Display::draw_rect(Display::frame_t& frame,
-					int x, int y,
-					int w, int h,
-					graphics::colour_rgb565 col)
-{
-	for(size_t _y = 120; _y < 140; _y += 2)
-	{
-		// for(size_t _x = 0; _x < 20; _x += 2)
-		// {
-			uint16_t i = _y;// + _x;
-			*(frame.buffer + i + 0) = ((uint16_t)col >> 8) & 0xFFu;
-			*(frame.buffer + i + 1) = ((uint16_t)col >> 0) & 0xFFu;
-		// }
-	}
-}
-
-
 static void fill_buffer_rgb565(enum Display::corner corner, uint8_t grey, uint8_t *buf, size_t buf_size)
 {
 	uint16_t color = get_rgb565_color(corner, grey);
@@ -229,45 +208,19 @@ void Display::init_display()
 
 void Display::blank_screen()
 {
-	buf_desc.buf_size = buf_size;
-	buf_desc.pitch = capabilities.x_resolution;
-	buf_desc.width = capabilities.x_resolution;
-	buf_desc.height = h_step;
-
-	memset(buf, 0xFF, buf_size);
-
-	frame_t f = {
-		.buffer = buf,
-		.size = buf_size,
-		.width = capabilities.x_resolution,
-		.height = capabilities.y_resolution
-	};
-
-	for (int i = 0; i < buf_size; i += h_step)
-    {
-		*(f.buffer + i + 0) = ((uint16_t)graphics::colour_rgb565::RED >> 8) & 0xFFu;
-		*(f.buffer + i + 1) = ((uint16_t)graphics::colour_rgb565::RED >> 0) & 0xFFu;
-	}
-	// for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
-    // {
-	// 	display_write(display_dev, 0, idx, &buf_desc, f.buffer);
-	// }
-
 	lv_init();
-	lv_color_t blue = lv_color_make(255, 0, 0);
-	lv_color_t red = lv_color_make(0, 255, 0);
-	lv_color_t green = lv_color_make(0, 0, 255);
+
 
     lv_draw_rect_dsc_t rect_dsc;
     lv_draw_rect_dsc_init(&rect_dsc);
-    rect_dsc.radius = 2;
+    rect_dsc.radius = 0;
     rect_dsc.bg_opa = LV_OPA_COVER;
     // rect_dsc.bg_grad_dir = LV_GRAD_DIR_HOR;
-    rect_dsc.bg_color = green;
+    rect_dsc.bg_color = graphics::blue;
     // rect_dsc.bg_grad_color = LV_COLOR_BLUE;
-    rect_dsc.border_width = 1;
+    rect_dsc.border_width = 0;
     rect_dsc.border_opa = LV_OPA_90;
-    rect_dsc.border_color = blue;
+    rect_dsc.border_color = graphics::blue;
     rect_dsc.shadow_width = 0;
     rect_dsc.shadow_ofs_x = 0;
     rect_dsc.shadow_ofs_y = 0;
@@ -283,15 +236,23 @@ void Display::blank_screen()
     lv_obj_align(canvas, LV_ALIGN_CENTER, 0, 0);
 
 
-    lv_canvas_fill_bg(canvas, red, LV_OPA_COVER);
+    lv_canvas_fill_bg(canvas, graphics::red, LV_OPA_COVER);
 
-	for(size_t i = 0; i < capabilities.x_resolution; ++i)
-	{
-		for(size_t j = 0; j < capabilities.y_resolution; ++j)
-		{
-			lv_canvas_draw_rect(canvas, i*10, j*10, 10, 10, &rect_dsc);
-		}
-	}
+	// for(size_t i = 0; i < capabilities.x_resolution; ++i)
+	// {
+	// 	for(size_t j = 0; j < capabilities.y_resolution; ++j)
+	// 	{
+	// 		lv_canvas_draw_rect(canvas, i*10, j*10, 10, 10, &rect_dsc);
+	// 	}
+	// }
+
+	// paddles
+	graphics::draw_rect(canvas, 20, 30, 15, 80, graphics::blue);
+	graphics::draw_rect(canvas, capabilities.x_resolution+5, 30, 15, 80, graphics::blue);
+
+	// ball
+	graphics::draw_rect(canvas, capabilities.x_resolution/2, capabilities.y_resolution/2, 15, 15, graphics::green);
+
 
 
 	// lv_obj_t*	hello_world_label = lv_label_create(lv_scr_act());
@@ -305,17 +266,18 @@ void Display::blank_screen()
 
 }
 
-void Display::draw_frame(frame_t& frame)
+
+void Display::draw_frame(graphics::frame_t& frame)
 {
-	buf_desc.buf_size = buf_size;
-	buf_desc.pitch = capabilities.x_resolution;
-	buf_desc.width = capabilities.x_resolution;
-	buf_desc.height = h_step;
+	// buf_desc.buf_size = buf_size;
+	// buf_desc.pitch = capabilities.x_resolution;
+	// buf_desc.width = capabilities.x_resolution;
+	// buf_desc.height = h_step;
 
-	memset(buf, 0xFF, buf_size);
+	// memset(buf, 0xFF, buf_size);
 
-	for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
-    {
-		display_write(display_dev, 0, idx, &buf_desc, buf);
-	}
+	// for (int idx = 0; idx < capabilities.y_resolution; idx += h_step)
+    // {
+	// 	display_write(display_dev, 0, idx, &buf_desc, buf);
+	// }
 }

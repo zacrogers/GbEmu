@@ -57,7 +57,7 @@ public:
             switch(new_state)
             {
                 case State::MENU: tmp = new MenuState(); break;
-                case State::GAME: tmp = new MenuState(); break;
+                case State::GAME: tmp = new PongGame(); break;
                 default: break;
             }
 

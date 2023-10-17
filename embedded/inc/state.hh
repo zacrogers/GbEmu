@@ -11,7 +11,7 @@ public:
 
     virtual ~StateBase() = default;
 
-    virtual Display::frame_t get_frame() = 0;
+    virtual graphics::frame_t get_frame() = 0;
 
     inline bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
     inline bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
@@ -53,6 +53,41 @@ private:
     StateBase::State current_state { };
 };
 
+typedef struct {
+    int x, y;
+    uint8_t collision_group; // 0 = no collision
+} entity_t;
+
+
+class PongGame: public StateBase
+{
+private:
+    enum Option { START_GAME = 0, SHUT_DOWN, NUM_OPTIONS, NONE };
+
+public:
+    PongGame();
+    ~PongGame() override;
+
+    graphics::frame_t get_frame           () override;
+
+private:
+/* Member Functions */
+
+    /* Button handlers */
+    void             handle_a_button     () override;
+    void             handle_b_button     () override;
+    void             handle_up_button    () override;
+    void             handle_down_button  () override;
+    void             handle_left_button  () override;
+    void             handle_right_button () override;
+
+    entity_t player_a;
+    entity_t player_b;
+    entity_t ball;
+
+    graphics::frame_t frame {};
+};
+
 
 class MenuState: public StateBase
 {
@@ -63,7 +98,7 @@ public:
     MenuState();
     ~MenuState() override;
 
-    Display::frame_t get_frame           () override;
+    graphics::frame_t get_frame           () override;
 
 private:
 /* Member Functions */
