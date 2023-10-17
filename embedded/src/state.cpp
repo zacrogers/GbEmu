@@ -9,7 +9,7 @@ PongGame::PongGame()
 {
     lv_init();
     frame = lv_canvas_create(lv_scr_act());
-    lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
+    lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
 	lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
 	lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
     lv_obj_align(frame, LV_ALIGN_CENTER, 0, 0);
@@ -27,6 +27,8 @@ void PongGame::draw_ready_to_play_state()
     // Fill background
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
 
+    graphics::draw_text(frame, 70, 50, "Pong");
+    graphics::draw_text(frame, 50, 75, "Start Game");
 }
 
 
@@ -38,11 +40,11 @@ void PongGame::draw_playing_state()
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
 
 	// Draw paddles
-	graphics::draw_rect(frame, player_a.x, player_a.y, player_a.w, player_a.h, graphics::red);
-	graphics::draw_rect(frame, player_b.x, player_b.y, player_b.w, player_b.h, graphics::red);
+	graphics::draw_rect(frame, player_a.pos, player_a.w, player_a.h, graphics::red);
+	graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
 
     // Draw ball
-    graphics::draw_rect(frame, ball.x, ball.y, ball.w, ball.h, graphics::green);
+    graphics::draw_rect(frame, ball.pos, ball.w, ball.h, graphics::green);
 }
 
 
@@ -50,7 +52,6 @@ void PongGame::draw_match_finished_state()
 {
     // Fill background
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
-
 }
 
 
@@ -58,7 +59,6 @@ void PongGame::draw_game_finished_state()
 {
     // Fill background
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
-
 }
 
 
@@ -78,40 +78,46 @@ void PongGame::draw()
 
 void PongGame::handle_collision()
 {
-    ball.x += squareVelocityX;
-    ball.y += squareVelocityY;
+    ball.pos.x += ball.velocity.x;
+    ball.pos.y += ball.velocity.y;
 
-    if (x_out_of_bounds(ball.x))
+    if(x_out_of_bounds(ball.pos.x))
     {
-        if(player_a_scored(ball.x))
+        if(player_a_scored(ball.pos.x))
         {
-            player_a_score++;
+            game_info.player_a_score++;
         }
-        if(player_b_scored(ball.x))
+        if(player_b_scored(ball.pos.x))
         {
-            player_b_score++;
+            game_info.player_b_score++;
         }
         if(!still_in_progress())
         {
 
         }
     }
-    if(n_ticks > 20) {
+
+    // Ball was getting stuck and oscillating.
+    // Let it get away from the paddle after a bounce
+    // before doing another collision check
+    if(n_ticks > 20)
+    {
         n_ticks = 0;
         bounced=false;
     }
 
     if ((graphics::entities_colliding(ball, player_a) ||
-        graphics::entities_colliding(ball, player_b)) && !bounced)
+        graphics::entities_colliding(ball, player_b)) &&
+        !bounced)
     {
-        squareVelocityX = -squareVelocityX;
+        ball.velocity.x = -ball.velocity.x;
         bounced = true;
     }
 
     // Bounce off the top and bottom of the screen
-    if (y_out_of_bounds(ball.y))
+    if (y_out_of_bounds(ball.pos.y))
     {
-        squareVelocityY = -squareVelocityY;
+        ball.velocity.y = -ball.velocity.y;
     }
 
     n_ticks++;
@@ -122,16 +128,37 @@ void check_endgoal_areas()
 
 }
 
-/* Button handlers */
-void PongGame::handle_a_button()
+
+void PongGame::start_game()
 {
 
 }
 
 
+/* Button handlers */
+void PongGame::handle_a_button()
+{
+    switch(play_state)
+    {
+        case PlayState::READY_TO_PLAY: start_game(); break;
+        case PlayState::PLAYING:
+        case PlayState::MATCH_FINISHED:
+        case PlayState::GAME_FINISHED:
+        default: break;
+    }
+}
+
+
 void PongGame::handle_b_button()
 {
-
+    switch(play_state)
+    {
+        case PlayState::READY_TO_PLAY:
+        case PlayState::PLAYING:
+        case PlayState::MATCH_FINISHED:
+        case PlayState::GAME_FINISHED:
+        default: break;
+    }
 }
 
 
@@ -147,37 +174,34 @@ void PongGame::move_player_a_down()
 }
 
 
-
 void PongGame::handle_up_button()
 {
-    // if(player_a.y > player_a_
-    switch (play_state)
+    switch(play_state)
     {
-    case PlayState::PLAYING: move_player_a_up(); break;
-
-    default: break;
+        case PlayState::PLAYING: move_player_a_up(); break;
+        case PlayState::READY_TO_PLAY:
+        case PlayState::MATCH_FINISHED:
+        case PlayState::GAME_FINISHED:
+        default: break;
     }
-    //     player_a.y -= player_a_speed;
 }
 
 
 void PongGame::handle_down_button()
 {
-    // if(player_a.y <= 100)
-    //     player_a.y += player_a_speed;
+    switch(play_state)
+    {
+        case PlayState::PLAYING: move_player_a_down(); break;
+        case PlayState::READY_TO_PLAY:
+        case PlayState::MATCH_FINISHED:
+        case PlayState::GAME_FINISHED:
+        default: break;
+    }
 }
 
 
-void PongGame::handle_left_button()
-{
-
-}
-
-
-void PongGame::handle_right_button()
-{
-
-}
+void PongGame::handle_left_button()   { }
+void PongGame::handle_right_button()  { }
 
 
 /*

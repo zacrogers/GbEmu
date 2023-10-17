@@ -30,10 +30,9 @@ public:
 
 
     void draw_frame(graphics::frame_t& frame);
-    void blank_screen();
 
-void draw_paddle(lv_obj_t* canvas, int x, int y);
     void init_display();
+
 private:
 
 	size_t                           x;

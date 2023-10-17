@@ -60,8 +60,8 @@ private:
     enum class PlayState { READY_TO_PLAY, PLAYING, MATCH_FINISHED, GAME_FINISHED };
 
     typedef struct {
-        uint32_t total_time_ms;
         uint8_t player_a_score, player_b_score;
+        uint32_t total_time_ms;
     } game_info_t;
 
 public:
@@ -85,14 +85,17 @@ private:
     void handle_left_button        () override;
     void handle_right_button       () override;
 
+    /* Button actions */
     void move_player_a_up          ();
     void move_player_a_down        ();
+    void start_game                ();
 
     // graphics
     void draw_ready_to_play_state  ();
     void draw_playing_state        ();
     void draw_match_finished_state ();
     void draw_game_finished_state  ();
+
 
     void handle_collision          ();
 
@@ -105,31 +108,27 @@ private:
     bool player_a_scored           (int x) { return (x > 160); }
 
     bool still_in_progress         ()
-        { return (player_a_score != winning_score) || (player_b_score != winning_score); }
+        { return (game_info.player_a_score != winning_score) ||
+                (game_info.player_b_score != winning_score); }
 
     uint8_t winning_score  = 5;
+
     game_info_t game_info = {
         .player_a_score = 0,
         .player_b_score = 0,
         .total_time_ms = 0
     };
-    uint8_t player_a_score = 0;
-    uint8_t player_b_score = 0;
 
-    int squareVelocityX    = 5;
-    int squareVelocityY    = 5;
     int paddle_length      = 70;
 
-    uint8_t player_a_speed = 5, player_b_speed = 5, ball_speed = 5;
-    int ball_start_x =25, ball_start_y = 25;
+    int ball_start_x = 25;
+    int ball_start_y = 25;
 
-    graphics::entity_t player_a = { 15, 50, 15, paddle_length };
-    graphics::entity_t player_b = { 170, 50, 15, paddle_length };
-    graphics::entity_t ball     = { ball_start_x, ball_start_y, 15, 15, 1 };
+    graphics::entity_t player_a = { {15, 50}, 15, paddle_length, 0, {0, 0} };
+    graphics::entity_t player_b = { {170, 50}, 15, paddle_length, 0, {0, 0} };
+    graphics::entity_t ball     = { {ball_start_x, ball_start_y}, 15, 15, 0, {5, 5} };
 
     PlayState play_state { PlayState::PLAYING };
-
-    bool going_left = false;
 
     graphics::frame_t frame { nullptr };
     int n_ticks = 0;
