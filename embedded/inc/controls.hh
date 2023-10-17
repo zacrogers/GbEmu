@@ -9,22 +9,22 @@
 class Controls
 {
 public:
-    static const size_t INPUT_QUEUE_SIZE = 0xFF;
+    static constexpr size_t INPUT_QUEUE_SIZE = 0xFF;
 
     enum InputType { A, B, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, NUM_INPUTS, NONE };
 
     Controls();
     ~Controls();
 
-    const InputType get_last_pressed();
+    static const InputType get_last_pressed();
 
-private:
-    struct gpio_dt_spec a_button = GPIO_DT_SPEC_GET(DT_NODELABEL(a_button), gpios);
-    struct gpio_dt_spec b_button = GPIO_DT_SPEC_GET(DT_NODELABEL(b_button), gpios);
+// private:
+    static struct gpio_dt_spec a_button;
+    static struct gpio_dt_spec b_button;
 
 
-    etl::queue<InputType, INPUT_QUEUE_SIZE>  input_queue { };
+    static etl::queue<InputType, INPUT_QUEUE_SIZE>  input_queue;
 
-    void init_gpio(){}
-    void add_to_queue(const InputType& input) { input_queue.push(input); }
+public:
+    static void add_to_queue(const InputType& input) { input_queue.push(input); }
 };

@@ -57,7 +57,7 @@ private:
 class PongGame: public StateBase
 {
 private:
-    enum class PlayState { READY_TO_PLAY, PLAYING, MATCH_FINISHED, GAME_FINISHED };
+    enum class PlayState { READY_TO_PLAY, PLAYING, GAME_FINISHED };
 
     typedef struct {
         uint8_t player_a_score, player_b_score;
@@ -95,7 +95,6 @@ private:
     /* Graphics */
     void draw_ready_to_play_state  ();
     void draw_playing_state        ();
-    void draw_match_finished_state ();
     void draw_game_finished_state  ();
 
     /* Bounds & collision checking */
@@ -114,7 +113,7 @@ private:
 
 /* Constants */
     static const uint8_t winning_score  { 5 };
-    static const int     paddle_length  { 70 };
+    static const int     paddle_length  { 35 };
     static const int     ball_start_x   { 25 };
     static const int     ball_start_y   { 25 };
 

@@ -45,7 +45,7 @@ public:
 
     void process()
     {
-        // process_input();
+        process_input();
         process_frame();
     }
 

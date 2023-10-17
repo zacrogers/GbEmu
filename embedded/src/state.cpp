@@ -48,19 +48,14 @@ void PongGame::draw_playing_state()
 }
 
 
-void PongGame::draw_match_finished_state()
-{
-    // Fill background
-    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
-}
-
-
 void PongGame::draw_game_finished_state()
 {
     // Fill background
     lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
 
     graphics::draw_text(frame, 70, 50, "Game Over Yo");
+    game_info.player_a_score = 0;
+    game_info.player_b_score = 0;
 }
 
 
@@ -70,7 +65,6 @@ void PongGame::draw()
     {
         case PlayState::READY_TO_PLAY:  draw_ready_to_play_state();  break;
         case PlayState::PLAYING:        draw_playing_state();        break;
-        case PlayState::MATCH_FINISHED: draw_match_finished_state(); break;
         case PlayState::GAME_FINISHED:  draw_game_finished_state();  break;
         default: break;
     }
@@ -138,7 +132,9 @@ void check_endgoal_areas()
 /* Button actions */
 void PongGame::start_game()
 {
-
+    game_info.player_a_score = 0;
+    game_info.player_b_score = 0;
+    play_state = PlayState::PLAYING;
 }
 
 
@@ -150,17 +146,17 @@ void PongGame::continue_game()
 
 void PongGame::back_to_start_menu()
 {
-
+    play_state = PlayState::READY_TO_PLAY;
 }
 
 
 /* Button handlers */
 void PongGame::handle_a_button()
 {
+    // stxart_game();
     switch(play_state)
     {
         case PlayState::READY_TO_PLAY:  start_game();         break;
-        case PlayState::MATCH_FINISHED: continue_game();      break;
         case PlayState::GAME_FINISHED:  back_to_start_menu(); break;
         case PlayState::PLAYING:
         default: break;
@@ -174,7 +170,6 @@ void PongGame::handle_b_button()
     {
         case PlayState::READY_TO_PLAY:
         case PlayState::PLAYING:
-        case PlayState::MATCH_FINISHED:
         case PlayState::GAME_FINISHED:
         default: break;
     }
@@ -199,7 +194,6 @@ void PongGame::handle_up_button()
     {
         case PlayState::PLAYING: move_player_a_up(); break;
         case PlayState::READY_TO_PLAY:
-        case PlayState::MATCH_FINISHED:
         case PlayState::GAME_FINISHED:
         default: break;
     }
@@ -212,7 +206,6 @@ void PongGame::handle_down_button()
     {
         case PlayState::PLAYING: move_player_a_down(); break;
         case PlayState::READY_TO_PLAY:
-        case PlayState::MATCH_FINISHED:
         case PlayState::GAME_FINISHED:
         default: break;
     }
