@@ -29,9 +29,6 @@ static const ctx inst[0x100] = {
     [0x0E] =  { MN::LD,   AM::R_D8,   R::C,     R::None,  8,    2, 0,    "LD C,#D8"    },
     [0x0F] =  { MN::RRCA, AM::None,   R::None,  R::None,  4,    2, 0,    "RRCA"        },
 
-
-    //TODO: FILL OUT MC and LEN BELOW
-
 /*  0x10 */
     [0x10] =  { MN::STOP, AM::None,   R::None,  R::None,  4,    2, 0,    "STOP 0"      },
     [0x11] =  { MN::LD,   AM::R_D16,  R::DE,    R::None,  12,   3, 0,    "LD DE,#D16"  },
