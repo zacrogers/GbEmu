@@ -3,11 +3,11 @@
 
 void Engine::process_input()
 {
-    // if(p_controls && p_current_state)
-    // {
+    if(p_controls && p_current_state)
+    {
         auto last_control = p_controls->get_last_pressed();
         p_current_state->process_input(last_control);
-    // }
+    }
 }
 
 void Engine::process_frame()
@@ -15,7 +15,6 @@ void Engine::process_frame()
     if(p_current_state && p_display)
     {
         p_current_state->draw();
-
         // p_display->draw_frame(new_frame);
     }
 }

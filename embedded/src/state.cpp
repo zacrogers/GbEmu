@@ -178,7 +178,7 @@ void PongGame::handle_b_button()
 {
     switch(play_state)
     {
-        case PlayState::PLAYING:
+        case PlayState::PLAYING:          move_player_a_down(); break;
         case PlayState::READY_TO_PLAY:
         case PlayState::GAME_FINISHED:
         default: break;
@@ -188,13 +188,13 @@ void PongGame::handle_b_button()
 
 void PongGame::move_player_a_up()
 {
-
+    player_a.pos.y -= player_a.velocity.y;
 }
 
 
 void PongGame::move_player_a_down()
 {
-
+    player_a.pos.y += player_a.velocity.y;
 }
 
 

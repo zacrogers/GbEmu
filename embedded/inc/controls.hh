@@ -18,6 +18,7 @@ public:
 
     static const InputType get_last_pressed();
     static void update();
+    static void clear_queue();
 
 // private:
     static struct gpio_dt_spec a_button;
@@ -26,9 +27,12 @@ public:
     static bool input_pressed[InputType::NUM_INPUTS];
 
     static etl::queue<InputType, INPUT_QUEUE_SIZE> input_queue;
+    static uint64_t last_time;
+    struct gpio_callback a_btn_cb_data;
+    struct gpio_callback b_btn_cb_data;
+
     static void a_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
-static uint64_t last_time;
-struct gpio_callback a_btn_cb_data;
+    static void b_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
 
 public:
     // static void add_to_queue(const InputType& input) { input_queue.push(input); }

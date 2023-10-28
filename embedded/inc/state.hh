@@ -125,7 +125,7 @@ private:
     game_info_t          game_info      { 0, 0, 0 };
 
     /* Entities */
-    graphics::entity_t   player_a       { {15, 50}, 15, paddle_length, 0, {0, 0} };
+    graphics::entity_t   player_a       { {15, 50}, 15, paddle_length, 0, {0, 5} };
     graphics::entity_t   player_b       { {170, 50}, 15, paddle_length, 0, {0, 0} };
     graphics::entity_t   ball           { {ball_start_x, ball_start_y}, 15, 15, 0, {5, 5} };
 
