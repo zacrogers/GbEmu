@@ -27,7 +27,7 @@ struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
     GPIO_DT_SPEC_GET(DT_NODELABEL(down_button), gpios)
 };
 
-uint64_t Controls::last_time = 0;
+uint64_t Controls::last_time[InputType::NUM_INPUTS] {};
 
 #define DEBOUNCE_TIMEOUT_MS 150
 #define TIMER_RETRIGGER_MS 50
@@ -146,7 +146,7 @@ const Controls::InputType Controls::get_last_pressed()
 void Controls::handle_button(Controls::InputType input)
 {
     uint64_t now = k_uptime_get();
-    if ((now - Controls::last_time) > DEBOUNCE_TIMEOUT_MS)
+    if ((now - Controls::last_time[input]) > DEBOUNCE_TIMEOUT_MS)
     {
         if(Controls::trigger_mapping[input] == Controls::TriggerType::PERIODIC)
         {
@@ -160,7 +160,7 @@ void Controls::handle_button(Controls::InputType input)
         }
     }
 
-    Controls::last_time = now;
+    Controls::last_time[input] = now;
 }
 
 

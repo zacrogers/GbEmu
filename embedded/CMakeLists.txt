@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.20.0)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 find_package(etl REQUIRED)
-
 FILE(GLOB app_sources src/*.cpp)
 target_sources(app PRIVATE ${app_sources})
+target_sources(app PRIVATE src/states/pong.cpp)
+target_sources(app PRIVATE src/states/main_menu.cpp)
 project(gb_emu)
 
 zephyr_include_directories(../modules/etl)
@@ -12,6 +13,7 @@ zephyr_include_directories(../modules/etl)
 #     ../emu_core/inc
 #     ../emu_core/src
 # )
+
 
 target_link_libraries(app PRIVATE etl::etl)
 target_sources(app PRIVATE src/main.cpp)

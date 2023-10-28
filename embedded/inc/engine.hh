@@ -2,7 +2,10 @@
 
 #include "controls.hh"
 #include "display.hh"
-#include "state.hh"
+#include "states/state.hh"
+#include "states/pong.hh"
+#include "states/main_menu.hh"
+
 class Engine
 {
 public:

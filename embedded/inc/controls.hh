@@ -23,16 +23,14 @@ public:
 
 
 private:
-    static struct gpio_dt_spec  button[InputType::NUM_INPUTS];
-    static TriggerType          trigger_mapping[InputType::NUM_INPUTS];
-    static struct k_timer       button_timers[InputType::NUM_INPUTS];
-    static struct gpio_callback cb_data[InputType::NUM_INPUTS];
-
-
+    static struct gpio_dt_spec                     button[InputType::NUM_INPUTS];
+    static TriggerType                             trigger_mapping[InputType::NUM_INPUTS];
+    static struct k_timer                          button_timers[InputType::NUM_INPUTS];
+    static struct gpio_callback                    cb_data[InputType::NUM_INPUTS];
+    static uint64_t                                last_time[InputType::NUM_INPUTS];
     static etl::queue<InputType, INPUT_QUEUE_SIZE> input_queue;
-    static uint64_t last_time;
 
-    /* TImer Handlers */
+    /* Timer Handlers */
     static void timer_handler(InputType input);
     static void a_button_timer_handler(struct k_timer *dummy);
     static void b_button_timer_handler(struct k_timer *dummy);

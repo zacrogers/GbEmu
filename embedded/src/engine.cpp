@@ -45,6 +45,7 @@ void Engine::change_state(State new_state)
             delete p_current_state;
             p_current_state = tmp;
             current_state = new_state;
+            // p_controls->set_trigger_map(p_current_state.get_trigger_map());
         }
     }
 }
