@@ -2,7 +2,7 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(menu, LOG_LEVEL_ERR);
+LOG_MODULE_REGISTER(menu, LOG_LEVEL_DBG);
 
 
 PongGame::PongGame()
@@ -22,10 +22,28 @@ PongGame::~PongGame()
 }
 
 
+void PongGame::draw_background()
+{
+    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+}
+
+
+void PongGame::draw_paddles()
+{
+	graphics::draw_rect(frame, player_a.pos, player_a.w, player_a.h, graphics::red);
+	graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
+}
+
+
+void PongGame::draw_ball()
+{
+    graphics::draw_rect(frame, ball.pos, ball.w, ball.h);
+}
+
+
 void PongGame::draw_ready_to_play_state()
 {
-    // Fill background
-    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+    draw_background();
 
     graphics::draw_text(frame, 70, 50, "Pong");
     graphics::draw_text(frame, 50, 75, "Start Game");
@@ -35,23 +53,15 @@ void PongGame::draw_ready_to_play_state()
 void PongGame::draw_playing_state()
 {
     handle_collision();
-
-    // Fill background
-    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
-
-	// Draw paddles
-	graphics::draw_rect(frame, player_a.pos, player_a.w, player_a.h, graphics::red);
-	graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
-
-    // Draw ball
-    graphics::draw_rect(frame, ball.pos, ball.w, ball.h);
+    draw_background();
+    draw_paddles();
+    draw_ball();
 }
 
 
 void PongGame::draw_game_finished_state()
 {
-    // Fill background
-    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+    draw_background();
 
     graphics::draw_text(frame, 70, 50, "Game Over Yo");
     game_info.player_a_score = 0;
@@ -153,7 +163,7 @@ void PongGame::back_to_start_menu()
 /* Button handlers */
 void PongGame::handle_a_button()
 {
-    // stxart_game();
+    LOG_INF("A button pressed");
     switch(play_state)
     {
         case PlayState::READY_TO_PLAY:  start_game();         break;
@@ -168,8 +178,8 @@ void PongGame::handle_b_button()
 {
     switch(play_state)
     {
-        case PlayState::READY_TO_PLAY:
         case PlayState::PLAYING:
+        case PlayState::READY_TO_PLAY:
         case PlayState::GAME_FINISHED:
         default: break;
     }

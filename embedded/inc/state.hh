@@ -93,6 +93,10 @@ private:
     void back_to_start_menu        ();
 
     /* Graphics */
+    void draw_background           ();
+    void draw_paddles              ();
+    void draw_ball                 ();
+
     void draw_ready_to_play_state  ();
     void draw_playing_state        ();
     void draw_game_finished_state  ();
@@ -101,11 +105,11 @@ private:
     void handle_collision          ();
     void check_endgoal_areas       ();
 
-    bool x_out_of_bounds           (int x) { return (x < 15 || x > 160); }
-    bool y_out_of_bounds           (int y) { return (y < 15 || y > 128); }
+    bool x_out_of_bounds           (const int x) { return (x < 15 || x > 160); }
+    bool y_out_of_bounds           (const int y) { return (y < 15 || y > 128); }
 
-    bool player_b_scored           (int x) { return (x < 15); }
-    bool player_a_scored           (int x) { return (x > 160); }
+    bool player_b_scored           (const int x) { return (x < 15); }
+    bool player_a_scored           (const int x) { return (x > 160); }
 
     bool somebody_won              ()
         { return (game_info.player_a_score == winning_score) ||
