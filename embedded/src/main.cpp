@@ -16,7 +16,7 @@ int main(void)
 	while (1)
 	{
 		engine.process();
-		k_msleep(1);
+		// k_msleep(1);
 	}
 	return 0;
 }

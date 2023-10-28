@@ -92,14 +92,14 @@ void PongGame::handle_collision()
         if(player_a_scored(ball.pos.x))
         {
             game_info.player_a_score++;
-            ball.pos.x = ball_start_x;
-            ball.pos.y = ball_start_y;
+            ball.pos.x = ball_start.x;
+            ball.pos.y = ball_start.y;
         }
         if(player_b_scored(ball.pos.x))
         {
             game_info.player_b_score++;
-            ball.pos.x = ball_start_x;
-            ball.pos.y = ball_start_y;
+            ball.pos.x = ball_start.x;
+            ball.pos.y = ball_start.y;
         }
         if(somebody_won())
         {
@@ -168,7 +168,7 @@ void PongGame::handle_a_button()
     {
         case PlayState::READY_TO_PLAY:  start_game();         break;
         case PlayState::GAME_FINISHED:  back_to_start_menu(); break;
-        case PlayState::PLAYING:
+        case PlayState::PLAYING:        move_player_b_up();   break;
         default: break;
     }
 }
@@ -178,7 +178,7 @@ void PongGame::handle_b_button()
 {
     switch(play_state)
     {
-        case PlayState::PLAYING:          move_player_a_down(); break;
+        case PlayState::PLAYING:  move_player_b_down(); break;
         case PlayState::READY_TO_PLAY:
         case PlayState::GAME_FINISHED:
         default: break;
@@ -195,6 +195,18 @@ void PongGame::move_player_a_up()
 void PongGame::move_player_a_down()
 {
     player_a.pos.y += player_a.velocity.y;
+}
+
+
+void PongGame::move_player_b_up()
+{
+    player_b.pos.y -= player_b.velocity.y;
+}
+
+
+void PongGame::move_player_b_down()
+{
+    player_b.pos.y += player_b.velocity.y;
 }
 
 

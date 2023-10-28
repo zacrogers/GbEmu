@@ -88,6 +88,8 @@ private:
     /* Button actions */
     void move_player_a_up          ();
     void move_player_a_down        ();
+    void move_player_b_up          ();
+    void move_player_b_down        ();
     void start_game                ();
     void continue_game             ();
     void back_to_start_menu        ();
@@ -116,18 +118,17 @@ private:
                 (game_info.player_b_score == winning_score); }
 
 /* Constants */
-    static const uint8_t winning_score  { 5 };
-    static const int     paddle_length  { 35 };
-    static const int     ball_start_x   { 25 };
-    static const int     ball_start_y   { 25 };
+    static const uint8_t             winning_score  { 5 };
+    static const int                 paddle_length  { 65 };
+    static constexpr graphics::pos_t     ball_start     { 35, 25 };
 
 /* Variables */
     game_info_t          game_info      { 0, 0, 0 };
 
     /* Entities */
     graphics::entity_t   player_a       { {15, 50}, 15, paddle_length, 0, {0, 5} };
-    graphics::entity_t   player_b       { {170, 50}, 15, paddle_length, 0, {0, 0} };
-    graphics::entity_t   ball           { {ball_start_x, ball_start_y}, 15, 15, 0, {5, 5} };
+    graphics::entity_t   player_b       { {170, 50}, 15, paddle_length, 0, {0, 5} };
+    graphics::entity_t   ball           { ball_start, 15, 15, 0, {5, 5} };
 
     PlayState            play_state     { PlayState::PLAYING };
     graphics::frame_t    frame          { nullptr };

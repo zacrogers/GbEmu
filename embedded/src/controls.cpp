@@ -5,9 +5,21 @@ LOG_MODULE_REGISTER(controls, LOG_LEVEL_DBG);
 
 
 
-etl::queue<Controls::InputType, Controls::INPUT_QUEUE_SIZE> Controls::input_queue {};
-struct k_timer Controls::button_timers[InputType::NUM_INPUTS] {};
-struct k_timer Controls::button_timer {};
+etl::queue<Controls::InputType, Controls::INPUT_QUEUE_SIZE> Controls::input_queue { };
+Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]  {
+    // Controls::TriggerType::ONE_SHOT,
+    // Controls::TriggerType::ONE_SHOT,
+    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::PERIODIC
+};
+
+struct gpio_callback            Controls::cb_data[InputType::NUM_INPUTS]    { };
+struct k_timer                  Controls::button_timers[InputType::NUM_INPUTS]    { };
+
 struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
     GPIO_DT_SPEC_GET(DT_NODELABEL(a_button), gpios),
     GPIO_DT_SPEC_GET(DT_NODELABEL(b_button), gpios),
@@ -15,38 +27,49 @@ struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
     GPIO_DT_SPEC_GET(DT_NODELABEL(down_button), gpios)
 };
 
-Controls::InputType Controls::current_input = Controls::InputType::NONE;
-
 uint64_t Controls::last_time = 0;
 
 #define DEBOUNCE_TIMEOUT_MS 150
+#define TIMER_RETRIGGER_MS 50
 
-void Controls::button_timer_handler(struct k_timer *dummy)
+
+/*
+    Button timer handlers
+*/
+void Controls::timer_handler(Controls::InputType input)
 {
-    Controls::input_queue.push(Controls::current_input);
-    if(!gpio_pin_get_dt(&button[Controls::current_input]))
+    Controls::input_queue.push(input);
+
+    if(!gpio_pin_get_dt(&button[input]))
     {
-        k_timer_stop(&button_timers[Controls::current_input]);
+        k_timer_stop(&button_timers[input]);
     }
 }
+
+
+void Controls::a_button_timer_handler(struct k_timer *dummy)
+{
+    Controls::timer_handler(InputType::A);
+}
+
+
+void Controls::b_button_timer_handler(struct k_timer *dummy)
+{
+   Controls::timer_handler(InputType::B);
+}
+
 
 void Controls::up_button_timer_handler(struct k_timer *dummy)
 {
-    Controls::input_queue.push(Controls::InputType::UP);
-    if(!gpio_pin_get_dt(&button[Controls::InputType::UP]))
-    {
-        k_timer_stop(&button_timers[Controls::InputType::UP]);
-    }
+   Controls::timer_handler(InputType::UP);
 }
+
 
 void Controls::down_button_timer_handler(struct k_timer *dummy)
 {
-    Controls::input_queue.push(Controls::InputType::DOWN);
-    if(!gpio_pin_get_dt(&button[Controls::InputType::DOWN]))
-    {
-        k_timer_stop(&button_timers[Controls::InputType::DOWN]);
-    }
+   Controls::timer_handler(InputType::DOWN);
 }
+
 
 void Controls::clear_queue()
 {
@@ -55,42 +78,44 @@ void Controls::clear_queue()
 
 Controls::Controls()
 {
-    k_timer_init(&Controls::button_timer, button_timer_handler, NULL);
     if (device_is_ready(button[Controls::InputType::A].port))
     {
         int ret = gpio_pin_configure_dt(&button[Controls::InputType::A], GPIO_INPUT);
 
         ret = gpio_pin_interrupt_configure_dt(&button[Controls::InputType::A], GPIO_INT_EDGE_TO_ACTIVE);
-        gpio_init_callback(&a_btn_cb_data, this->a_button_pressed , BIT(button[Controls::InputType::A].pin));
-        gpio_add_callback(button[Controls::InputType::A].port, &a_btn_cb_data);
-        k_timer_init(&Controls::button_timers[Controls::InputType::A], button_timer_handler, NULL);
+        gpio_init_callback(&cb_data[InputType::A], this->a_button_pressed , BIT(button[Controls::InputType::A].pin));
+        gpio_add_callback(button[Controls::InputType::A].port, &cb_data[InputType::A]);
+        k_timer_init(&Controls::button_timers[Controls::InputType::A], a_button_timer_handler, NULL);
     }
+
     if (device_is_ready(button[Controls::InputType::B].port))
     {
         int ret = gpio_pin_configure_dt(&button[Controls::InputType::B], GPIO_INPUT);
 
         ret = gpio_pin_interrupt_configure_dt(&button[Controls::InputType::B], GPIO_INT_EDGE_TO_ACTIVE);
-        gpio_init_callback(&b_btn_cb_data, this->b_button_pressed , BIT(button[Controls::InputType::B].pin));
-        gpio_add_callback(button[Controls::InputType::B].port, &b_btn_cb_data);
-        k_timer_init(&Controls::button_timers[Controls::InputType::B], button_timer_handler, NULL);
+        gpio_init_callback(&cb_data[InputType::B], this->b_button_pressed , BIT(button[Controls::InputType::B].pin));
+        gpio_add_callback(button[Controls::InputType::B].port, &cb_data[InputType::B]);
+        k_timer_init(&Controls::button_timers[Controls::InputType::B], b_button_timer_handler, NULL);
     }
+
     if (device_is_ready(button[Controls::InputType::UP].port))
     {
         int ret = gpio_pin_configure_dt(&button[Controls::InputType::UP], GPIO_INPUT);
 
-        ret = gpio_pin_interrupt_configure_dt(&button[Controls::InputType::UP], GPIO_INT_EDGE_TO_ACTIVE);
-        gpio_init_callback(&up_btn_cb_data, this->up_button_pressed , BIT(button[Controls::InputType::UP].pin));
-        gpio_add_callback(button[Controls::InputType::UP].port, &up_btn_cb_data);
-        k_timer_init(&Controls::button_timers[Controls::InputType::UP], up_button_timer_handler, NULL);
+        ret = gpio_pin_interrupt_configure_dt(&button[InputType::UP], GPIO_INT_EDGE_TO_ACTIVE);
+        gpio_init_callback(&cb_data[InputType::UP], this->up_button_pressed , BIT(button[InputType::UP].pin));
+        gpio_add_callback(button[InputType::UP].port, &cb_data[InputType::UP]);
+        k_timer_init(&Controls::button_timers[InputType::UP], up_button_timer_handler, NULL);
     }
+
     if (device_is_ready(button[Controls::InputType::DOWN].port))
     {
-        int ret = gpio_pin_configure_dt(&button[Controls::InputType::DOWN], GPIO_INPUT);
+        int ret = gpio_pin_configure_dt(&button[InputType::DOWN], GPIO_INPUT);
 
-        ret = gpio_pin_interrupt_configure_dt(&button[Controls::InputType::DOWN], GPIO_INT_EDGE_TO_ACTIVE);
-        gpio_init_callback(&down_btn_cb_data, this->down_button_pressed , BIT(button[Controls::InputType::DOWN].pin));
-        gpio_add_callback(button[Controls::InputType::DOWN].port, &down_btn_cb_data);
-        k_timer_init(&Controls::button_timers[Controls::InputType::DOWN], down_button_timer_handler, NULL);
+        ret = gpio_pin_interrupt_configure_dt(&button[InputType::DOWN], GPIO_INT_EDGE_TO_ACTIVE);
+        gpio_init_callback(&cb_data[InputType::DOWN], this->down_button_pressed , BIT(button[InputType::DOWN].pin));
+        gpio_add_callback(button[Controls::InputType::DOWN].port, &cb_data[InputType::DOWN]);
+        k_timer_init(&Controls::button_timers[InputType::DOWN], down_button_timer_handler, NULL);
     }
 
 }
@@ -118,52 +143,52 @@ const Controls::InputType Controls::get_last_pressed()
 /*
     Button Handlers
 */
-
-void Controls::a_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins)
+void Controls::handle_button(Controls::InputType input)
 {
     uint64_t now = k_uptime_get();
     if ((now - Controls::last_time) > DEBOUNCE_TIMEOUT_MS)
     {
-        current_input = InputType::A;
-        k_timer_start(&button_timers[InputType::A], K_MSEC(50), K_MSEC(50));
+        if(Controls::trigger_mapping[input] == Controls::TriggerType::PERIODIC)
+        {
+            k_timer_start(&button_timers[input],
+                        K_MSEC(TIMER_RETRIGGER_MS),
+                        K_MSEC(TIMER_RETRIGGER_MS));
+        }
+        else if(Controls::trigger_mapping[input] == Controls::TriggerType::ONE_SHOT)
+        {
+            Controls::input_queue.push(input);
+        }
     }
 
     Controls::last_time = now;
 }
 
 
-void Controls::b_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins)
+void Controls::a_button_pressed(const struct device *dev,
+                                struct gpio_callback* cb,
+                                uint32_t pins)
 {
-    uint64_t now = k_uptime_get();
-    if ((now - Controls::last_time) > DEBOUNCE_TIMEOUT_MS)
-    {
-        current_input = InputType::B;
-        k_timer_start(&button_timers[InputType::B], K_MSEC(50), K_MSEC(50));
-    }
-
-    Controls::last_time = now;
+    handle_button(InputType::A);
 }
 
-void Controls::up_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins)
+void Controls::b_button_pressed(const struct device *dev,
+                                struct gpio_callback* cb,
+                                uint32_t pins)
 {
-    uint64_t now = k_uptime_get();
-    if ((now - Controls::last_time) > DEBOUNCE_TIMEOUT_MS)
-    {
-        current_input = InputType::UP;
-        k_timer_start(&button_timers[InputType::UP], K_MSEC(50), K_MSEC(50));
-    }
+    handle_button(InputType::B);
 
-    Controls::last_time = now;
 }
 
-void Controls::down_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins)
+void Controls::up_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
 {
-    uint64_t now = k_uptime_get();
-    if ((now - Controls::last_time) > DEBOUNCE_TIMEOUT_MS)
-    {
-        current_input = InputType::DOWN;
-        k_timer_start(&button_timers[InputType::DOWN], K_MSEC(50), K_MSEC(50));
-    }
+    handle_button(InputType::UP);
+}
 
-    Controls::last_time = now;
+void Controls::down_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
+{
+    handle_button(InputType::DOWN);
 }
