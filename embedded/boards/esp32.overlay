@@ -18,6 +18,14 @@
 			gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
 			label = "B Button";
 		};
+		up_button: up_button {
+			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+			label = "Up Button";
+		};
+		down_button: down_button {
+			gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
+			label = "Down Button";
+		};
 	};
 };
 
