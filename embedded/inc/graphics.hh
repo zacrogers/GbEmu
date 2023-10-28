@@ -6,18 +6,11 @@ namespace graphics
 {
 	using frame_t           = lv_obj_t*;
 	using collision_group_t = uint8_t;
-	typedef enum
-	{
-		BLACK = 0x0000,
-		RED   = 0xf800,
-		GREEN = 0x07e0,
-		BLUE  = 0x001f
-	} colour_rgb565;
 
-	static lv_color_t blue   = lv_color_make(255, 0, 0);
-	static lv_color_t red    = lv_color_make(0, 255, 0);
-	static lv_color_t green  = lv_color_make(0, 0, 255);
-	static lv_color_t purple = lv_color_make(255, 255, 0);
+	static lv_color_t red   = lv_color_make(255, 0, 0);
+	static lv_color_t blue    = lv_color_hex(0x4034eb);
+	static lv_color_t green  = lv_color_hex(0x34eb37);
+	static lv_color_t purple = lv_color_make(0, 255, 255);
 	static lv_color_t black  = lv_color_make(0, 0, 0);
 
 

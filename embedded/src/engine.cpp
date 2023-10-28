@@ -15,7 +15,6 @@ void Engine::process_frame()
     if(p_current_state && p_display)
     {
         p_current_state->draw();
-        // p_display->draw_frame(new_frame);
     }
 }
 
@@ -24,29 +23,32 @@ void Engine::process()
 {
     process_input();
     process_frame();
+
+    if(p_current_state && p_current_state->ready_to_close())
+    {
+        if(current_state == State::MENU)      change_state(State::GAME);
+        else if(current_state == State::GAME) change_state(State::MENU);
+    }
 }
 
 
 void Engine::change_state(State new_state)
 {
-    if(p_current_state && p_current_state->ready_to_close())
+    StateBase* tmp { nullptr };
+
+    switch(new_state)
     {
-        StateBase* tmp { nullptr };
+        case State::MENU: tmp = new MenuState(); break;
+        case State::GAME: tmp = new PongGame();  break;
+        default: break;
+    }
 
-        switch(new_state)
-        {
-            case State::MENU: tmp = new MenuState(); break;
-            case State::GAME: tmp = new PongGame();  break;
-            default: break;
-        }
-
-        if(tmp)
-        {
-            delete p_current_state;
-            p_current_state = tmp;
-            current_state = new_state;
-            // p_controls->set_trigger_map(p_current_state.get_trigger_map());
-        }
+    if(tmp)
+    {
+        delete p_current_state;
+        p_current_state = tmp;
+        current_state = new_state;
+        // p_controls->set_trigger_map(p_current_state.get_trigger_map());
     }
 }
 

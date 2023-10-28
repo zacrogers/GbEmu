@@ -73,7 +73,7 @@ private:
 
 /* Constants */
     static const uint8_t             winning_score  { 5 };
-    static const int                 paddle_length  { 66 };
+    static const int                 paddle_length  { 56 };
     static constexpr graphics::pos_t     ball_start     { 35, 25 };
 
 /* Variables */
@@ -90,6 +90,7 @@ private:
     bool                 bounced        { false };
     bool                 playing_ai     { true };
     uint16_t             num_hits       { 0 };
+    bool                 player_won     { false };
 
 #define CANVAS_WIDTH  200
 #define CANVAS_HEIGHT  150

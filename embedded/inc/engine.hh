@@ -10,15 +10,17 @@ class Engine
 {
 public:
     enum class State { MENU, GAME };
+    enum class Game  { PONG, SNAKE };
 
     Engine(Controls* p_controls, Display* p_display)
             :p_controls(p_controls), p_display(p_display)
     {
-        current_state   = State::GAME;
+        // current_state   = State::GAME;
+        // p_display->init_display();
+        // p_current_state = new PongGame();
+        current_state   = State::MENU;
         p_display->init_display();
-        p_current_state = new PongGame();
-
-        // p_display->blank_screen();
+        p_current_state = new MenuState();
     };
 
     ~Engine(){};

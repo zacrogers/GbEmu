@@ -7,10 +7,10 @@ LOG_MODULE_REGISTER(controls, LOG_LEVEL_DBG);
 
 etl::queue<Controls::InputType, Controls::INPUT_QUEUE_SIZE> Controls::input_queue { };
 Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]  {
-    // Controls::TriggerType::ONE_SHOT,
-    // Controls::TriggerType::ONE_SHOT,
-    Controls::TriggerType::PERIODIC,
-    Controls::TriggerType::PERIODIC,
+    Controls::TriggerType::ONE_SHOT,
+    Controls::TriggerType::ONE_SHOT,
+    // Controls::TriggerType::PERIODIC,
+    // Controls::TriggerType::PERIODIC,
     Controls::TriggerType::PERIODIC,
     Controls::TriggerType::PERIODIC,
     Controls::TriggerType::PERIODIC,

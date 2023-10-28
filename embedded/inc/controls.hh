@@ -31,17 +31,21 @@ private:
     static etl::queue<InputType, INPUT_QUEUE_SIZE> input_queue;
 
     /* Timer Handlers */
-    static void timer_handler(InputType input);
-    static void a_button_timer_handler(struct k_timer *dummy);
-    static void b_button_timer_handler(struct k_timer *dummy);
-    static void up_button_timer_handler(struct k_timer *dummy);
-    static void down_button_timer_handler(struct k_timer *dummy);
+    static void timer_handler             (InputType input);
+    static void a_button_timer_handler    (struct k_timer *dummy);
+    static void b_button_timer_handler    (struct k_timer *dummy);
+    static void up_button_timer_handler   (struct k_timer *dummy);
+    static void down_button_timer_handler (struct k_timer *dummy);
 
     /* Button handlers */
-    static void handle_button(InputType input);
-    static void a_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
-    static void b_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
-    static void up_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
-    static void down_button_pressed(const struct device *dev, struct gpio_callback* cb, uint32_t pins);
+    static void handle_button             (InputType input);
+    static void a_button_pressed          (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void b_button_pressed          (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void up_button_pressed         (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void down_button_pressed       (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
 
 };

@@ -7,7 +7,7 @@ LOG_MODULE_REGISTER(pong_game, LOG_LEVEL_DBG);
 
 PongGame::PongGame()
 {
-    lv_init();
+    // lv_init();
     frame = lv_canvas_create(lv_scr_act());
     lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
 	lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
@@ -18,7 +18,7 @@ PongGame::PongGame()
 
 PongGame::~PongGame()
 {
-
+    // delete frame;
 }
 
 
@@ -75,7 +75,15 @@ void PongGame::draw_game_finished_state()
 {
     draw_background();
 
-    graphics::draw_text(frame, 70, 50, "Game Over Yo");
+    if(player_won)
+    {
+        graphics::draw_text(frame, 60, 50, "You Won");
+    }
+    else
+    {
+        graphics::draw_text(frame, 60, 50, "Game Over");
+    }
+
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
 }
@@ -116,7 +124,10 @@ void PongGame::handle_collision()
         if(somebody_won())
         {
             play_state = PlayState::GAME_FINISHED;
+
+            player_won = (game_info.player_a_score == winning_score);
         }
+        LOG_INF("Score: A-%d, B-%d", game_info.player_a_score, game_info.player_b_score);
     }
 
     // Ball was getting stuck and oscillating.
@@ -158,6 +169,7 @@ void PongGame::start_game()
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
     num_hits = 0;
+    player_won = false;
     play_state = PlayState::PLAYING;
 }
 
@@ -201,7 +213,7 @@ void PongGame::handle_b_button()
             if(!playing_ai) move_player_b_down();
             break;
         }
-        case PlayState::READY_TO_PLAY:
+        case PlayState::READY_TO_PLAY: set_current_state(StateBase::State::READY_TO_CLOSE);
         case PlayState::GAME_FINISHED:
         default: break;
     }

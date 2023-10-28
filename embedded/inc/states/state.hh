@@ -7,7 +7,7 @@
 class StateBase
 {
 public:
-    enum class State { READY_TO_CLOSE, PREPARING_TO_CLOSE };
+    enum class State { READY_TO_CLOSE, PREPARING_TO_CLOSE, RUNNING };
 
     virtual ~StateBase() = default;
 
@@ -15,6 +15,7 @@ public:
 
     inline bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
     inline bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
+    void set_current_state(StateBase::State state) { current_state = state; }
 
     void process_input(const Controls::InputType& control)
     {
@@ -50,5 +51,5 @@ private:
     virtual void handle_left_button  () = 0;
     virtual void handle_right_button () = 0;
 
-    StateBase::State current_state { };
+    StateBase::State current_state { State::RUNNING };
 };

@@ -16,7 +16,7 @@ namespace graphics
 	{
 		lv_draw_rect_dsc_t rect_dsc;
 		lv_draw_rect_dsc_init(&rect_dsc);
-		rect_dsc.radius = 0;
+		rect_dsc.radius = 5;
 		rect_dsc.bg_opa = LV_OPA_COVER;
 		rect_dsc.bg_color = col;
 		rect_dsc.border_width = 0;
