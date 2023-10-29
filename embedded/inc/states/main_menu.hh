@@ -4,6 +4,7 @@
 #include "../controls.hh"
 #include "../display.hh"
 
+#include <lvgl.h>
 
 class MenuState: public StateBase
 {
@@ -15,9 +16,11 @@ public:
     ~MenuState() override;
 
     void draw           () override;
+    void show           () override;
 
 private:
 /* Member Functions */
+void draw_main_screen();
 
     /* Button handlers */
     void             handle_a_button     () override;
@@ -42,5 +45,8 @@ private:
     const char* menu_option_labels[NUM_OPTIONS] = {"Start Game", "Shut Down"};
 
     uint8_t current_row = 0;
+    lv_obj_t* main_screen;
+    lv_obj_t* ui_Start_Game_Button;
+    lv_obj_t* ui_Start_Game_Label;
 };
 

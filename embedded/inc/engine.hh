@@ -18,9 +18,10 @@ public:
         // current_state   = State::GAME;
         // p_display->init_display();
         // p_current_state = new PongGame();
-        current_state   = State::MENU;
-        p_display->init_display();
-        p_current_state = new MenuState();
+        // current_state   = State::MENU;
+        // p_display->init_display();
+        p_current_game = new PongGame();
+        main_menu.show();
     };
 
     ~Engine(){};
@@ -30,13 +31,17 @@ public:
     void process();
     void change_state(State new_state);
 
+    void start_game();
+
 private:
     // Subsystem pointers
     Controls*     p_controls      { nullptr };
     Display*      p_display       { nullptr };
+    MenuState     main_menu       { };
+    bool          game_playing    { false };
 
-    Engine::State current_state   { State::GAME };
-    StateBase*    p_current_state { nullptr };
+    // Engine::State current_state   { State::GAME };
+    StateBase*    p_current_game  { nullptr };
 };
 
 

@@ -7,10 +7,11 @@ LOG_MODULE_REGISTER(pong_game, LOG_LEVEL_DBG);
 
 PongGame::PongGame()
 {
-    // lv_init();
-    frame = lv_canvas_create(lv_scr_act());
+    main_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
+
+    frame = lv_canvas_create(main_screen);
     lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
-	lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
 	lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
     lv_obj_align(frame, LV_ALIGN_CENTER, 0, 0);
 }
@@ -18,7 +19,8 @@ PongGame::PongGame()
 
 PongGame::~PongGame()
 {
-    // delete frame;
+   lv_obj_clean(main_screen);
+//    lv_obj_clean(frame);
 }
 
 
@@ -86,6 +88,13 @@ void PongGame::draw_game_finished_state()
 
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
+}
+
+
+void PongGame::show()
+{
+    set_current_state(StateBase::State::RUNNING);
+    lv_scr_load(main_screen);
 }
 
 

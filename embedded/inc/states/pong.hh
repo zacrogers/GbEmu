@@ -25,6 +25,7 @@ public:
     ~PongGame() override;
 
     void draw                      () override;
+    void show                      () override;
 
 private:
 /* Member Functions */
@@ -85,6 +86,7 @@ private:
     graphics::entity_t   ball           { ball_start, 15, 15, 0, {5, 5} };
 
     PlayState            play_state     { PlayState::PLAYING };
+    lv_obj_t* main_screen;
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };
     bool                 bounced        { false };

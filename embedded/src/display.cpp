@@ -30,7 +30,7 @@ void Display::init_display()
 
 	LOG_INF("Display sample for %s", display_dev->name);
 	display_get_capabilities(display_dev, &capabilities);
-
+    // lv_init();
     lv_task_handler();
 	display_blanking_off(display_dev);
 }

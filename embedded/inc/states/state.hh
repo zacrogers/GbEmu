@@ -12,6 +12,7 @@ public:
     virtual ~StateBase() = default;
 
     virtual void draw() = 0;
+    virtual void show() = 0;
 
     inline bool ready_to_close()     { return current_state == State::READY_TO_CLOSE; }
     inline bool preparing_to_close() { return current_state == State::PREPARING_TO_CLOSE; }
