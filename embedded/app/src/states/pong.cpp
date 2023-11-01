@@ -20,7 +20,7 @@ PongGame::PongGame()
 PongGame::~PongGame()
 {
    lv_obj_clean(main_screen);
-//    lv_obj_clean(frame);
+   lv_obj_clean(frame);
 }
 
 
@@ -205,7 +205,8 @@ void PongGame::handle_a_button()
         case PlayState::GAME_FINISHED:  back_to_start_menu(); break;
         case PlayState::PLAYING:
         {
-            if(!playing_ai) move_player_b_up();
+            if(!playing_ai)
+                move_player_b_up();
             break;
         }
         default: break;
@@ -219,7 +220,8 @@ void PongGame::handle_b_button()
     {
         case PlayState::PLAYING:
         {
-            if(!playing_ai) move_player_b_down();
+            if(!playing_ai)
+                move_player_b_down();
             break;
         }
         case PlayState::READY_TO_PLAY: set_current_state(StateBase::State::READY_TO_CLOSE);

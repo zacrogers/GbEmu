@@ -26,6 +26,22 @@
 			gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
 			label = "Down Button";
 		};
+		// left_button: left_button {
+		// 	gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
+		// 	label = "Left Button";
+		// };
+		// right_button: right_button {
+		// 	gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+		// 	label = "Right Button";
+		// };
+		// start_button: start_button {
+		// 	gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+		// 	label = "Start Button";
+		// };
+		// select_button: select_button {
+		// 	gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
+		// 	label = "Select Button";
+		// };
 	};
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state.hh"
+#include "../common.hh"
 #include "../controls.hh"
 #include "../display.hh"
 
@@ -17,10 +18,10 @@ public:
 
     void draw           () override;
     void show           () override;
-
+    GameType selected_game();
 private:
 /* Member Functions */
-void draw_main_screen();
+    void draw_main_screen();
 
     /* Button handlers */
     void             handle_a_button     () override;
@@ -35,8 +36,10 @@ void draw_main_screen();
     void             shut_down           ();
     bool             game_select_dropdown_open();
 
-    Option current_option     { Option::START_GAME };
-    bool   option_is_selected { false };
+    // this needs to match GameType in common.hh BT_CONTROLLER, SERIAL_MONITOR, WIFI_MANAGER
+    const char* game_dropdown_options { "Pong\nSnake\nGB Emu\nBT\nSerial\nWIFI" };
+    Option      current_option        { Option::START_GAME };
+    bool        option_is_selected    { false };
 
     const char* menu_option_labels[NUM_OPTIONS] = {"Start Game", "Shut Down"};
 

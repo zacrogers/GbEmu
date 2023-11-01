@@ -11,15 +11,22 @@ class Controls
 public:
     static constexpr size_t INPUT_QUEUE_SIZE = 3;
 
-    enum InputType   { A, B, UP, DOWN, LEFT, RIGHT, UL, UR, DL, DR, NUM_INPUTS, NONE };
+    enum InputType
+    {
+        A, B,
+        UP, DOWN, LEFT, RIGHT,
+        START, SELECT,
+        UL, UR, DL, DR,
+        NUM_INPUTS, NONE
+    };
     enum TriggerType { ONE_SHOT, PERIODIC };
 
     Controls();
     ~Controls();
 
     static const InputType get_last_pressed();
-    static void clear_queue();
-    static void set_trigger_map(TriggerType trigger_map[InputType::NUM_INPUTS]);
+    static void            clear_queue();
+    static void            set_trigger_map(TriggerType trigger_map[InputType::NUM_INPUTS]);
 
 
 private:
@@ -30,7 +37,7 @@ private:
     static uint64_t                                last_time[InputType::NUM_INPUTS];
     static etl::queue<InputType, INPUT_QUEUE_SIZE> input_queue;
 
-    /* Timer Handlers */
+    /* Button Timer Handlers */
     static void timer_handler             (InputType input);
     static void a_button_timer_handler    (struct k_timer *dummy);
     static void b_button_timer_handler    (struct k_timer *dummy);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common.hh"
 #include "controls.hh"
 #include "display.hh"
 #include "states/state.hh"
@@ -19,14 +20,13 @@ public:
         main_menu.show();
     };
 
-    ~Engine(){};
+    ~Engine() {};
 
-    void process_input();
-    void process_frame();
-    void process();
-    void change_state(State new_state);
-
-    void start_game();
+    void process_input ();
+    void process_frame ();
+    void process       ();
+    void open_menu     ();
+    void start_game    (GameType game);
 
 private:
     Controls*     p_controls      { nullptr };

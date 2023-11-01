@@ -1,7 +1,5 @@
 #include "../../inc/states/main_menu.hh"
 
-// #include "ui.h"
-
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(menu, LOG_LEVEL_DBG);
@@ -45,7 +43,7 @@ MenuState::MenuState()
     lv_obj_set_style_text_font(start_game_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
 
     game_select_dropdown = lv_dropdown_create(main_screen);
-    lv_dropdown_set_options( game_select_dropdown, "Pong\nSnake\nGameboy" );
+    lv_dropdown_set_options( game_select_dropdown, game_dropdown_options );
     lv_obj_set_width( game_select_dropdown, 105);
     lv_obj_set_height( game_select_dropdown, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_x( game_select_dropdown, 2 );
@@ -70,9 +68,22 @@ void MenuState::show()
     lv_scr_load(main_screen);
 }
 
+
 void  MenuState::draw()
 {
 	lv_task_handler();
+}
+
+
+bool MenuState::game_select_dropdown_open()
+{
+    return lv_dropdown_is_open(game_select_dropdown);
+}
+
+
+GameType MenuState::selected_game()
+{
+    return static_cast<GameType>(lv_dropdown_get_selected(game_select_dropdown));
 }
 
 /*
@@ -87,16 +98,12 @@ void MenuState::handle_a_button()
     }
     else
     {
+        LOG_ERR("DD: %d", lv_dropdown_get_selected(game_select_dropdown));
         // handle sending selected game to engine
         set_current_state(StateBase::State::READY_TO_CLOSE);
     }
 }
 
-
-bool MenuState::game_select_dropdown_open()
-{
-    return lv_dropdown_is_open(game_select_dropdown);
-}
 
 
 void MenuState::handle_b_button()

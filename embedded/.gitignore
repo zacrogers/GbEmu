@@ -1,7 +1,7 @@
-/.venv
-/.west
+*.venv
 /bootloader
 /build
 /modules
 /tools
 /zephyr
+/deps
