@@ -4,8 +4,8 @@
 #include "subsystems/controls.hh"
 #include "subsystems/display.hh"
 #include "states/state.hh"
-#include "states/pong.hh"
-#include "states/main_menu.hh"
+#include "states/game/pong.hh"
+#include "states/page/main_menu.hh"
 
 namespace vroom
 {

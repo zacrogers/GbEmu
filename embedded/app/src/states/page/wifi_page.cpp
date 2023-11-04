@@ -1,4 +1,4 @@
-#include "../../inc/states/wifi_page.hh"
+#include "../../../inc/states/wifi_page.hh"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>

@@ -1,4 +1,4 @@
-#include "../../inc/states/pong.hh"
+#include "../../../inc/states/game/pong.hh"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>

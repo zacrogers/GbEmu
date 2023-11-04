@@ -17,7 +17,7 @@ config BATTMAN_SEND_BATT_SIGNAL
 	default y
 
 config USE_PHYSICAL_CONTROLS
-	bool "Battman has more tools available with the utility belt"
+	bool "Use the buttons on the console"
 	default y
 
 config VROOM_ENABLE_GAMES
@@ -26,7 +26,7 @@ config VROOM_ENABLE_GAMES
 
 config VROOM_ENABLE_GB_EMULATOR
 	bool "Battman has more tools available with the utility belt"
-	default y
+	default n
 
 config VROOM_ENABLE_UTILITIES
 	bool "Battman has more tools available with the utility belt"

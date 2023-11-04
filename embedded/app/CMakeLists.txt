@@ -7,14 +7,14 @@ FILE(GLOB app_sources src/*.cpp)
 target_sources(app PRIVATE ${app_sources})
 target_sources(app PRIVATE src/subsystems/display.cpp)
 target_sources(app PRIVATE src/subsystems/graphics.cpp)
-target_sources(app PRIVATE src/states/main_menu.cpp)
+target_sources(app PRIVATE src/states/page/main_menu.cpp)
 project(gb_emu)
 
 
 if(CONFIG_VROOM_ENABLE_GAMES)
-    target_sources(app PRIVATE src/states/pong.cpp)
-    # target_sources(app PRIVATE src/states/snake.cpp)
-    # target_sources(app PRIVATE src/states/sudoku.cpp)
+    target_sources(app PRIVATE src/states/game/pong.cpp)
+    # target_sources(app PRIVATE src/states/game/snake.cpp)
+    # target_sources(app PRIVATE src/states/game/sudoku.cpp)
 endif()
 
 
@@ -48,18 +48,18 @@ endif()
 target_link_libraries(app PRIVATE etl::etl)
 target_sources(app PRIVATE src/main.cpp)
 
-if(CONFIG_VROOM_ENABLE_GB_EMULATOR)
-    include_directories(
-        ../emu_core/inc
-        ../emu_core/src
-    )
-    target_sources(app PRIVATE
-        ../emu_core/src/cpu.cpp
-        ../emu_core/src/registers.cpp
-        ../emu_core/src/process.cpp
-        ../emu_core/src/instructions.cpp
-        ../emu_core/src/cart.cpp
-    )
-endif()
+# if(CONFIG_VROOM_ENABLE_GB_EMULATOR)
+#     include_directories(
+#         ../emu_core/inc
+#         ../emu_core/src
+#     )
+#     target_sources(app PRIVATE
+#         ../emu_core/src/cpu.cpp
+#         ../emu_core/src/registers.cpp
+#         ../emu_core/src/process.cpp
+#         ../emu_core/src/instructions.cpp
+#         ../emu_core/src/cart.cpp
+#     )
+# endif()
 
 

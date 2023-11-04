@@ -1,8 +1,8 @@
 #pragma once
 
-#include "state.hh"
-#include "../subsystems/controls.hh"
-#include "../subsystems/display.hh"
+#include "../state.hh"
+#include "../../subsystems/controls.hh"
+#include "../../subsystems/display.hh"
 
 
 namespace game

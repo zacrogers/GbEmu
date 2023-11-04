@@ -1,9 +1,9 @@
 #pragma once
 
-#include "state.hh"
-#include "../common.hh"
-#include "../controls.hh"
-#include "../display.hh"
+#include "../state.hh"
+#include "../../common.hh"
+#include "../../controls.hh"
+#include "../../display.hh"
 
 #include <lvgl.h>
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "state.hh"
-#include "../common.hh"
-#include "../subsystems/controls.hh"
-#include "../subsystems/display.hh"
-#include "../connectivity/wifi.hh"
+#include "../state.hh"
+#include "../../common.hh"
+#include "../../subsystems/controls.hh"
+#include "../../subsystems/display.hh"
+#include "../../connectivity/wifi.hh"
 
 namespace pages
 {
