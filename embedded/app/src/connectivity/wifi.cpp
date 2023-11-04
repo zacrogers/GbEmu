@@ -9,8 +9,7 @@ namespace connectivity
 
 struct k_sem Wifi::wifi_connected{};
 struct k_sem Wifi::ipv4_address_obtained{};
-// struct net_mgmt_event_callback Wifi::wifi_cb {};
-// struct net_mgmt_event_callback Wifi::ipv4_cb {};
+
 
 void Wifi::init()
 {
@@ -97,6 +96,32 @@ void Wifi::log_status()
         LOG_INF("Security: %s", wifi_security_txt(status.security));
         LOG_INF("RSSI: %d",     status.rssi);
     }
+}
+
+
+Wifi::status_t Wifi::get_status()
+{
+    struct wifi_iface_status status = {0};
+
+    if (iface && net_mgmt(NET_REQUEST_WIFI_IFACE_STATUS, iface, &status,
+                    sizeof(struct wifi_iface_status)))
+    {
+        LOG_ERR("WiFi Status Request Failed");
+    }
+
+    Wifi::status_t s = { 0 };
+
+    if (status.state >= WIFI_STATE_ASSOCIATED)
+    {
+        s.connected      = true;
+        s.last_connected = 0;
+        s.ssid           = status.ssid;
+        s.band           = wifi_band_txt(status.band);
+        s.channel        = status.channel;
+        s.security_txt   = wifi_security_txt(status.security);
+        s.rssi           = status.rssi;
+    }
+    return s;
 }
 
 

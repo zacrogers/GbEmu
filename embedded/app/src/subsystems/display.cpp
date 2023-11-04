@@ -17,6 +17,7 @@ Display::~Display()
 {
 }
 
+
 void Display::init_display()
 {
 	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));

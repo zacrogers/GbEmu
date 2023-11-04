@@ -4,6 +4,8 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(menu, LOG_LEVEL_DBG);
 
+extern const lv_font_t lv_font_montserrat_20;
+
 /*
     Menu State
 */

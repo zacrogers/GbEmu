@@ -4,6 +4,8 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pong_game, LOG_LEVEL_DBG);
 
+namespace game
+{
 
 PongGame::PongGame()
 {
@@ -285,3 +287,5 @@ void PongGame::handle_down_button()
 
 void PongGame::handle_left_button()   { }
 void PongGame::handle_right_button()  { }
+
+}

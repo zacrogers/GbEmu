@@ -18,7 +18,7 @@ public:
     Engine(Controls* p_controls, Display* p_display)
             :p_controls(p_controls), p_display(p_display)
     {
-        p_current_game = new PongGame();
+        p_current_game = new game::PongGame();
         main_menu.show();
     };
 

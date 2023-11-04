@@ -23,17 +23,24 @@ public:
     } credentials_t;
 
     typedef struct {
-        bool    connected;
-        int64_t last_connected;
+        bool                      connected;
+        int64_t                   last_connected;
+        etl::string<ssid_max_len> ssid;
+        etl::string<ssid_max_len> band;
+        uint8_t                   channel;
+        etl::string<ssid_max_len> security_txt;
+        int16_t                   rssi;
     } __attribute__((__packed__)) status_t;
 
 public:
     Wifi() {};
     ~Wifi() {};
-    void init       ();
-    void connect    (const credentials_t& creds);
-    void disconnect ();
-    void log_status ();
+    void     init       ();
+    void     connect    (const credentials_t& creds);
+    void     disconnect ();
+    void     log_status ();
+    status_t get_status ();
+
     static struct k_sem            wifi_connected;
     static struct k_sem            ipv4_address_obtained;
 

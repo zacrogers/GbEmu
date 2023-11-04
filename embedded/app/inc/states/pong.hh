@@ -5,6 +5,9 @@
 #include "../subsystems/display.hh"
 
 
+namespace game
+{
+
 class PongGame: public StateBase
 {
 private:
@@ -98,3 +101,4 @@ private:
     lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT)];
 };
 
+}
