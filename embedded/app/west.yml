@@ -46,11 +46,15 @@ manifest:
           - hal_espressif  # required by the nucleo_f302r8 board (STM32 based)
           - hal_xtensa  # required by the nucleo_f302r8 board (STM32 based)
           - lvgl
+          - mbedtls
+          - mcuboot
+
     - name: etl_base
       remote: etl
       repo-path: etl
       revision: 20.36.1
       path: deps/modules/etl
+
     - name: lua_base
       remote: lua
       repo-path: lua

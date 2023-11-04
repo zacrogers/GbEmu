@@ -72,6 +72,35 @@
 	};
 };
 
+// &spi1 {
+// 	status = "okay";
+// 	cs-gpios = <&porta 27 GPIO_ACTIVE_LOW>;
+
+// 	sdhc0: sdhc@0 {
+// 			compatible = "zephyr,sdhc-spi-slot";
+// 			reg = <0>;
+// 			status = "okay";
+// 			mmc {
+// 				compatible = "zephyr,sdmmc-disk";
+// 				status = "okay";
+// 			};
+// 			spi-max-frequency = <24000000>;
+// 	};
+// };
+
+
+&wifi {
+	status = "okay";
+};
+
+&uart1 {
+	status="disabled";
+};
+
+&uart2 {
+	status="disabled";
+};
+
 &pinctrl {
 	spim2_default: spim2_default {
 		group1 {

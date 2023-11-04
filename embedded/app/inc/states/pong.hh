@@ -16,8 +16,7 @@ private:
     } game_info_t;
 
 public:
-    typedef struct {
-        graphics::entity_t entity;
+    typedef struct: public graphics::entity_t {
         uint8_t score;
     } player_t;
 
@@ -75,7 +74,7 @@ private:
 /* Constants */
     static const uint8_t             winning_score  { 5 };
     static const int                 paddle_length  { 56 };
-    static constexpr graphics::pos_t     ball_start     { 35, 25 };
+    static constexpr graphics::pos_t ball_start     { 35, 25 };
 
 /* Variables */
     game_info_t          game_info      { 0, 0, 0 };
@@ -86,7 +85,7 @@ private:
     graphics::entity_t   ball           { ball_start, 15, 15, 0, {5, 5} };
 
     PlayState            play_state     { PlayState::PLAYING };
-    lv_obj_t* main_screen;
+    lv_obj_t*            main_screen;
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };
     bool                 bounced        { false };

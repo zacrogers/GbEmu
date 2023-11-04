@@ -7,6 +7,8 @@
 #include "states/pong.hh"
 #include "states/main_menu.hh"
 
+namespace vroom
+{
 class Engine
 {
 public:
@@ -36,4 +38,4 @@ private:
     StateBase*    p_current_game  { nullptr };
 };
 
-
+}

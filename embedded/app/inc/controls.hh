@@ -1,5 +1,6 @@
 #pragma once
 
+#include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
 
 #include "etl/queue.h"
@@ -27,6 +28,7 @@ public:
     static const InputType get_last_pressed();
     static void            clear_queue();
     static void            set_trigger_map(TriggerType trigger_map[InputType::NUM_INPUTS]);
+    static bool            init_gpio_pin(InputType input, k_timer_expiry_t timer_fn, gpio_callback_handler_t gpio_cb);
 
 
 private:

@@ -1,5 +1,7 @@
 #include "../inc/engine.hh"
 
+namespace vroom
+{
 
 void Engine::process_input()
 {
@@ -61,4 +63,6 @@ void Engine::start_game(GameType game)
         // set button trigger map
         game_playing = true;
         p_current_game->show();
+}
+
 }

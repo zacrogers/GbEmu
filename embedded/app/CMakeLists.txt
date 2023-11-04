@@ -3,12 +3,18 @@ cmake_minimum_required(VERSION 3.20.0)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 find_package(etl REQUIRED)
 FILE(GLOB app_sources src/*.cpp)
+# target_compile_options(app PRIVATE -DLUA_32BITS -DLUA_C89_NUMBERS)
 target_sources(app PRIVATE ${app_sources})
-target_sources(app PRIVATE src/states/pong.cpp)
-target_sources(app PRIVATE src/states/main_menu.cpp)
+# target_sources(app PRIVATE src/states/pong.cpp)
+# target_sources(app PRIVATE src/states/main_menu.cpp)
 project(gb_emu)
 
+if(CONFIG_VROOM_ENABLE_WIFI)
+    target_sources(app PRIVATE src/connectivity/wifi.cpp)
+endif()
+
 zephyr_include_directories(../modules/etl)
+# zephyr_include_directories(../modules/lua)
 # include_directories(
 #     ../emu_core/inc
 #     ../emu_core/src

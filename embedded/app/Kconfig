@@ -1,2 +1,5 @@
 source "Kconfig.zephyr"
 
+config VROOM_ENABLE_WIFI
+	bool "Enable WIFI"
+	default n
