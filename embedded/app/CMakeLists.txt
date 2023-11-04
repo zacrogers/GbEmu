@@ -5,32 +5,61 @@ find_package(etl REQUIRED)
 FILE(GLOB app_sources src/*.cpp)
 # target_compile_options(app PRIVATE -DLUA_32BITS -DLUA_C89_NUMBERS)
 target_sources(app PRIVATE ${app_sources})
-target_sources(app PRIVATE src/subsystems/controls.cpp)
 target_sources(app PRIVATE src/subsystems/display.cpp)
 target_sources(app PRIVATE src/subsystems/graphics.cpp)
-target_sources(app PRIVATE src/states/pong.cpp)
 target_sources(app PRIVATE src/states/main_menu.cpp)
 project(gb_emu)
 
-if(CONFIG_VROOM_ENABLE_WIFI)
-    target_sources(app PRIVATE src/connectivity/wifi.cpp)
+
+if(CONFIG_VROOM_ENABLE_GAMES)
+    target_sources(app PRIVATE src/states/pong.cpp)
+    # target_sources(app PRIVATE src/states/snake.cpp)
+    # target_sources(app PRIVATE src/states/sudoku.cpp)
+endif()
+
+
+if(CONFIG_USE_PHYSICAL_CONTROLS)
+    target_sources(app PRIVATE src/subsystems/controls.cpp)
+elseif(CONFIG_USE_BT_CONTROLLER)
+endif()
+
+
+if(CONFIG_VROOM_ENABLE_UTILITIES)
+    if(CONFIG_VROOM_ENABLE_WIFI)
+        target_sources(app PRIVATE src/connectivity/wifi.cpp)
+    endif()
+
+    if(CONFIG_VROOM_ENABLE_BT)
+        target_sources(app PRIVATE src/connectivity/bt.cpp)
+    endif()
+
+    # if(CONFIG_BATTMAN_SEND_BATT_SIGNAL)
+    #     target_sources(app PRIVATE src/subsystems/battman.cpp)
+    # endif()
 endif()
 
 zephyr_include_directories(../modules/etl)
-# zephyr_include_directories(../modules/lua)
-# include_directories(
-#     ../emu_core/inc
-#     ../emu_core/src
-# )
+
+if(CONFIG_LUA)
+    zephyr_include_directories(../modules/lua)
+endif()
 
 
 target_link_libraries(app PRIVATE etl::etl)
 target_sources(app PRIVATE src/main.cpp)
-# ../emu_core/src/cpu.cpp
-# ../emu_core/src/registers.cpp
-# ../emu_core/src/process.cpp
-# ../emu_core/src/instructions.cpp
-# ../emu_core/src/cart.cpp
-# )
-# add_library(etl::etl STATIC IMPORTED GLOBAL)
-# set_target_properties(etl::etl PROPERTIES IMPORTED_LOCATION ${LIB_DIR}/OtherLib.a)
+
+if(CONFIG_VROOM_ENABLE_GB_EMULATOR)
+    include_directories(
+        ../emu_core/inc
+        ../emu_core/src
+    )
+    target_sources(app PRIVATE
+        ../emu_core/src/cpu.cpp
+        ../emu_core/src/registers.cpp
+        ../emu_core/src/process.cpp
+        ../emu_core/src/instructions.cpp
+        ../emu_core/src/cart.cpp
+    )
+endif()
+
+

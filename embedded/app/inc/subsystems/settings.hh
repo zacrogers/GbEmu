@@ -31,6 +31,7 @@ constexpr const uint8_t label_max_len    = 30;
 typedef struct {
     uint16_t minutes_played;
     uint16_t times_played;
+    uint16_t sleep_interval;
 } game_stats_t;
 
 
