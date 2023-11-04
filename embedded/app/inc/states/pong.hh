@@ -1,8 +1,8 @@
 #pragma once
 
 #include "state.hh"
-#include "../controls.hh"
-#include "../display.hh"
+#include "../subsystems/controls.hh"
+#include "../subsystems/display.hh"
 
 
 class PongGame: public StateBase

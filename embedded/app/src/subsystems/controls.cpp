@@ -1,4 +1,4 @@
-#include "../inc/controls.hh"
+#include "../../inc/subsystems/controls.hh"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(controls, LOG_LEVEL_DBG);
@@ -79,7 +79,7 @@ void Controls::clear_queue()
 Controls::Controls()
 {
     // Init buttons
-    bool a      = init_gpio_pin(InputType::A,      down_button_timer_handler,   down_button_pressed);
+    bool a      = init_gpio_pin(InputType::A,      a_button_timer_handler,      a_button_pressed);
     bool b      = init_gpio_pin(InputType::B,      b_button_timer_handler,      b_button_pressed);
     bool up     = init_gpio_pin(InputType::UP,     up_button_timer_handler,     up_button_pressed);
     bool down   = init_gpio_pin(InputType::DOWN,   down_button_timer_handler,   down_button_pressed);

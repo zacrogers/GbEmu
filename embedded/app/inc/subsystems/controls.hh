@@ -28,7 +28,6 @@ public:
     static const InputType get_last_pressed();
     static void            clear_queue();
     static void            set_trigger_map(TriggerType trigger_map[InputType::NUM_INPUTS]);
-    static bool            init_gpio_pin(InputType input, k_timer_expiry_t timer_fn, gpio_callback_handler_t gpio_cb);
 
 
 private:
@@ -38,6 +37,10 @@ private:
     static struct gpio_callback                    cb_data[InputType::NUM_INPUTS];
     static uint64_t                                last_time[InputType::NUM_INPUTS];
     static etl::queue<InputType, INPUT_QUEUE_SIZE> input_queue;
+
+    static bool init_gpio_pin             (InputType input,
+                                            k_timer_expiry_t timer_fn,
+                                            gpio_callback_handler_t gpio_cb);
 
     /* Button Timer Handlers */
     static void timer_handler             (InputType input);

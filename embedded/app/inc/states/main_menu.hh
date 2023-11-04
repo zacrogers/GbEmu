@@ -2,8 +2,8 @@
 
 #include "state.hh"
 #include "../common.hh"
-#include "../controls.hh"
-#include "../display.hh"
+#include "../subsystems/controls.hh"
+#include "../subsystems/display.hh"
 
 #include <lvgl.h>
 

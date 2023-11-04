@@ -1,4 +1,4 @@
-#include "../inc/display.hh"
+#include "../../inc/subsystems/display.hh"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>

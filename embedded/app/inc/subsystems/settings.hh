@@ -1,7 +1,7 @@
 #pragma once
 
-#include "version.hh"
-#include "connectivity/wifi.hh"
+#include "../version.hh"
+#include "../connectivity/wifi.hh"
 
 #include "etl/string.h"
 

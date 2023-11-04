@@ -9,7 +9,8 @@ namespace connectivity
 
 struct k_sem Wifi::wifi_connected{};
 struct k_sem Wifi::ipv4_address_obtained{};
-
+// struct net_mgmt_event_callback Wifi::wifi_cb {};
+// struct net_mgmt_event_callback Wifi::ipv4_cb {};
 
 void Wifi::init()
 {
@@ -105,11 +106,11 @@ void Wifi::handle_wifi_connect_result(struct net_mgmt_event_callback *cb)
 
     if (status->status)
     {
-        printk("Connection request failed (%d)\n", status->status);
+        LOG_INF("Connection request failed (%d)\n", status->status);
     }
     else
     {
-        printk("Connected\n");
+        LOG_INF("Connected\n");
         k_sem_give(&wifi_connected);
     }
 }

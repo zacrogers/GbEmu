@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../controls.hh"
-#include "../display.hh"
+#include "../subsystems/controls.hh"
+#include "../subsystems/display.hh"
 
 
 class StateBase
@@ -17,6 +17,7 @@ public:
     inline bool ready_to_close     ()                       { return current_state == State::READY_TO_CLOSE; }
     inline bool preparing_to_close ()                       { return current_state == State::PREPARING_TO_CLOSE; }
     void        set_current_state  (StateBase::State state) { current_state = state; }
+    inline bool needs_redrawing    ()                       { return gui_has_changed; }
     void        get_trigger_map    ();
 
     void process_input(const Controls::InputType& control)
@@ -54,6 +55,7 @@ private:
     virtual void handle_left_button  () = 0;
     virtual void handle_right_button () = 0;
 
+    bool                  gui_has_changed                              { false };
     StateBase::State      current_state                                { State::RUNNING };
     Controls::TriggerType trigger_map[Controls::InputType::NUM_INPUTS] { };
 };
