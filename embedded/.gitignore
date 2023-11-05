@@ -5,3 +5,4 @@
 /tools
 /zephyr
 /deps
+*credentials.hh

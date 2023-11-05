@@ -84,22 +84,11 @@ void Engine::load_game(GameType game)
 
     if(new_game)
     {
-        auto scr1 = lv_obj_create(NULL);
-        LOG_DBG("A");
-        lv_scr_load(scr1);
-        LOG_DBG("B");
+        new_game->show();
         delete p_current_game;
-        LOG_DBG("C");
         p_current_game = new_game;
-        LOG_DBG("D");
-        p_current_game->show();
-        LOG_DBG("E");
-        lv_obj_clean(scr1);
-        LOG_DBG("F");
-        lv_obj_del(scr1);
-        LOG_DBG("G");
+        new_game = nullptr;
     }
-    new_game = nullptr;
 }
 
 

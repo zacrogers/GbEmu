@@ -8,11 +8,6 @@ LOG_MODULE_REGISTER(main_mayne, LOG_LEVEL_DBG);
 #include "../inc/connectivity/wifi.hh"
 
 
-// static connectivity::Wifi::credentials_t creds = {
-// 	.ssid     = "Carnival",
-// 	.password = "Thebluesking"
-// };
-
 int main(void)
 {
 	connectivity::Wifi     wifi     { };

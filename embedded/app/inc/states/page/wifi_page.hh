@@ -6,6 +6,8 @@
 #include "../../subsystems/display.hh"
 #include "../../connectivity/wifi.hh"
 
+#include <lvgl.h>
+
 namespace pages
 {
     namespace conn = connectivity;
@@ -40,6 +42,7 @@ private:
     lv_obj_t* security_label;
     lv_obj_t* rssi_label;
     lv_obj_t* instructions_label;
+    lv_obj_t* conn_spinner;
 
     conn::Wifi&                wifi_conn;
     // conn::Wifi::credentials_t& creds;
