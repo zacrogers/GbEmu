@@ -1,0 +1,33 @@
+source "Kconfig.zephyr"
+
+config VROOM_ENABLE_WIFI
+	bool "Enable WIFI"
+	default n
+
+config VROOM_ENABLE_BT
+	bool "Enable WIFI"
+	default n
+
+config BATTMAN_USE_UTILITY_BELT
+	bool "Battman has more tools available with the utility belt"
+	default y
+
+config BATTMAN_SEND_BATT_SIGNAL
+	bool "Battman has more tools available with the utility belt"
+	default y
+
+config USE_PHYSICAL_CONTROLS
+	bool "Use the buttons on the console"
+	default y
+
+config VROOM_ENABLE_GAMES
+	bool "Battman has more tools available with the utility belt"
+	default y
+
+config VROOM_ENABLE_GB_EMULATOR
+	bool "Battman has more tools available with the utility belt"
+	default n
+
+config VROOM_ENABLE_UTILITIES
+	bool "Battman has more tools available with the utility belt"
+	default y

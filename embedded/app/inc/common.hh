@@ -1,0 +1,4 @@
+#pragma once
+
+
+enum class GameType { PONG, SNAKE, GAMEBOY, BT_CONTROLLER, SERIAL_MONITOR, WIFI_MANAGER };

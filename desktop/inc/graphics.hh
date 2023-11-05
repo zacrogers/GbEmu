@@ -171,7 +171,7 @@ public:
         // SDL_SetRenderDrawColor(renderer, 0xF0, 0xF0, 0xF0, 0xFF);
         // SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-        drawDebugPanel();
+        // drawDebugPanel();
 
         SDL_Event event;
         bool quit = false;

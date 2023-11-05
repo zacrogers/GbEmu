@@ -6,7 +6,7 @@
 // {}
 
 typedef union {
-    struct { std::uint8_t r, g, b, a };
+    struct { std::uint8_t r, g, b, a; };
     std::uint32_t rgba;
 } colour_vals_t;
 
@@ -49,5 +49,5 @@ class Graphics
 public:
     virtual bool init() = 0;
     virtual void draw() = 0;
-    virtual void drawPixel() = 0;
+    // virtual void drawPixel() = 0;
 };

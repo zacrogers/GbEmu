@@ -10,7 +10,7 @@ bool Cpu::init()
 {
     // pReg->print();
     // printf("START\n\n");
-            // printf("A:%02x F:%02x B:%02x C:%02x D:%02x E:%02x H:%02x L:%02x SP:%04x PC:%04x PCMEM:%02x,%02x,%02x,%02x\n",pReg->read(Register::A),pReg->read(Register::F),pReg->read(Register::B),pReg->read(Register::C),pReg->read(Register::D),pReg->read(Register::E),pReg->read(Register::H),pReg->read(Register::L),pReg->spGet(),pReg->pcGet(),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()));
+    // printf("A:%02x F:%02x B:%02x C:%02x D:%02x E:%02x H:%02x L:%02x SP:%04x PC:%04x PCMEM:%02x,%02x,%02x,%02x\n",pReg->read(Register::A),pReg->read(Register::F),pReg->read(Register::B),pReg->read(Register::C),pReg->read(Register::D),pReg->read(Register::E),pReg->read(Register::H),pReg->read(Register::L),pReg->spGet(),pReg->pcGet(),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()),pBus->read(pReg->pcGet()));
     pFlags = new Flags();
     return true;
 }
@@ -86,14 +86,16 @@ void Cpu::fetchData()
     case Instruction::AM::R_HLI:
     {
         auto memDest = pReg->read(Register::HL);
-        auto result = pBus->read( memDest << 8);
+        auto result = pBus->read(( memDest << 8) );
 
-        // printf("RESULT %04X: %02X\n\n", memDest << 8, result);
+        // printf("RESULT %04X: %02X\n\n", (memDest << 8), result);
 
         pReg->setOpA(pReg->read(currInst.regA));
         pReg->setOpB(result);
 
-        pReg->write(Register::HL, (((memDest << 8 )+ 1) >> 8) | ((memDest << 8 )+ 1) << 8);
+        // printf("OPA: %02X, OPB:%02X\n", pReg->getOpA(), pReg->getOpB());
+
+        pReg->write(Register::HL, ((((memDest << 8 )) >> 8) | ((memDest << 8 )) << 8) + 1);
 
         break;
     }
@@ -161,9 +163,9 @@ void Cpu::fetchData()
             pReg->setOpA(pBus->read16(pReg->pcIncr())); pReg->pcIncr(); // increment pc twice for 16 bit
             // emu_cycles(1);
             break;
-
     case Instruction::AM::D8:
-            pReg->setOpA(pBus->read(pReg->pcIncr()));
+            pReg->setOpA(pBus->read(pReg->pcGet()));
+            pReg->pcIncr();
             // emu_cycles(1);
             break;
 

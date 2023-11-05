@@ -120,7 +120,7 @@ bool Cart::load(char* fname)
         return false;
     }
 
-    printf("Opened: %s\n", filename);
+    // printf("Opened: %s\n", filename);
 
     fseek(fp, 0, SEEK_END);
     rom_size = ftell(fp);
@@ -134,7 +134,7 @@ bool Cart::load(char* fname)
     header = *(rom_header *)(rom_data + 0x100);
     header.title[15] = 0;
 
-    printHeader();
+    // printHeader();
 
     isLoaded = true;
 

@@ -22,7 +22,7 @@ public:
     {
         bool success = true;
         cpu.init();
-        success = pGraphics->init();
+        // success = pGraphics->init();
         return success;
     }
 
@@ -40,7 +40,7 @@ public:
             return -2;
         }
 
-        printf("Cart loaded..\n");
+        // printf("Cart loaded..\n");
 
 
         // TTF_Init();
