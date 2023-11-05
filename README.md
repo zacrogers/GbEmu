@@ -1,4 +1,24 @@
-Created following tutorial at  https://www.youtube.com/watch?v=e87qKixKFME 
+## Mini handheld
+- ESP32
+
+
+### Zephyr project
+
+` west update `
+
+- states
+- subsystems
+- connectivity
+- games
+- utilities
+
+### Electronics
+- V1
+
+
+## Gameboy Emulator - WIP
+
+Following tutorial at  https://www.youtube.com/watch?v=e87qKixKFME
 
 Important References:
 
@@ -17,7 +37,7 @@ https://github.com/rockytriton/LLD_gbemu/raw/main/docs/gbctr.pdf
 Current progress PART 02:
     NEED TO FIX!!!
 
-    zac@zac-iMac:~/Documents/GbEmu/my_emu/build$ gbemu/gbemu  ../../roms/dmg-acid2.gb 
+    zac@zac-iMac:~/Documents/GbEmu/my_emu/build$ gbemu/gbemu  ../../roms/dmg-acid2.gb
     Opened: ../../roms/dmg-acid2.gb
     Cartridge Loaded:
             Title    : DMG-ACID2
