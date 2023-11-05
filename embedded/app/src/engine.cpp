@@ -1,5 +1,8 @@
 #include "../inc/engine.hh"
 
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(engine, LOG_LEVEL_DBG);
+
 namespace vroom
 {
 
@@ -56,13 +59,56 @@ void Engine::open_menu()
 }
 
 
+void Engine::load_game(GameType game)
+{
+    if(game == current_game)
+    {
+        p_current_game->show();
+        return;
+    }
+
+    current_game = game;
+
+    StateBase* new_game { nullptr };
+
+    switch(game)
+    {
+        case GameType::PONG:         new_game = new game::PongGame();  break;
+        case GameType::WIFI_MANAGER: new_game = new pages::Wifi(wifi_conn); break;
+        case GameType::SNAKE:
+        case GameType::GAMEBOY:
+        case GameType::BT_CONTROLLER:
+        case GameType::SERIAL_MONITOR:
+        break;
+    }
+
+    if(new_game)
+    {
+        auto scr1 = lv_obj_create(NULL);
+        LOG_DBG("A");
+        lv_scr_load(scr1);
+        LOG_DBG("B");
+        delete p_current_game;
+        LOG_DBG("C");
+        p_current_game = new_game;
+        LOG_DBG("D");
+        p_current_game->show();
+        LOG_DBG("E");
+        lv_obj_clean(scr1);
+        LOG_DBG("F");
+        lv_obj_del(scr1);
+        LOG_DBG("G");
+    }
+    new_game = nullptr;
+}
+
+
 void Engine::start_game(GameType game)
 {
-        // unload and delete current game
-        // load new game
-        // set button trigger map
-        game_playing = true;
-        p_current_game->show();
+    LOG_INF("Start game: %d", static_cast<int>(game));
+    load_game(game);
+    // set button trigger map
+    game_playing = true;
 }
 
 }

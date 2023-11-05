@@ -30,7 +30,7 @@ public:
         uint8_t                   channel;
         etl::string<ssid_max_len> security_txt;
         int16_t                   rssi;
-    } __attribute__((__packed__)) status_t;
+    } status_t;
 
 public:
     Wifi() {};

@@ -1,18 +1,23 @@
-#include "../../../inc/states/wifi_page.hh"
+#include "../../../inc/states/page/wifi_page.hh"
+
+#include "etl/string.h"
+#include "etl/to_string.h"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(wifi_page, LOG_LEVEL_DBG);
 
+extern const lv_font_t lv_font_montserrat_20;
+
 namespace pages
 {
 
-extern const lv_font_t lv_font_montserrat_20;
-
-
 Wifi::~Wifi()
 {
-
+    // lv_obj_del(ssid_label);
+    // lv_obj_del(rssi_label);
+    lv_obj_del(main_screen);
+    // lv_obj_clean(lv_scr_act());
 }
 
 
@@ -21,7 +26,7 @@ void Wifi::init_screen()
     main_screen = lv_obj_create(NULL);
     lv_obj_set_scrollbar_mode(lv_scr_act(), LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x272846), LV_PART_MAIN | LV_STATE_DEFAULT );
+    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
     lv_obj_set_style_bg_opa(main_screen, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
     lv_obj_set_align( main_screen, LV_ALIGN_CENTER );
     lv_obj_set_width( main_screen, 160);
@@ -44,53 +49,69 @@ void Wifi::init_screen()
     lv_obj_set_align( rssi_label, LV_ALIGN_CENTER );
     lv_label_set_text(rssi_label,"RSSI: ");
     lv_obj_set_style_text_font(rssi_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+    LOG_INF("Inited Wifi");
 }
 
 
 void Wifi::draw()
 {
-
+    if(needs_redrawing())
+    {
+        gui_has_changed = false;
+        lv_task_handler();
+    }
 }
 
 
 void Wifi::show()
 {
-
+    // init_screen();
+    set_current_state(StateBase::State::RUNNING);
+    lv_scr_load(main_screen);
 }
 
 
 void Wifi::draw_wifi_stats(const conn::Wifi::status_t& wifi_status)
 {
-
+    lv_label_set_text_fmt(ssid_label, "SSID: %s", wifi_status.ssid.c_str());
+    lv_label_set_text_fmt(rssi_label, "RSSI: %d", wifi_status.rssi);
 }
 
 
 /* Button handlers */
 void Wifi::handle_a_button()
 {
-
-
+    static connectivity::Wifi::credentials_t creds = {
+        .ssid     = "Carnival",
+        .password = "Thebluesking"
+    };
+    wifi_conn.connect(creds);
+    auto status = wifi_conn.get_status();
+    draw_wifi_stats(status);
+    gui_has_changed = true;
 }
 
 
 void Wifi::handle_b_button()
 {
-
-
+    LOG_WRN("Pressed b button");
+    wifi_conn.disconnect();
+    connectivity::Wifi::status_t status = { 0 };
+    draw_wifi_stats(status);
+    set_current_state(StateBase::State::READY_TO_CLOSE);
 }
 
 
 void Wifi::handle_up_button()
 {
-
-
+    LOG_WRN("Pressed up button");
 }
 
 
 void Wifi::handle_down_button()
 {
-
-
+    LOG_WRN("Pressed down button");
 }
 
 

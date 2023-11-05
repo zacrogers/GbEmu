@@ -15,6 +15,7 @@ public:
     Wifi(conn::Wifi& wifi_conn): wifi_conn(wifi_conn)
         {
             init_screen();
+            // wifi_conn.init();
         }
     ~Wifi() override;
 
@@ -40,6 +41,7 @@ private:
     lv_obj_t* rssi_label;
     lv_obj_t* instructions_label;
 
-    conn::Wifi& wifi_conn;
+    conn::Wifi&                wifi_conn;
+    // conn::Wifi::credentials_t& creds;
 };
 }

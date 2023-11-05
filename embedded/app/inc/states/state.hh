@@ -44,6 +44,7 @@ public:
             break;
         }
     }
+    bool gui_has_changed { false }; // set this to true to draw the initial frame
 
 private:
     // virtual void init                () = 0;
@@ -55,7 +56,6 @@ private:
     virtual void handle_left_button  () = 0;
     virtual void handle_right_button () = 0;
 
-    bool                  gui_has_changed                              { false };
     StateBase::State      current_state                                { State::RUNNING };
     Controls::TriggerType trigger_map[Controls::InputType::NUM_INPUTS] { };
 };

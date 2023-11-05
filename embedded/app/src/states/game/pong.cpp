@@ -21,8 +21,11 @@ PongGame::PongGame()
 
 PongGame::~PongGame()
 {
-   lv_obj_clean(main_screen);
-   lv_obj_clean(frame);
+//    lv_obj_clean(frame);
+//    lv_obj_clean(main_screen);
+   lv_obj_del(frame);
+   lv_obj_del(main_screen);
+//    lv_obj_clean(lv_scr_act());
 }
 
 

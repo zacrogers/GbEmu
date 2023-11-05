@@ -65,7 +65,7 @@ void Wifi::connect(const credentials_t& creds)
     {
         LOG_ERR("WiFi Connection Request Failed");
     }
-    k_sem_take(&wifi_connected, K_FOREVER);
+    k_sem_take(&wifi_connected, K_SECONDS(5));
 }
 
 

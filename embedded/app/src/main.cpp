@@ -7,25 +7,21 @@ LOG_MODULE_REGISTER(main_mayne, LOG_LEVEL_DBG);
 #include "../inc/engine.hh"
 #include "../inc/connectivity/wifi.hh"
 
+
+// static connectivity::Wifi::credentials_t creds = {
+// 	.ssid     = "Carnival",
+// 	.password = "Thebluesking"
+// };
+
 int main(void)
 {
-	// connectivity::Wifi wifi {};
-	// wifi.init();
-
-	// static connectivity::Wifi::credentials_t creds = {
-	// 	.ssid     = "Carnival",
-	// 	.password = "Thebluesking"
-	// };
-
-	// wifi.connect(creds);
-	// k_msleep(5000);
-	// wifi.log_status();
-	// k_msleep(5000);
-	// wifi.disconnect();
+	connectivity::Wifi     wifi     { };
+	wifi.init();
+	k_msleep(500);
 
 	static Controls        controls { };
 	static Display         display  { };
-	static vroom::Engine   engine   { &controls, &display };
+	static vroom::Engine   engine   { &controls, &display, wifi };
 
 	while (1)
 	{

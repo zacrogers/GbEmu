@@ -27,6 +27,7 @@ endif()
 if(CONFIG_VROOM_ENABLE_UTILITIES)
     if(CONFIG_VROOM_ENABLE_WIFI)
         target_sources(app PRIVATE src/connectivity/wifi.cpp)
+        target_sources(app PRIVATE src/states/page/wifi_page.cpp)
     endif()
 
     if(CONFIG_VROOM_ENABLE_BT)
