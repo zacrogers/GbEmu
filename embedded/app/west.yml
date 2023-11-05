@@ -48,6 +48,7 @@ manifest:
           - lvgl
           - mbedtls
           - mcuboot
+          - tinycrypt
 
     - name: etl_base
       remote: etl

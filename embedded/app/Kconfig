@@ -5,8 +5,8 @@ config VROOM_ENABLE_WIFI
 	default n
 
 config VROOM_ENABLE_BT
-	bool "Enable WIFI"
-	default n
+	bool "Enable Bluetooth"
+	default y
 
 config BATTMAN_USE_UTILITY_BELT
 	bool "Battman has more tools available with the utility belt"

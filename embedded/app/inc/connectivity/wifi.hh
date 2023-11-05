@@ -45,10 +45,8 @@ public:
     static struct k_sem            ipv4_address_obtained;
 
 private:
-
     static status_t                status;
     struct net_if                  *iface;
-
 
     struct net_mgmt_event_callback wifi_cb;
     struct net_mgmt_event_callback ipv4_cb;
