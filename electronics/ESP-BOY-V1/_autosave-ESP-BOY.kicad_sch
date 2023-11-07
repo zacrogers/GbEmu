@@ -3173,7 +3173,7 @@
     (property "Value" "2N3904" (id 1) (at 139.446 111.2519 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_TO_SOT_THT:TO-92_Inline" (id 2) (at 140.462 111.887 0)
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23" (id 2) (at 140.462 111.887 0)
       (effects (font (size 1.27 1.27) italic) (justify left) hide)
     )
     (property "Datasheet" "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" (id 3) (at 145.542 109.982 0)
@@ -3537,7 +3537,7 @@
       (reference "J10") (unit 1) (value "USB_C_Receptacle") (footprint "Connector_USB:USB_C_Receptacle_Amphenol_12401548E4-2A")
     )
     (path "/d4e58911-9ef0-4855-bb10-bf00f0c3ae7f"
-      (reference "Q1") (unit 1) (value "2N3904") (footprint "Package_TO_SOT_THT:TO-92_Inline")
+      (reference "Q1") (unit 1) (value "2N3904") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/28aefc84-1f0c-415b-b337-ae32b0353648"
       (reference "R1") (unit 1) (value "0r") (footprint "Resistor_SMD:R_0805_2012Metric")
