@@ -31,8 +31,7 @@ void Wifi::init()
         LOG_ERR("No interface yo");
    }
 
-    net_mgmt_init_event_callback(&wifi_cb,
-                                wifi_mgmt_event_handler,
+    net_mgmt_init_event_callback(&wifi_cb, wifi_mgmt_event_handler,
                                  NET_EVENT_WIFI_CONNECT_RESULT | NET_EVENT_WIFI_DISCONNECT_RESULT);
 
     net_mgmt_init_event_callback(&ipv4_cb, wifi_mgmt_event_handler, NET_EVENT_IPV4_ADDR_ADD);

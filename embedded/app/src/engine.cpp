@@ -74,7 +74,7 @@ void Engine::load_game(GameType game)
     switch(game)
     {
         case GameType::PONG:         new_game = new game::PongGame();  break;
-        case GameType::WIFI_MANAGER: new_game = new pages::Wifi(wifi_conn); break;
+        case GameType::WIFI_MANAGER: //new_game = new pages::Wifi(wifi_conn); break;
         case GameType::SNAKE:
         case GameType::GAMEBOY:
         case GameType::BT_CONTROLLER:

@@ -19,10 +19,9 @@ namespace bt
 namespace device
 {
 
-typedef struct
-{
-    uint16_t milli_volts;
+typedef struct {
     int64_t  timestamp;
+    uint16_t milli_volts;
 } __attribute__((__packed__)) batt_reading_t;
 
 constexpr const uint8_t username_max_len = 10;
@@ -36,8 +35,8 @@ typedef struct {
 
 
 typedef struct {
-    uint8_t                       screen_brightness;
     int64_t                       time_played;
+    uint8_t                       screen_brightness;
     bool                          power_saving_active;
     bool                          battery_monitor_active;
     bool                          wifi_active;
@@ -45,8 +44,8 @@ typedef struct {
     etl::string<username_max_len> username;
 } __attribute__((__packed__)) ctx_t;
 
-typedef enum
-{
+
+typedef enum {
     screen_brightness,
     time_played,
     power_saving_active,
@@ -56,8 +55,8 @@ typedef enum
     username
 } ctx_fields_e;
 
-
-static const etl::string<10> ctx_labels[] = {
+static constexpr uint8_t label_max_len = 10;
+static const etl::string<label_max_len> ctx_labels[] = {
     "screen_brightness",
     "time_played",
     "power_saving_active",
@@ -67,7 +66,7 @@ static const etl::string<10> ctx_labels[] = {
     "username"
 };
 
-}
+} /* namespace device */
 
 class Core
 {
@@ -85,4 +84,4 @@ public:
     static bool                      save_device_ctx        (device::ctx_t);
 };
 
-}
+} /* namespace settings */

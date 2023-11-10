@@ -107,7 +107,6 @@ void MenuState::handle_a_button()
 }
 
 
-
 void MenuState::handle_b_button()
 {
     if(game_select_dropdown_open())

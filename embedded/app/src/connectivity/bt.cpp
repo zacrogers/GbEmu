@@ -53,12 +53,12 @@ void Bt::device_found(const bt_addr_le_t *addr, int8_t rssi, uint8_t type,
     };
 
     struct bt_conn_le_create_param create_param = { 0 };
-    create_param.interval = 0;
+    create_param.interval       = 0;
     create_param.interval_coded = 0;
-    create_param.options = BT_LE_SCAN_OPT_NONE;
-    create_param.timeout = 0;
-    create_param.window = 0;
-    create_param.window_coded = 0;
+    create_param.options        = BT_LE_SCAN_OPT_NONE;
+    create_param.timeout        = 0;
+    create_param.window         = 0;
+    create_param.window_coded   = 0;
 
 	err = bt_conn_le_create(addr, &create_param, &conn_param, &Bt::default_conn);
 	if (err) {
