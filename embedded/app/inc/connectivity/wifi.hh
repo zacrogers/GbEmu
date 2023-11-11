@@ -1,12 +1,14 @@
 #pragma once
 
-#include "etl/string.h"
-
 #include <zephyr/kernel.h>
 #include <zephyr/net/net_if.h>
 #include <zephyr/net/wifi_mgmt.h>
 #include <zephyr/net/net_event.h>
 #include <errno.h>
+
+#include "etl/string.h"
+
+#include "../common.hh"
 
 namespace connectivity
 {
@@ -14,8 +16,12 @@ namespace connectivity
 class Wifi
 {
 public:
-    static constexpr uint8_t ssid_max_len = 32;
-    static constexpr uint8_t pw_max_len   = 32;
+    static const constexpr uint8_t ssid_max_len = 32;
+    static const constexpr uint8_t pw_max_len   = 32;
+
+    using rssi_t       = int16_t;
+    using channel_t    = uint8_t;
+    using status_str_t = etl::string<ssid_max_len>;
 
     typedef struct {
         etl::string<ssid_max_len> ssid;
@@ -23,13 +29,13 @@ public:
     } credentials_t;
 
     typedef struct {
-        bool                      connected;
-        int64_t                   last_connected;
-        etl::string<ssid_max_len> ssid;
-        etl::string<ssid_max_len> band;
-        uint8_t                   channel;
-        etl::string<ssid_max_len> security_txt;
-        int16_t                   rssi;
+        bool          connected;
+        int64_t       last_connected;
+        status_str_t  ssid;
+        status_str_t  band;
+        channel_t     channel;
+        status_str_t  security_txt;
+        rssi_t        rssi;
     } status_t;
 
 public:
@@ -46,9 +52,16 @@ public:
 
 private:
 
+// class RssiSensor: public vroom::logging::Sensor<rssi_t>
+// {
+//     rssi_t take_reading() override
+//     {
+//         return 0;
+//     }
+// };
+
     static status_t                status;
     struct net_if                  *iface;
-
 
     struct net_mgmt_event_callback wifi_cb;
     struct net_mgmt_event_callback ipv4_cb;
