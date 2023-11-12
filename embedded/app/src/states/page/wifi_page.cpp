@@ -94,6 +94,7 @@ void Wifi::handle_a_button()
 {
     wifi_conn.connect(creds);
     auto status = wifi_conn.get_status();
+    notify_observers(status.rssi);
     draw_wifi_stats(status);
     lv_obj_add_flag(conn_spinner, LV_OBJ_FLAG_HIDDEN);
     gui_has_changed = true;

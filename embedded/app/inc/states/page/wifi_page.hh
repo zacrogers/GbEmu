@@ -10,15 +10,24 @@
 
 namespace pages
 {
-    namespace conn = connectivity;
-class Wifi: public StateBase
+namespace conn = connectivity;
+
+using rssi_observable    = vroom::logging::sensor_observable<conn::Wifi::rssi_t>;
+using channel_observable = vroom::logging::sensor_observable<conn::Wifi::channel_t>;
+
+class Wifi:
+    public StateBase,
+    public rssi_observable,
+    public channel_observable
 {
 public:
     Wifi(conn::Wifi& wifi_conn): wifi_conn(wifi_conn)
-        {
-            init_screen();
-            // wifi_conn.init();
-        }
+    {
+        init_screen();
+        // wifi_conn.init();
+        rssi_observable::add_observer(rssi_logger);
+        channel_observable::add_observer(channel_logger);
+    }
     ~Wifi() override;
 
     void     draw           () override;
@@ -46,5 +55,7 @@ private:
 
     conn::Wifi&                wifi_conn;
     // conn::Wifi::credentials_t& creds;
+    vroom::logging::DataLogger<conn::Wifi::channel_t> channel_logger { "Channel", nullptr };
+    vroom::logging::DataLogger<conn::Wifi::rssi_t>    rssi_logger    { "Rssi", nullptr };
 };
 }
