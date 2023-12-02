@@ -51,7 +51,8 @@ public:
     ~DataLogger() {};
 
     /* Sensor observer */
-    void notification (T val) override {
+    void notification (T val) override
+    {
         queue.push(val);
 
         if(p_backend)

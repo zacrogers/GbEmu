@@ -7,15 +7,15 @@ LOG_MODULE_REGISTER(vroom_wifi, LOG_LEVEL_DBG);
 namespace connectivity
 {
 
-struct k_sem Wifi::wifi_connected{};
-struct k_sem Wifi::ipv4_address_obtained{};
+struct k_sem Wifi::wifi_connected        { };
+struct k_sem Wifi::ipv4_address_obtained { };
 
 
 void Wifi::init()
 {
     iface = net_if_get_default();
 
-    if(iface )
+    if(iface)
     {
         LOG_INF("Got interface");
     }

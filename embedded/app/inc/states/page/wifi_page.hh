@@ -57,5 +57,7 @@ private:
     // conn::Wifi::credentials_t& creds;
     vroom::logging::DataLogger<conn::Wifi::channel_t> channel_logger { "Channel", nullptr };
     vroom::logging::DataLogger<conn::Wifi::rssi_t>    rssi_logger    { "Rssi", nullptr };
+
+    static constexpr uint8_t num_subpages { 1 };
 };
 }
