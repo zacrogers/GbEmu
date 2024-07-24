@@ -48,4 +48,27 @@ namespace graphics
 		return true;
 	}
 
+	Button* create_button(lv_obj_t*           parent,
+							graphics::size_t  size,
+							graphics::pos_t   pos,
+							graphics::style_t style,
+							lv_align_t        align)
+	{
+		lv_obj_t*  btn = lv_btn_create(parent);
+
+		lv_obj_set_scrollbar_mode     (btn, LV_SCROLLBAR_MODE_OFF);
+		lv_obj_set_width              (btn, size.w);
+		lv_obj_set_height             (btn, size.h);
+		lv_obj_set_x                  (btn, pos.x);
+		lv_obj_set_y                  (btn, pos.y);
+		lv_obj_set_align              (btn, align );
+		lv_obj_set_style_bg_color     (btn, style.bg_col, LV_PART_MAIN | LV_STATE_DEFAULT );
+		lv_obj_set_style_bg_opa       (btn, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+		lv_obj_set_style_border_color (btn, style.accent_col, LV_PART_MAIN | LV_STATE_DEFAULT );
+		lv_obj_set_style_border_opa   (btn, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+		lv_obj_set_style_border_width (btn, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
+		lv_obj_set_style_border_side  (btn, LV_BORDER_SIDE_FULL, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+		return (Button*)(btn);
+	}
 }

@@ -34,6 +34,8 @@ void Display::init_display()
     lv_init();
     lv_task_handler();
 	display_blanking_off(display_dev);
+	LOG_INF("YO");
+	lv_task_handler();
 }
 
 

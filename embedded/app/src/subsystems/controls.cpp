@@ -10,14 +10,14 @@ uint64_t                        Controls::last_time[InputType::NUM_INPUTS]      
 etl::queue<Controls::InputType, Controls::INPUT_QUEUE_SIZE> Controls::input_queue { };
 
 Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]  {
-    Controls::TriggerType::ONE_SHOT,
-    Controls::TriggerType::ONE_SHOT,
-    // Controls::TriggerType::PERIODIC,
-    // Controls::TriggerType::PERIODIC,
-    Controls::TriggerType::PERIODIC,
-    Controls::TriggerType::PERIODIC,
-    Controls::TriggerType::PERIODIC,
-    Controls::TriggerType::PERIODIC
+    [InputType::A]      = Controls::TriggerType::ONE_SHOT,
+    [InputType::B]      = Controls::TriggerType::ONE_SHOT,
+    // [InputType::START]  = Controls::TriggerType::PERIODIC,
+    // [InputType::SELECT] = Controls::TriggerType::PERIODIC,
+    [InputType::UP]     = Controls::TriggerType::PERIODIC,
+    [InputType::DOWN]   = Controls::TriggerType::PERIODIC,
+    [InputType::LEFT]   = Controls::TriggerType::PERIODIC,
+    [InputType::RIGHT]  = Controls::TriggerType::PERIODIC
 };
 
 

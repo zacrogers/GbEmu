@@ -40,6 +40,7 @@ manifest:
         path-prefix: deps
         name-allowlist:
           - cmsis      # required by the ARM port
+          - hal_rpi_pico
           - hal_atmel # required by the custom_plank board (Nordic based)
           - hal_stm32  # required by the nucleo_f302r8 board (STM32 based)
           - hal_st  # required by the nucleo_f302r8 board (STM32 based)

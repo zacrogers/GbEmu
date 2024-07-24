@@ -48,5 +48,12 @@ private:
     lv_obj_t* start_game_button;
     lv_obj_t* start_game_label;
     lv_obj_t* game_select_dropdown;
+
+    graphics::style_t default_style = {
+        .bg_col     = lv_color_hex(0x130059),
+        .fg_col     = 0,
+        .text_col   = 0,
+        .accent_col = lv_color_hex(0x1200FF)
+    };
 };
 

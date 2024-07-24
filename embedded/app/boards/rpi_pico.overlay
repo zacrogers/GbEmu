@@ -1,0 +1,145 @@
+/*
+ * Copyright (c) 2020, Kim Bøndergaard, <kim@fam-boendergaard.dk>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+ #include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
+ / {
+	chosen {
+		zephyr,console = &cdc_acm_uart0;
+		zephyr,shell-uart = &cdc_acm_uart0;
+		zephyr,uart-mcumgr = &cdc_acm_uart0;
+		zephyr,display = &st7735r_st7735r_ada_160x128;
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		a_button: a_button {
+			gpios = <&pico_header 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "A Button";
+		};
+		b_button: b_button {
+			gpios = <&pico_header 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "B Button";
+		};
+		up_button: up_button {
+			gpios = <&pico_header 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Up Button";
+		};
+		down_button: down_button {
+			gpios = <&pico_header 16 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Down Button";
+		};
+		// left_button: left_button {
+		// 	gpios = <&pico_header 18 GPIO_ACTIVE_LOW>;
+		// 	label = "Left Button";
+		// };
+		// right_button: right_button {
+		// 	gpios = <&pico_header 5 GPIO_ACTIVE_LOW>;
+		// 	label = "Right Button";
+		// };
+		// start_button: start_button {
+		// 	gpios = <&pico_header 5 GPIO_ACTIVE_LOW>;
+		// 	label = "Start Button";
+		// };
+		// select_button: select_button {
+		// 	gpios = <&pico_header 18 GPIO_ACTIVE_LOW>;
+		// 	label = "Select Button";
+		// };
+	};
+
+	mipi_dbi_st7735r_ada_160x128 {
+		compatible = "zephyr,mipi-dbi-spi";
+		spi-dev = <&spi0>;
+		dc-gpios = <&pico_header 20 GPIO_ACTIVE_HIGH>;	/* D9 */
+		reset-gpios = <&pico_header 21 GPIO_ACTIVE_LOW>;	/* D8 */
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		st7735r_st7735r_ada_160x128: st7735r@0 {
+			compatible = "sitronix,st7735r";
+			mipi-max-frequency = <20000000>;
+			mipi-mode = <MIPI_DBI_MODE_SPI_4WIRE>;
+			reg = <0>;
+			width = <160>;
+			height = <128>;
+			x-offset = <0>;
+			y-offset = <0>;
+			madctl = <0x60>;
+			colmod = <0x55>;
+			vmctr1 = <0x0e>;
+			pwctr1 = [a2 02 84];
+			pwctr2 = [c5];
+			pwctr3 = [0a 00];
+			pwctr4 = [8a 2a];
+			pwctr5 = [8a ee];
+			frmctr1 = [01 2c 2d];
+			frmctr2 = [01 2c 2d];
+			frmctr3 = [01 2c 2d 01 2c 2d];
+			gamctrp1 = [02 1c 07 12 37 32 29 2d 29 25 2b 39 00 01 03 10];
+			gamctrn1 = [03 1d 07 06 2e 2c 29 2d 2e 2e 37 3f 00 00 02 10];
+		};
+	};
+	aliases {
+		buzzer-pwm = &buzzer;
+	};
+	pwmbuzzer {
+		compatible = "pwm-leds";
+		status = "okay";
+
+		buzzer: buzzer_pwm {
+			pwms = <&pwm 0 PWM_HZ(880) PWM_POLARITY_NORMAL>;
+			label = "PWM_1";
+		};
+	};
+    // rotary_encoder: rotary_encoder {
+    //     compatible = "gpio-rotary-encoder";
+    //     pin_a-gpios = <&pico_header 2 GPIO_ACTIVE_HIGH>;  // Adjust GPIO port and pin
+    //     pin_b-gpios = <&pico_header 3 GPIO_ACTIVE_HIGH>;  // Adjust GPIO port and pin
+    // };
+};
+
+// &spi1 {
+//     compatible = "raspberrypi,spi";
+//     status = "okay";
+//     sck-pin = <10>;
+//     mosi-pin = <11>;
+//     miso-pin = <12>;
+
+//     cs-gpios = <&pico_header 13 GPIO_ACTIVE_LOW>;
+
+// 	sdhc0: sdhc@0 {
+// 		compatible = "zephyr,sdhc-spi-slot";
+// 		reg = <0>;
+// 		status = "okay";
+// 		mmc {
+// 			compatible = "zephyr,sdmmc-disk";
+// 			status = "okay";
+// 		};
+// 		spi-max-frequency = <24000000>;
+// 	};
+// };
+
+
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};
+
+
+&pwm {
+	status="okay";
+	pinctrl-0 = <&pwm_ch3a_default>;
+	pinctrl-names = "default";
+	divider-int-4 = <255>;
+};
+
+
+&pinctrl {
+	pwm_ch3a_default: pwm_ch3a_default {
+		group1 {
+			pinmux = <PWM_3A_P22>;
+		};
+	};
+};

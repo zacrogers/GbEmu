@@ -23,32 +23,32 @@ void Engine::process_input()
 
 void Engine::process_frame()
 {
-    if(game_playing)
-    {
-        p_current_game->draw();
-    }
-    else
-    {
+    // if(game_playing)
+    // {
+    //     p_current_game->draw();
+    // }
+    // else
+    // {
         main_menu.draw();
-    }
+    // }
 }
 
 
 void Engine::process()
 {
-    process_input();
+    // process_input();
     process_frame();
 
     // Handle game opening & closing
-    if(game_playing && p_current_game->ready_to_close())
-    {
-        open_menu();
-    }
-    else if(!game_playing && main_menu.ready_to_close())
-    {
-        auto new_game = main_menu.selected_game();
-        start_game(new_game);
-    }
+    // if(game_playing && p_current_game->ready_to_close())
+    // {
+    //     open_menu();
+    // }
+    // else if(!game_playing && main_menu.ready_to_close())
+    // {
+    //     auto new_game = main_menu.selected_game();
+    //     start_game(new_game);
+    // }
 }
 
 
@@ -74,7 +74,7 @@ void Engine::load_game(GameType game)
     switch(game)
     {
         case GameType::PONG:         new_game = new game::PongGame();  break;
-        case GameType::WIFI_MANAGER: new_game = new pages::Wifi(wifi_conn); break;
+        // case GameType::WIFI_MANAGER: new_game = new pages::Wifi(wifi_conn); break;
         case GameType::SNAKE:
         case GameType::GAMEBOY:
         case GameType::BT_CONTROLLER:

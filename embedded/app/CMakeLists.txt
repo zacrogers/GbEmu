@@ -24,26 +24,26 @@ elseif(CONFIG_USE_BT_CONTROLLER)
 endif()
 
 
-if(CONFIG_VROOM_ENABLE_UTILITIES)
-    if(CONFIG_VROOM_ENABLE_WIFI)
-        target_sources(app PRIVATE src/connectivity/wifi.cpp)
-        target_sources(app PRIVATE src/states/page/wifi_page.cpp)
-    endif()
+# if(CONFIG_VROOM_ENABLE_UTILITIES)
+#     if(CONFIG_VROOM_ENABLE_WIFI)
+#         target_sources(app PRIVATE src/connectivity/wifi.cpp)
+#         target_sources(app PRIVATE src/states/page/wifi_page.cpp)
+#     endif()
 
-    if(CONFIG_VROOM_ENABLE_BT)
-        target_sources(app PRIVATE src/connectivity/bt.cpp)
-    endif()
+#     if(CONFIG_VROOM_ENABLE_BT)
+#         target_sources(app PRIVATE src/connectivity/bt.cpp)
+#     endif()
 
-    # if(CONFIG_BATTMAN_SEND_BATT_SIGNAL)
-    #     target_sources(app PRIVATE src/subsystems/battman.cpp)
-    # endif()
-endif()
+#     # if(CONFIG_BATTMAN_SEND_BATT_SIGNAL)
+#     #     target_sources(app PRIVATE src/subsystems/battman.cpp)
+#     # endif()
+# endif()
 
-zephyr_include_directories(../modules/etl)
+zephyr_include_directories(../deps/modules/etl)
 
-if(CONFIG_LUA)
-    zephyr_include_directories(../modules/lua)
-endif()
+# if(CONFIG_LUA)
+#     zephyr_include_directories(../modules/lua)
+# endif()
 
 
 target_link_libraries(app PRIVATE etl::etl)
