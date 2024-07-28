@@ -81,7 +81,7 @@
 		};
 	};
 	aliases {
-		buzzer-pwm = &buzzer;
+		buzzerpwm = &buzzer;
 	};
 	pwmbuzzer {
 		compatible = "pwm-leds";
@@ -135,6 +135,14 @@
 	divider-int-4 = <255>;
 };
 
+&i2c0 {
+	mpu6050@68 {
+		compatible = "invensense,mpu6050";
+		reg = <0x68>;
+		status = "okay";
+		int-gpios = <&pico_header 6 GPIO_ACTIVE_HIGH>;
+	};
+};
 
 &pinctrl {
 	pwm_ch3a_default: pwm_ch3a_default {
