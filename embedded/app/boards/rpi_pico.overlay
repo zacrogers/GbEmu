@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
  #include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
+ #include <zephyr/dt-bindings/led/led.h>
+
  / {
 	chosen {
 		zephyr,console = &cdc_acm_uart0;
@@ -82,7 +84,9 @@
 	};
 	aliases {
 		buzzerpwm = &buzzer;
+		led-strip = &ws2812;
 	};
+
 	pwmbuzzer {
 		compatible = "pwm-leds";
 		status = "okay";
@@ -92,12 +96,8 @@
 			label = "PWM_1";
 		};
 	};
-    // rotary_encoder: rotary_encoder {
-    //     compatible = "gpio-rotary-encoder";
-    //     pin_a-gpios = <&pico_header 2 GPIO_ACTIVE_HIGH>;  // Adjust GPIO port and pin
-    //     pin_b-gpios = <&pico_header 3 GPIO_ACTIVE_HIGH>;  // Adjust GPIO port and pin
-    // };
 };
+
 
 // &spi1 {
 //     compatible = "raspberrypi,spi";
@@ -127,6 +127,28 @@
 	};
 };
 
+&pio0 {
+	status = "okay";
+
+	pio-ws2812 {
+		compatible = "worldsemi,ws2812-rpi_pico-pio";
+		status = "okay";
+		pinctrl-0 = <&ws2812_pio0_default>;
+		pinctrl-names = "default";
+		bit-waveform = <3>, <3>, <4>;
+
+		ws2812: ws2812 {
+			status = "okay";
+			gpios = <&pico_header 15 GPIO_ACTIVE_HIGH>;
+			chain-length = <256>;
+			color-mapping = <LED_COLOR_ID_GREEN
+							 LED_COLOR_ID_RED
+							 LED_COLOR_ID_BLUE>;
+			reset-delay = <280>;
+			frequency = <800000>;
+		};
+	};
+};
 
 &pwm {
 	status="okay";
@@ -148,6 +170,11 @@
 	pwm_ch3a_default: pwm_ch3a_default {
 		group1 {
 			pinmux = <PWM_3A_P22>;
+		};
+	};
+	ws2812_pio0_default: ws2812_pio0_default {
+		ws2812 {
+			pinmux = <PIO0_P15>;
 		};
 	};
 };
