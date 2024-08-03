@@ -5,7 +5,7 @@ namespace graphics
 {
 	void draw_text(frame_t frame, int x, int y, const char* text)
 	{
-		lv_draw_label_dsc_t label_dsc;
+		static lv_draw_label_dsc_t label_dsc;
 		lv_draw_label_dsc_init(&label_dsc);
 		label_dsc.color = black;
 		lv_canvas_draw_text(frame, x, y, 120, &label_dsc, text);
@@ -14,7 +14,7 @@ namespace graphics
 
 	void draw_rect(frame_t frame, int x, int y, int width, int height, lv_color_t col)
 	{
-		lv_draw_rect_dsc_t rect_dsc;
+		static lv_draw_rect_dsc_t rect_dsc;
 		lv_draw_rect_dsc_init(&rect_dsc);
 		rect_dsc.radius = 5;
 		rect_dsc.bg_opa = LV_OPA_COVER;
@@ -70,5 +70,25 @@ namespace graphics
 		lv_obj_set_style_border_side  (btn, LV_BORDER_SIDE_FULL, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 		return (Button*)(btn);
+	}
+
+	Rect* create_rect(lv_obj_t* parent, graphics::size_t size, pos_t pos, lv_color_t col)
+	{
+		lv_obj_t*  rect = lv_obj_create(parent);
+
+		lv_obj_set_scrollbar_mode     (rect, LV_SCROLLBAR_MODE_OFF);
+		lv_obj_set_width              (rect, size.w);
+		lv_obj_set_height             (rect, size.h);
+		lv_obj_set_x                  (rect, pos.x);
+		lv_obj_set_y                  (rect, pos.y);
+		// lv_obj_set_align              (btn, align);
+		// lv_obj_set_style_bg_color     (btn, style.bg_col, LV_PART_MAIN | LV_STATE_DEFAULT );
+		// lv_obj_set_style_bg_opa       (btn, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_color (btn, style.accent_col, LV_PART_MAIN | LV_STATE_DEFAULT );
+		// lv_obj_set_style_border_opa   (btn, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_width (btn, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_side  (btn, LV_BORDER_SIDE_FULL, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+		return (Rect*)(rect);
 	}
 }

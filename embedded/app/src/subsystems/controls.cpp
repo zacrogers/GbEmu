@@ -29,7 +29,7 @@ struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
 };
 
 
-#define DEBOUNCE_TIMEOUT_MS 150
+#define DEBOUNCE_TIMEOUT_MS 100
 #define TIMER_RETRIGGER_MS 50
 
 
@@ -88,11 +88,11 @@ Controls::Controls()
     // bool start  = init_gpio_pin(InputType::START,  start_button_timer_handler,  start_button_pressed);
     // bool select = init_gpio_pin(InputType::SELECT, select_button_timer_handler, select_button_pressed);
 
-//     LOG_INF("|   Button Status   |\n |-------------------|\n | A | B | UP | DOWN |\n| %d | %d | %d  |  %d   |",
-//             //  | LEFT | RIGHT | START | SELECT |\n \
-//             //  | %d | %d | %d  |  %d   |",
-//              a, b, up, down);
-//             //  left, right, start, select);
+    LOG_INF("|   Button Status   |\n |-------------------|\n | A | B | UP | DOWN |\n| %d | %d | %d  |  %d   |",
+            //  | LEFT | RIGHT | START | SELECT |\n \
+            //  | %d | %d | %d  |  %d   |",
+             a, b, up, down);
+            //  left, right, start, select);
 }
 
 
@@ -104,7 +104,7 @@ bool Controls::init_gpio_pin(InputType input, k_timer_expiry_t timer_fn, gpio_ca
 
         ret = gpio_pin_interrupt_configure_dt(&button[input], GPIO_INT_EDGE_TO_ACTIVE);
         gpio_init_callback(&cb_data[input], gpio_cb , BIT(button[input].pin));
-        gpio_add_callback(button[input].port, &cb_data[input]);
+        ret = gpio_add_callback(button[input].port, &cb_data[input]);
         k_timer_init(&Controls::button_timers[input], timer_fn, NULL);
 
         return ret == 0;
@@ -148,6 +148,7 @@ void Controls::handle_button(Controls::InputType input)
         }
         else if(Controls::trigger_mapping[input] == Controls::TriggerType::ONE_SHOT)
         {
+            LOG_DBG("I: %d", input);
             Controls::input_queue.push(input);
         }
     }

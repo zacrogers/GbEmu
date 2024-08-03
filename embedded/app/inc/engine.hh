@@ -21,8 +21,8 @@ public:
     {
         // load_game(current_game);
         // p_current_game = new pages::Wifi(wifi_conn);
-        // p_current_game = new game::PongGame();
-        // game_playing = false;
+        p_current_game = new game::PongGame();
+        game_playing = false;
         main_menu.show();
     };
 

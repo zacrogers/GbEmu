@@ -12,10 +12,16 @@ PongGame::PongGame()
     main_screen = lv_obj_create(NULL);
     lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
 
-    frame = lv_canvas_create(main_screen);
-    lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
-	lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_align(frame, LV_ALIGN_CENTER, 0, 0);
+    // frame = lv_canvas_create(main_screen);
+    // lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
+	// lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
+    // lv_obj_align(frame, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x272846), LV_PART_MAIN | LV_STATE_DEFAULT );
+
+
+    player_a.obj = (lv_obj_t*)create_rect(main_screen, {player_a.w, player_a.h}, player_a.pos);
+    player_b.obj = (lv_obj_t*)create_rect(main_screen, {player_b.w, player_b.h}, player_b.pos);
+    ball.obj = (lv_obj_t*)create_rect(main_screen, {ball.w, ball.h}, ball.pos);
 }
 
 
@@ -37,14 +43,17 @@ void PongGame::draw_background()
 
 void PongGame::draw_paddles()
 {
-	graphics::draw_rect(frame, player_a.pos, player_a.w, player_a.h, graphics::red);
-	graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
+    lv_obj_set_pos(player_a.obj, player_a.pos.x, player_a.pos.y);
+    lv_obj_set_pos(player_b.obj, player_b.pos.x, player_b.pos.y);
+	// graphics::draw_rect(frame, player_a.pos, player_a.w, player_a.h, graphics::red);
+	// graphics::draw_rect(frame, player_b.pos, player_b.w, player_b.h, graphics::purple);
 }
 
 
 void PongGame::draw_ball()
 {
-    graphics::draw_rect(frame, ball.pos, ball.w, ball.h);
+    // graphics::draw_rect(frame, ball.pos, ball.w, ball.h);
+    lv_obj_set_pos(ball.obj, ball.pos.x, ball.pos.y);
 }
 
 
@@ -72,7 +81,7 @@ void PongGame::draw_playing_state()
     }
 
     handle_collision();
-    draw_background();
+    // draw_background();
     draw_paddles();
     draw_ball();
 }
@@ -112,7 +121,7 @@ void PongGame::draw()
         case PlayState::GAME_FINISHED:  draw_game_finished_state();  break;
         default: break;
     }
-	lv_task_handler();
+	// lv_task_handler();
 }
 
 

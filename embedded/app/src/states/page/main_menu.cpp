@@ -80,7 +80,7 @@ void MenuState::show()
 
 void  MenuState::draw()
 {
-	lv_task_handler();
+	// lv_task_handler();
 }
 
 
@@ -100,56 +100,60 @@ GameType MenuState::selected_game()
 */
 void MenuState::handle_a_button()
 {
-    // if(game_select_dropdown_open())
-    // {
-    //     uint32_t t = LV_KEY_ENTER;
-    //     lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
-    // }
-    // else
-    // {
-    //     LOG_ERR("DD: %d", lv_dropdown_get_selected(game_select_dropdown));
-    //     // handle sending selected game to engine
-    //     set_current_state(StateBase::State::READY_TO_CLOSE);
-    // }
+    // LOG_INF("HANDLE A");
+    if(game_select_dropdown_open())
+    {
+        uint32_t t = LV_KEY_ENTER;
+        lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
+    }
+    else
+    {
+        LOG_ERR("DD: %d", lv_dropdown_get_selected(game_select_dropdown));
+        // handle sending selected game to engine
+        set_current_state(StateBase::State::READY_TO_CLOSE);
+    }
 }
 
 
 
 void MenuState::handle_b_button()
 {
-    // if(game_select_dropdown_open())
-    // {
-    //     lv_dropdown_close(game_select_dropdown);
-    // }
-    // else
-    // {
-    //     lv_dropdown_open(game_select_dropdown);
-    // }
+    if(game_select_dropdown_open())
+    {
+        lv_dropdown_close(game_select_dropdown);
+    }
+    else
+    {
+        lv_dropdown_open(game_select_dropdown);
+    }
 }
 
 
 void MenuState::handle_up_button()
 {
     uint32_t t = LV_KEY_UP;
-    // lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
+    lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
 }
 
 
 void MenuState::handle_down_button()
 {
     uint32_t t = LV_KEY_DOWN;
-    // lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
+    lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
 }
 
 
 void MenuState::handle_left_button()
 {
-
+    uint32_t t = LV_KEY_LEFT;
+    lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
 }
 
 
 void MenuState::handle_right_button()
 {
+    uint32_t t = LV_KEY_RIGHT;
+    lv_event_send(game_select_dropdown, LV_EVENT_KEY, &t);
 
 }
 

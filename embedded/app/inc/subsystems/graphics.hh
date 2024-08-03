@@ -8,6 +8,7 @@ namespace graphics
 	using Button            = lv_obj_t*;
 	using Label             = lv_obj_t*;
 	using Dropdown          = lv_obj_t*;
+	using Rect              = lv_obj_t*;
 	using collision_group_t = uint8_t;
 
 	static lv_color_t red    = lv_color_make(255, 0, 0);
@@ -29,6 +30,7 @@ namespace graphics
 		collision_group_t collision_group;
 		// X, and Y velocity
 		pos_t velocity;
+		lv_obj_t* obj;
 	} entity_t;
 
 	typedef struct {
@@ -57,6 +59,7 @@ namespace graphics
 	// Drawing
 	void draw_rect(frame_t frame, int x, int y, int width, int height, lv_color_t col);
 	void draw_rect(frame_t frame, pos_t pos, int width, int height, lv_color_t col=green);
+	Rect* create_rect(lv_obj_t* parent, graphics::size_t size, pos_t pos, lv_color_t col=green);
 
 	void draw_text(frame_t frame, int x, int y, const char* text);
 	void draw_text(frame_t frame, pos_t pos, const char* text);

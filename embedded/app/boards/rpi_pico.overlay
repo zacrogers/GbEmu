@@ -17,37 +17,37 @@
 	buttons {
 		compatible = "gpio-keys";
 		a_button: a_button {
-			gpios = <&pico_header 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			gpios = <&pico_header 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "A Button";
 		};
 		b_button: b_button {
-			gpios = <&pico_header 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			gpios = <&pico_header 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "B Button";
 		};
 		up_button: up_button {
-			gpios = <&pico_header 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			gpios = <&pico_header 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "Up Button";
 		};
 		down_button: down_button {
-			gpios = <&pico_header 16 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			gpios = <&pico_header 8 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "Down Button";
 		};
-		// left_button: left_button {
-		// 	gpios = <&pico_header 18 GPIO_ACTIVE_LOW>;
-		// 	label = "Left Button";
-		// };
-		// right_button: right_button {
-		// 	gpios = <&pico_header 5 GPIO_ACTIVE_LOW>;
-		// 	label = "Right Button";
-		// };
-		// start_button: start_button {
-		// 	gpios = <&pico_header 5 GPIO_ACTIVE_LOW>;
-		// 	label = "Start Button";
-		// };
-		// select_button: select_button {
-		// 	gpios = <&pico_header 18 GPIO_ACTIVE_LOW>;
-		// 	label = "Select Button";
-		// };
+		left_button: left_button {
+			gpios = <&pico_header 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Left Button";
+		};
+		right_button: right_button {
+			gpios = <&pico_header 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Right Button";
+		};
+		start_button: start_button {
+			gpios = <&pico_header 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Start Button";
+		};
+		select_button: select_button {
+			gpios = <&pico_header 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Select Button";
+		};
 	};
 
 	mipi_dbi_st7735r_ada_160x128 {
@@ -83,19 +83,19 @@
 		};
 	};
 	aliases {
-		buzzerpwm = &buzzer;
-		led-strip = &ws2812;
+		// buzzerpwm = &buzzer;
+		// led-strip = &ws2812;
 	};
 
-	pwmbuzzer {
-		compatible = "pwm-leds";
-		status = "okay";
+	// pwmbuzzer {
+	// 	compatible = "pwm-leds";
+	// 	status = "okay";
 
-		buzzer: buzzer_pwm {
-			pwms = <&pwm 0 PWM_HZ(880) PWM_POLARITY_NORMAL>;
-			label = "PWM_1";
-		};
-	};
+	// 	buzzer: buzzer_pwm {
+	// 		pwms = <&pwm 0 PWM_HZ(880) PWM_POLARITY_NORMAL>;
+	// 		label = "PWM_1";
+	// 	};
+	// };
 };
 
 
@@ -127,54 +127,54 @@
 	};
 };
 
-&pio0 {
-	status = "okay";
+// &pio0 {
+// 	status = "okay";
 
-	pio-ws2812 {
-		compatible = "worldsemi,ws2812-rpi_pico-pio";
-		status = "okay";
-		pinctrl-0 = <&ws2812_pio0_default>;
-		pinctrl-names = "default";
-		bit-waveform = <3>, <3>, <4>;
+// 	pio-ws2812 {
+// 		compatible = "worldsemi,ws2812-rpi_pico-pio";
+// 		status = "okay";
+// 		pinctrl-0 = <&ws2812_pio0_default>;
+// 		pinctrl-names = "default";
+// 		bit-waveform = <3>, <3>, <4>;
 
-		ws2812: ws2812 {
-			status = "okay";
-			gpios = <&pico_header 15 GPIO_ACTIVE_HIGH>;
-			chain-length = <256>;
-			color-mapping = <LED_COLOR_ID_GREEN
-							 LED_COLOR_ID_RED
-							 LED_COLOR_ID_BLUE>;
-			reset-delay = <280>;
-			frequency = <800000>;
-		};
-	};
-};
+// 		ws2812: ws2812 {
+// 			status = "okay";
+// 			gpios = <&pico_header 15 GPIO_ACTIVE_HIGH>;
+// 			chain-length = <256>;
+// 			color-mapping = <LED_COLOR_ID_GREEN
+// 							 LED_COLOR_ID_RED
+// 							 LED_COLOR_ID_BLUE>;
+// 			reset-delay = <280>;
+// 			frequency = <800000>;
+// 		};
+// 	};
+// };
 
-&pwm {
-	status="okay";
-	pinctrl-0 = <&pwm_ch3a_default>;
-	pinctrl-names = "default";
-	divider-int-4 = <255>;
-};
+// &pwm {
+// 	status="okay";
+// 	pinctrl-0 = <&pwm_ch3a_default>;
+// 	pinctrl-names = "default";
+// 	divider-int-4 = <255>;
+// };
 
-&i2c0 {
-	mpu6050@68 {
-		compatible = "invensense,mpu6050";
-		reg = <0x68>;
-		status = "okay";
-		int-gpios = <&pico_header 6 GPIO_ACTIVE_HIGH>;
-	};
-};
+// &i2c0 {
+// 	mpu6050@68 {
+// 		compatible = "invensense,mpu6050";
+// 		reg = <0x68>;
+// 		status = "okay";
+// 		int-gpios = <&pico_header 6 GPIO_ACTIVE_HIGH>;
+// 	};
+// };
 
 &pinctrl {
-	pwm_ch3a_default: pwm_ch3a_default {
-		group1 {
-			pinmux = <PWM_3A_P22>;
-		};
-	};
-	ws2812_pio0_default: ws2812_pio0_default {
-		ws2812 {
-			pinmux = <PIO0_P15>;
-		};
-	};
+	// pwm_ch3a_default: pwm_ch3a_default {
+	// 	group1 {
+	// 		pinmux = <PWM_3A_P22>;
+	// 	};
+	// };
+	// ws2812_pio0_default: ws2812_pio0_default {
+	// 	ws2812 {
+	// 		pinmux = <PIO0_P15>;
+	// 	};
+	// };
 };
