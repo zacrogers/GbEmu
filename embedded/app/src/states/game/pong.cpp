@@ -12,6 +12,29 @@ PongGame::PongGame()
     main_screen = lv_obj_create(NULL);
     lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
 
+    start_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(start_screen, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_bg_color(start_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
+
+    start_game_label = lv_label_create(start_screen);
+    lv_obj_set_scrollbar_mode(start_game_label, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_width( start_game_label, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height( start_game_label, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_align( start_game_label, LV_ALIGN_CENTER );
+    lv_label_set_text(start_game_label,"Pong\n\nStart");
+    lv_obj_set_style_text_font(start_game_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+    game_over_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(game_over_screen, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_bg_color(game_over_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
+
+    game_over_label = lv_label_create(game_over_screen);
+    lv_obj_set_scrollbar_mode(game_over_label, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_width( game_over_label, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height( game_over_label, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_align( game_over_label, LV_ALIGN_CENTER );
+    lv_label_set_text(game_over_label,"Game over");
+    lv_obj_set_style_text_font(game_over_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
     // frame = lv_canvas_create(main_screen);
     // lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
 	// lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
@@ -22,6 +45,8 @@ PongGame::PongGame()
     player_a.obj = (lv_obj_t*)create_rect(main_screen, {player_a.w, player_a.h}, player_a.pos);
     player_b.obj = (lv_obj_t*)create_rect(main_screen, {player_b.w, player_b.h}, player_b.pos);
     ball.obj = (lv_obj_t*)create_rect(main_screen, {ball.w, ball.h}, ball.pos);
+
+    init();
 }
 
 
@@ -31,13 +56,19 @@ PongGame::~PongGame()
 //    lv_obj_clean(main_screen);
    lv_obj_del(frame);
    lv_obj_del(main_screen);
+   lv_obj_del(start_screen);
+//    lv_obj_del(game_over_screen);
 //    lv_obj_clean(lv_scr_act());
 }
 
+void PongGame::close()
+{
+
+}
 
 void PongGame::draw_background()
 {
-    lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
+    // lv_canvas_fill_bg(frame, graphics::blue, LV_OPA_COVER);
 }
 
 
@@ -59,10 +90,11 @@ void PongGame::draw_ball()
 
 void PongGame::draw_ready_to_play_state()
 {
-    draw_background();
+    lv_scr_load(start_screen);
+    // draw_background();
 
-    graphics::draw_text(frame, 70, 50, "Pong");
-    graphics::draw_text(frame, 50, 75, "Start Game");
+    // graphics::draw_text(frame, 70, 50, "Pong");
+    // graphics::draw_text(frame, 50, 75, "Start Game");
 }
 
 
@@ -89,16 +121,20 @@ void PongGame::draw_playing_state()
 
 void PongGame::draw_game_finished_state()
 {
-    draw_background();
+    // draw_background();
+    init();
 
     if(player_won)
     {
-        graphics::draw_text(frame, 60, 50, "You Won");
+        lv_label_set_text(game_over_label,"You won");
+        // graphics::draw_text(frame, 60, 50, "You Won");
     }
     else
     {
-        graphics::draw_text(frame, 60, 50, "Game Over");
+        lv_label_set_text(game_over_label,"Game over");
+        // graphics::draw_text(frame, 60, 50, "Game Over");
     }
+    lv_scr_load(game_over_screen);
 
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
@@ -107,8 +143,11 @@ void PongGame::draw_game_finished_state()
 
 void PongGame::show()
 {
+    init();
     set_current_state(StateBase::State::RUNNING);
-    lv_scr_load(main_screen);
+    play_state = PlayState::READY_TO_PLAY;
+
+    lv_scr_load(start_screen);
 }
 
 
@@ -187,13 +226,24 @@ void check_endgoal_areas()
 }
 
 /* Button actions */
-void PongGame::start_game()
+void PongGame::init()
 {
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
     num_hits = 0;
     player_won = false;
+    ball.pos.x = PongGame::ball_start.x;
+    ball.pos.y = PongGame::ball_start.y;
+    player_a.pos.x = PongGame::player_a_start.x;
+    player_b.pos.y = PongGame::player_b_start.y;
+}
+
+
+void PongGame::start_game()
+{
+    init();
     play_state = PlayState::PLAYING;
+    lv_scr_load(main_screen);
 }
 
 
@@ -205,6 +255,7 @@ void PongGame::continue_game()
 
 void PongGame::back_to_start_menu()
 {
+    init();
     play_state = PlayState::READY_TO_PLAY;
 }
 
@@ -238,9 +289,11 @@ void PongGame::handle_b_button()
                 move_player_b_down();
             break;
         }
-        case PlayState::READY_TO_PLAY: set_current_state(StateBase::State::READY_TO_CLOSE);
+        case PlayState::READY_TO_PLAY:
         case PlayState::GAME_FINISHED:
-        default: break;
+            set_current_state(StateBase::State::READY_TO_CLOSE);
+        default:
+            break;
     }
 }
 

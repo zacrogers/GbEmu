@@ -49,11 +49,11 @@ namespace graphics
 							lv_align_t        align = LV_ALIGN_CENTER);
 
 	// Screen objects
-	// Label* create_label(lv_obj_t*         parent,
-	// 			       	graphics::size_t  size,
-	// 			       	graphics::pos_t   pos,
-	// 			       	graphics::style_t style,
-	// 			       	lv_align_t        align = LV_ALIGN_CENTER);
+	Label* create_label(lv_obj_t*         parent,
+				       	graphics::size_t  size,
+				       	graphics::pos_t   pos,
+				       	graphics::style_t style,
+				       	lv_align_t        align = LV_ALIGN_CENTER);
 
 
 	// Drawing

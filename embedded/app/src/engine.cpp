@@ -43,6 +43,7 @@ void Engine::process()
     if(game_playing && p_current_game->ready_to_close())
     {
         open_menu();
+        // delete p_current_game;
     }
     else if(!game_playing && main_menu.ready_to_close())
     {
@@ -63,8 +64,12 @@ void Engine::load_game(GameType game)
 {
     if(game == current_game)
     {
-        p_current_game->show();
-        return;
+        if(p_current_game)
+        {
+            p_current_game->show();
+            return;
+        }
+        // delete p_current_game;
     }
 
     current_game = game;

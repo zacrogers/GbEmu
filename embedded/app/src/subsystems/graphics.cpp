@@ -72,6 +72,19 @@ namespace graphics
 		return (Button*)(btn);
 	}
 
+	Label* create_label(lv_obj_t* parent, graphics::size_t size, pos_t pos, lv_color_t col)
+	{
+		lv_obj_t*  label = lv_label_create(parent);
+		lv_obj_set_scrollbar_mode(label, LV_SCROLLBAR_MODE_OFF);
+		lv_obj_set_style_bg_color     (label, col, LV_PART_MAIN | LV_STATE_DEFAULT );
+		lv_obj_set_width(label, size.w);  /// 1
+		lv_obj_set_height(label, size.h);   /// 1
+		lv_obj_set_align(label, LV_ALIGN_CENTER );
+		lv_label_set_text(label,"Start");
+		// lv_obj_set_style_text_font(label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
+		return (Label*)(label);
+	}
+
 	Rect* create_rect(lv_obj_t* parent, graphics::size_t size, pos_t pos, lv_color_t col)
 	{
 		lv_obj_t*  rect = lv_obj_create(parent);

@@ -29,6 +29,9 @@ public:
     void draw                      () override;
     void show                      () override;
 
+    void init();
+    void close();
+
 private:
 /* Member Functions */
     /* Button handlers */
@@ -78,23 +81,34 @@ private:
     static const uint8_t             winning_score  { 5 };
     static const int                 paddle_length  { 56 };
     static constexpr graphics::pos_t ball_start     { 35, 25 };
+    static constexpr graphics::pos_t player_a_start { 0, 50 };
+    static constexpr graphics::pos_t player_b_start { 145, 50 };
 
 /* Variables */
     game_info_t          game_info      { 0, 0, 0 };
 
     /* Entities */
-    graphics::entity_t   player_a       { {0, 50}, 15, paddle_length, 0, {0, 5}, nullptr };
-    graphics::entity_t   player_b       { {145, 50}, 15, paddle_length, 0, {0, 5}, nullptr };
+    graphics::entity_t   player_a       { player_a_start, 15, paddle_length, 0, {0, 5}, nullptr };
+    graphics::entity_t   player_b       { player_b_start, 15, paddle_length, 0, {0, 5}, nullptr };
     graphics::entity_t   ball           { ball_start, 15, 15, 0, {5, 5}, nullptr };
 
-    PlayState            play_state     { PlayState::PLAYING };
+    PlayState            play_state     { PlayState::READY_TO_PLAY };
     lv_obj_t*            main_screen;
+    lv_obj_t*            start_screen;
+    lv_obj_t*            game_over_screen;
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };
     bool                 bounced        { false };
     bool                 playing_ai     { true };
     uint16_t             num_hits       { 0 };
     bool                 player_won     { false };
+
+
+    lv_obj_t*            start_game_label;
+    lv_obj_t*            game_over_label;
+
+    lv_obj_t*            player_a_score_label;
+    lv_obj_t*            player_b_score_label;
 
 #define CANVAS_WIDTH  200
 #define CANVAS_HEIGHT  150

@@ -80,7 +80,7 @@ void MenuState::show()
 
 void  MenuState::draw()
 {
-	// lv_task_handler();
+	lv_task_handler();
 }
 
 
