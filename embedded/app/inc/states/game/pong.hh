@@ -70,8 +70,8 @@ private:
     bool x_out_of_bounds           (const int x) { return (x < 15 || x > 160); }
     bool y_out_of_bounds           (const int y) { return (y < 15 || y > 128); }
 
-    bool player_b_scored           (const int x) { return (x < 15); }
-    bool player_a_scored           (const int x) { return (x > 160); }
+    bool player_b_scored           (const int x) { return (x < 10); }
+    bool player_a_scored           (const int x) { return (x > 145); }
 
     bool somebody_won              ()
         { return (game_info.player_a_score == winning_score) ||
@@ -80,7 +80,9 @@ private:
 /* Constants */
     static const uint8_t             winning_score  { 5 };
     static const int                 paddle_length  { 56 };
-    static constexpr graphics::pos_t ball_start     { 35, 25 };
+    static constexpr graphics::pos_t ball_start     { 80, 25 };
+    // static constexpr graphics::pos_t ball_start_pos_b { 35, 25 };
+    static constexpr graphics::pos_t ball_start_velocity     { 5, 5 };
     static constexpr graphics::pos_t player_a_start { 0, 50 };
     static constexpr graphics::pos_t player_b_start { 145, 50 };
 
@@ -90,7 +92,7 @@ private:
     /* Entities */
     graphics::entity_t   player_a       { player_a_start, 15, paddle_length, 0, {0, 5}, nullptr };
     graphics::entity_t   player_b       { player_b_start, 15, paddle_length, 0, {0, 5}, nullptr };
-    graphics::entity_t   ball           { ball_start, 15, 15, 0, {5, 5}, nullptr };
+    graphics::entity_t   ball           { ball_start, 15, 15, 0, ball_start_velocity, nullptr };
 
     PlayState            play_state     { PlayState::READY_TO_PLAY };
     lv_obj_t*            main_screen;

@@ -174,14 +174,22 @@ void PongGame::handle_collision()
         if(player_a_scored(ball.pos.x))
         {
             game_info.player_a_score++;
+
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
+
+            ball.velocity.x = ball_start_velocity.x;
+            ball.velocity.y = ball_start_velocity.y;
         }
         if(player_b_scored(ball.pos.x))
         {
             game_info.player_b_score++;
+
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
+
+            ball.velocity.x = -ball_start_velocity.x;
+            ball.velocity.y = -ball_start_velocity.y;
         }
         if(somebody_won())
         {
@@ -208,6 +216,24 @@ void PongGame::handle_collision()
         ball.velocity.x = -ball.velocity.x;
         bounced = true;
         num_hits++;
+
+        if(ball.velocity.x > 0)
+        {
+            ball.velocity.x++;
+        }
+        else
+        {
+            ball.velocity.x--;
+        }
+
+        if(ball.velocity.y > 0)
+        {
+            ball.velocity.y++;
+        }
+        else
+        {
+            ball.velocity.y--;
+        }
     }
 
     // Bounce off the top and bottom of the screen
