@@ -46,6 +46,20 @@ PongGame::PongGame()
     player_b.obj = (lv_obj_t*)create_rect(main_screen, {player_b.w, player_b.h}, player_b.pos);
     ball.obj = (lv_obj_t*)create_rect(main_screen, {ball.w, ball.h}, ball.pos);
 
+    // Score labels
+    player_a_score_label = lv_label_create(main_screen);
+    player_b_score_label = lv_label_create(main_screen);
+  lv_obj_set_style_text_color(player_a_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
+  lv_obj_set_style_text_color(player_b_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
+
+    lv_obj_set_style_pad_left(player_a_score_label, 25, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(player_b_score_label, 25, LV_PART_MAIN);
+
+    lv_obj_set_align(player_a_score_label, LV_ALIGN_TOP_LEFT );
+    lv_obj_set_align(player_b_score_label, LV_ALIGN_TOP_RIGHT );
+    lv_label_set_text_fmt(player_a_score_label, "%d", 0);
+    lv_label_set_text_fmt(player_b_score_label, "%d", 0);
+
     init();
 }
 
@@ -173,7 +187,8 @@ void PongGame::handle_collision()
     {
         if(player_a_scored(ball.pos.x))
         {
-            game_info.player_a_score++;
+            // game_info.player_a_score++;
+            lv_label_set_text_fmt(player_a_score_label, "%d", ++game_info.player_a_score);
 
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
@@ -183,13 +198,15 @@ void PongGame::handle_collision()
         }
         if(player_b_scored(ball.pos.x))
         {
-            game_info.player_b_score++;
+            // game_info.player_b_score++;
+            lv_label_set_text_fmt(player_b_score_label, "%d", ++game_info.player_b_score);
 
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
 
             ball.velocity.x = -ball_start_velocity.x;
             ball.velocity.y = -ball_start_velocity.y;
+
         }
         if(somebody_won())
         {
