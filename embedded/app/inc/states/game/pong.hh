@@ -19,9 +19,12 @@ private:
     } game_info_t;
 
 public:
-    typedef struct: public graphics::entity_t {
-        uint8_t score;
-    } player_t;
+    struct settings {
+        graphics::pos_t ball_start_velocity     { 5, 5 };
+        graphics::pos_t ball_velocity_increment { 0, 0 };
+        uint8_t winning_score                   { 5 };
+        bool audio_enabled                      { false };
+    };
 
     PongGame();
     ~PongGame() override;
@@ -34,6 +37,13 @@ public:
 
 private:
 /* Member Functions */
+    /* Screen Initialisers */
+    void init_main_screen();
+    void init_start_screen();
+    void init_game_over_screen();
+    void init_pause_screen();
+    void init_settings_screen();
+
     /* Button handlers */
     void handle_a_button           () override;
     void handle_b_button           () override;
@@ -74,30 +84,31 @@ private:
     bool player_a_scored           (const int x) { return (x > 145); }
 
     bool somebody_won              ()
-        { return (game_info.player_a_score == winning_score) ||
-                (game_info.player_b_score == winning_score); }
+        { return (game_info.player_a_score == settings.winning_score) ||
+                (game_info.player_b_score == settings.winning_score); }
 
 /* Constants */
-    static const uint8_t             winning_score  { 5 };
     static const int                 paddle_length  { 56 };
     static constexpr graphics::pos_t ball_start     { 80, 25 };
-    // static constexpr graphics::pos_t ball_start_pos_b { 35, 25 };
-    static constexpr graphics::pos_t ball_start_velocity     { 5, 5 };
     static constexpr graphics::pos_t player_a_start { 0, 50 };
     static constexpr graphics::pos_t player_b_start { 145, 50 };
 
 /* Variables */
+    struct settings      settings       {};
     game_info_t          game_info      { 0, 0, 0 };
 
     /* Entities */
     graphics::entity_t   player_a       { player_a_start, 15, paddle_length, 0, {0, 5}, nullptr };
     graphics::entity_t   player_b       { player_b_start, 15, paddle_length, 0, {0, 5}, nullptr };
-    graphics::entity_t   ball           { ball_start, 15, 15, 0, ball_start_velocity, nullptr };
+    graphics::entity_t   ball           { ball_start, 15, 15, 0, settings.ball_start_velocity, nullptr };
 
     PlayState            play_state     { PlayState::READY_TO_PLAY };
+
     lv_obj_t*            main_screen;
     lv_obj_t*            start_screen;
     lv_obj_t*            game_over_screen;
+    lv_obj_t*            settings_screen;
+
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };
     bool                 bounced        { false };

@@ -9,56 +9,11 @@ namespace game
 
 PongGame::PongGame()
 {
-    main_screen = lv_obj_create(NULL);
-    lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
-
-    start_screen = lv_obj_create(NULL);
-    lv_obj_set_scrollbar_mode(start_screen, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_bg_color(start_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
-
-    start_game_label = lv_label_create(start_screen);
-    lv_obj_set_scrollbar_mode(start_game_label, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_width( start_game_label, LV_SIZE_CONTENT);  /// 1
-    lv_obj_set_height( start_game_label, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_align( start_game_label, LV_ALIGN_CENTER );
-    lv_label_set_text(start_game_label,"Pong\n\nStart");
-    lv_obj_set_style_text_font(start_game_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-    game_over_screen = lv_obj_create(NULL);
-    lv_obj_set_scrollbar_mode(game_over_screen, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_bg_color(game_over_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
-
-    game_over_label = lv_label_create(game_over_screen);
-    lv_obj_set_scrollbar_mode(game_over_label, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_width( game_over_label, LV_SIZE_CONTENT);  /// 1
-    lv_obj_set_height( game_over_label, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_align( game_over_label, LV_ALIGN_CENTER );
-    lv_label_set_text(game_over_label,"Game over");
-    lv_obj_set_style_text_font(game_over_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
-    // frame = lv_canvas_create(main_screen);
-    // lv_canvas_set_buffer(frame, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED);
-	// lv_obj_set_scrollbar_mode(frame, LV_SCROLLBAR_MODE_OFF);
-    // lv_obj_align(frame, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x272846), LV_PART_MAIN | LV_STATE_DEFAULT );
-
-
-    player_a.obj = (lv_obj_t*)create_rect(main_screen, {player_a.w, player_a.h}, player_a.pos);
-    player_b.obj = (lv_obj_t*)create_rect(main_screen, {player_b.w, player_b.h}, player_b.pos);
-    ball.obj = (lv_obj_t*)create_rect(main_screen, {ball.w, ball.h}, ball.pos);
-
-    // Score labels
-    player_a_score_label = lv_label_create(main_screen);
-    player_b_score_label = lv_label_create(main_screen);
-  lv_obj_set_style_text_color(player_a_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
-  lv_obj_set_style_text_color(player_b_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
-
-    lv_obj_set_style_pad_left(player_a_score_label, 25, LV_PART_MAIN);
-    lv_obj_set_style_pad_right(player_b_score_label, 25, LV_PART_MAIN);
-
-    lv_obj_set_align(player_a_score_label, LV_ALIGN_TOP_LEFT );
-    lv_obj_set_align(player_b_score_label, LV_ALIGN_TOP_RIGHT );
-    lv_label_set_text_fmt(player_a_score_label, "%d", 0);
-    lv_label_set_text_fmt(player_b_score_label, "%d", 0);
+    init_main_screen();
+    init_start_screen();
+    init_pause_screen();
+    init_game_over_screen();
+    init_settings_screen();
 
     init();
 }
@@ -79,6 +34,81 @@ void PongGame::close()
 {
 
 }
+
+void PongGame::init_main_screen()
+{
+    main_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
+
+    player_a.obj = (lv_obj_t*)create_rect(main_screen, {player_a.w, player_a.h}, player_a.pos);
+    player_b.obj = (lv_obj_t*)create_rect(main_screen, {player_b.w, player_b.h}, player_b.pos);
+    ball.obj = (lv_obj_t*)create_rect(main_screen, {ball.w, ball.h}, ball.pos);
+
+    // Score labels
+    player_a_score_label = lv_label_create(main_screen);
+    player_b_score_label = lv_label_create(main_screen);
+
+    lv_obj_set_style_text_color(player_a_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
+    lv_obj_set_style_text_color(player_b_score_label, lv_color_hex(0xffffff), LV_PART_MAIN);
+
+    lv_obj_set_style_pad_left(player_a_score_label, 25, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(player_b_score_label, 25, LV_PART_MAIN);
+
+    lv_obj_set_align(player_a_score_label, LV_ALIGN_TOP_LEFT );
+    lv_obj_set_align(player_b_score_label, LV_ALIGN_TOP_RIGHT );
+    lv_label_set_text_fmt(player_a_score_label, "%d", 0);
+    lv_label_set_text_fmt(player_b_score_label, "%d", 0);
+
+}
+
+
+void PongGame::init_start_screen()
+{
+    start_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(start_screen, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_bg_color(start_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
+
+    start_game_label = lv_label_create(start_screen);
+    lv_obj_set_scrollbar_mode(start_game_label, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_width( start_game_label, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height( start_game_label, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_align( start_game_label, LV_ALIGN_CENTER );
+    lv_label_set_text(start_game_label,"Press Start to Play\nPress Select For settings");
+    lv_obj_set_style_text_font(start_game_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
+}
+
+
+void PongGame::init_game_over_screen()
+{
+    game_over_screen = lv_obj_create(NULL);
+    lv_obj_set_scrollbar_mode(game_over_screen, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_bg_color(game_over_screen, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
+
+    game_over_label = lv_label_create(game_over_screen);
+    lv_obj_set_scrollbar_mode(game_over_label, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_width( game_over_label, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height( game_over_label, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_align( game_over_label, LV_ALIGN_CENTER );
+    lv_label_set_text(game_over_label,"Game over");
+    lv_obj_set_style_text_font(game_over_label, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(main_screen, lv_color_hex(0x272846), LV_PART_MAIN | LV_STATE_DEFAULT );
+}
+
+
+void PongGame::init_pause_screen()
+{
+
+}
+
+
+void PongGame::init_settings_screen()
+{
+
+}
+
+
+
 
 void PongGame::draw_background()
 {
@@ -193,8 +223,8 @@ void PongGame::handle_collision()
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
 
-            ball.velocity.x = ball_start_velocity.x;
-            ball.velocity.y = ball_start_velocity.y;
+            ball.velocity.x = settings.ball_start_velocity.x;
+            ball.velocity.y = settings.ball_start_velocity.y;
         }
         if(player_b_scored(ball.pos.x))
         {
@@ -204,15 +234,15 @@ void PongGame::handle_collision()
             ball.pos.x = ball_start.x;
             ball.pos.y = ball_start.y;
 
-            ball.velocity.x = -ball_start_velocity.x;
-            ball.velocity.y = -ball_start_velocity.y;
+            ball.velocity.x = -settings.ball_start_velocity.x;
+            ball.velocity.y = -settings.ball_start_velocity.y;
 
         }
         if(somebody_won())
         {
             play_state = PlayState::GAME_FINISHED;
 
-            player_won = (game_info.player_a_score == winning_score);
+            player_won = (game_info.player_a_score == settings.winning_score);
         }
         LOG_INF("Score: A-%d, B-%d", game_info.player_a_score, game_info.player_b_score);
     }
