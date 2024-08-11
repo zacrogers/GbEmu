@@ -25,7 +25,9 @@ struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
     GPIO_DT_SPEC_GET(DT_NODELABEL(a_button), gpios),
     GPIO_DT_SPEC_GET(DT_NODELABEL(b_button), gpios),
     GPIO_DT_SPEC_GET(DT_NODELABEL(up_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(down_button), gpios)
+    GPIO_DT_SPEC_GET(DT_NODELABEL(down_button), gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(left_button), gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(right_button), gpios)
 };
 
 
@@ -71,6 +73,18 @@ void Controls::down_button_timer_handler(struct k_timer *dummy)
 }
 
 
+void Controls::left_button_timer_handler(struct k_timer *dummy)
+{
+   Controls::timer_handler(InputType::LEFT);
+}
+
+
+void Controls::right_button_timer_handler(struct k_timer *dummy)
+{
+   Controls::timer_handler(InputType::RIGHT);
+}
+
+
 void Controls::clear_queue()
 {
 }
@@ -83,16 +97,19 @@ Controls::Controls()
     bool b      = init_gpio_pin(InputType::B,      b_button_timer_handler,      b_button_pressed);
     bool up     = init_gpio_pin(InputType::UP,     up_button_timer_handler,     up_button_pressed);
     bool down   = init_gpio_pin(InputType::DOWN,   down_button_timer_handler,   down_button_pressed);
-    // bool left   = init_gpio_pin(InputType::LEFT,   left_button_timer_handler,   left_button_pressed);
-    // bool right  = init_gpio_pin(InputType::RIGHT,  right_button_timer_handler,  right_button_pressed);
+    bool left   = init_gpio_pin(InputType::LEFT,   left_button_timer_handler,   left_button_pressed);
+    bool right  = init_gpio_pin(InputType::RIGHT,  right_button_timer_handler,  right_button_pressed);
     // bool start  = init_gpio_pin(InputType::START,  start_button_timer_handler,  start_button_pressed);
     // bool select = init_gpio_pin(InputType::SELECT, select_button_timer_handler, select_button_pressed);
 
-    LOG_INF("|   Button Status   |\n |-------------------|\n | A | B | UP | DOWN |\n| %d | %d | %d  |  %d   |",
-            //  | LEFT | RIGHT | START | SELECT |\n \
-            //  | %d | %d | %d  |  %d   |",
-             a, b, up, down);
-            //  left, right, start, select);
+    LOG_INF("|   Button Status   |\n |-------------------|\n | A | B | UP | DOWN | LEFT | RIGHT |\n| %d | %d | %d  |  %d   | %d | %d |",
+            //   START | SELECT |\n \
+            //   %d  |  %d   |",
+             a, b,
+             up, down,
+             left, right
+            // start, select
+    );
 }
 
 
@@ -184,4 +201,18 @@ void Controls::down_button_pressed(const struct device *dev,
                                     uint32_t pins)
 {
     handle_button(InputType::DOWN);
+}
+
+void Controls::left_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
+{
+    handle_button(InputType::LEFT);
+}
+
+void Controls::right_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
+{
+    handle_button(InputType::RIGHT);
 }

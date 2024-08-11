@@ -16,13 +16,21 @@
 
 	buttons {
 		compatible = "gpio-keys";
-		a_button: a_button {
-			gpios = <&pico_header 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-			label = "A Button";
+		start_button: start_button {
+			gpios = <&pico_header 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Start Button";
+		};
+		select_button: select_button {
+			gpios = <&pico_header 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "Select Button";
 		};
 		b_button: b_button {
 			gpios = <&pico_header 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "B Button";
+		};
+		a_button: a_button {
+			gpios = <&pico_header 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+			label = "A Button";
 		};
 		up_button: up_button {
 			gpios = <&pico_header 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
@@ -39,14 +47,6 @@
 		right_button: right_button {
 			gpios = <&pico_header 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 			label = "Right Button";
-		};
-		start_button: start_button {
-			gpios = <&pico_header 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-			label = "Start Button";
-		};
-		select_button: select_button {
-			gpios = <&pico_header 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-			label = "Select Button";
 		};
 	};
 

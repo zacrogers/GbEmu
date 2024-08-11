@@ -11,7 +11,7 @@ namespace game
 class PongGame: public StateBase
 {
 private:
-    enum class PlayState { READY_TO_PLAY, PLAYING, GAME_FINISHED };
+    enum class PlayState { READY_TO_PLAY, PLAYING, GAME_FINISHED, SHOWING_SETTINGS };
 
     typedef struct {
         uint8_t player_a_score, player_b_score;
@@ -21,7 +21,7 @@ private:
 public:
     struct settings {
         graphics::pos_t ball_start_velocity     { 5, 5 };
-        graphics::pos_t ball_velocity_increment { 0, 0 };
+        graphics::pos_t ball_velocity_increment { 1, 1 };
         uint8_t winning_score                   { 5 };
         bool audio_enabled                      { false };
     };
@@ -42,7 +42,7 @@ private:
     void init_start_screen();
     void init_game_over_screen();
     void init_pause_screen();
-    void init_settings_screen();
+    void init_settings_menu();
 
     /* Button handlers */
     void handle_a_button           () override;
@@ -88,7 +88,9 @@ private:
                 (game_info.player_b_score == settings.winning_score); }
 
 /* Constants */
-    static const int                 paddle_length  { 56 };
+    static constexpr std::uint8_t    paddle_length  { 56 };
+    static constexpr std::uint8_t    paddle_width   { 10 };
+    static constexpr std::uint8_t    ball_size      { 10 };
     static constexpr graphics::pos_t ball_start     { 80, 25 };
     static constexpr graphics::pos_t player_a_start { 0, 50 };
     static constexpr graphics::pos_t player_b_start { 145, 50 };
@@ -98,16 +100,16 @@ private:
     game_info_t          game_info      { 0, 0, 0 };
 
     /* Entities */
-    graphics::entity_t   player_a       { player_a_start, 15, paddle_length, 0, {0, 5}, nullptr };
-    graphics::entity_t   player_b       { player_b_start, 15, paddle_length, 0, {0, 5}, nullptr };
-    graphics::entity_t   ball           { ball_start, 15, 15, 0, settings.ball_start_velocity, nullptr };
+    graphics::entity_t   player_a       { player_a_start, paddle_width, paddle_length, 0, {0, 5}, nullptr };
+    graphics::entity_t   player_b       { player_b_start, paddle_width, paddle_length, 0, {0, 5}, nullptr };
+    graphics::entity_t   ball           { ball_start, ball_size, ball_size, 0, settings.ball_start_velocity, nullptr };
 
     PlayState            play_state     { PlayState::READY_TO_PLAY };
 
     lv_obj_t*            main_screen;
     lv_obj_t*            start_screen;
     lv_obj_t*            game_over_screen;
-    lv_obj_t*            settings_screen;
+    lv_obj_t*            settings_menu;
 
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };

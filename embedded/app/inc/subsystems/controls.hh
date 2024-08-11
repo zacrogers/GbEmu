@@ -48,6 +48,8 @@ private:
     static void b_button_timer_handler    (struct k_timer *dummy);
     static void up_button_timer_handler   (struct k_timer *dummy);
     static void down_button_timer_handler (struct k_timer *dummy);
+    static void left_button_timer_handler   (struct k_timer *dummy);
+    static void right_button_timer_handler (struct k_timer *dummy);
 
     /* Button handlers */
     static void handle_button             (InputType input);
@@ -58,6 +60,10 @@ private:
     static void up_button_pressed         (const struct device *dev,
                                             struct gpio_callback* cb, uint32_t pins);
     static void down_button_pressed       (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void left_button_pressed         (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void right_button_pressed       (const struct device *dev,
                                             struct gpio_callback* cb, uint32_t pins);
 
 };
