@@ -51,6 +51,8 @@ private:
     void handle_down_button        () override;
     void handle_left_button        () override;
     void handle_right_button       () override;
+    void handle_start_button       () override;
+    void handle_select_button      () override;
 
     /* Button actions */
     // Play state
@@ -117,6 +119,7 @@ private:
     bool                 playing_ai     { true };
     uint16_t             num_hits       { 0 };
     bool                 player_won     { false };
+    bool                 game_paused    { false };
 
 
     lv_obj_t*            start_game_label;

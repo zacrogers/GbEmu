@@ -25,12 +25,14 @@ private:
     void             draw_main_screen    ();
 
     /* Button handlers */
-    void             handle_a_button     () override;
-    void             handle_b_button     () override;
-    void             handle_up_button    () override;
-    void             handle_down_button  () override;
-    void             handle_left_button  () override;
-    void             handle_right_button () override;
+    void             handle_a_button      () override;
+    void             handle_b_button      () override;
+    void             handle_up_button     () override;
+    void             handle_down_button   () override;
+    void             handle_left_button   () override;
+    void             handle_right_button  () override;
+    void             handle_start_button  () override;
+    void             handle_select_button () override;
 
     /* Menu option processes */
     void             start_game                ();

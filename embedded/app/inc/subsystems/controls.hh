@@ -15,8 +15,8 @@ public:
     enum InputType
     {
         A, B,
-        UP, DOWN, LEFT, RIGHT,
         START, SELECT,
+        UP, DOWN, LEFT, RIGHT,
         UL, UR, DL, DR,
         NUM_INPUTS, NONE
     };
@@ -43,13 +43,15 @@ private:
                                             gpio_callback_handler_t gpio_cb);
 
     /* Button Timer Handlers */
-    static void timer_handler             (InputType input);
-    static void a_button_timer_handler    (struct k_timer *dummy);
-    static void b_button_timer_handler    (struct k_timer *dummy);
-    static void up_button_timer_handler   (struct k_timer *dummy);
-    static void down_button_timer_handler (struct k_timer *dummy);
+    static void timer_handler               (InputType input);
+    static void a_button_timer_handler      (struct k_timer *dummy);
+    static void b_button_timer_handler      (struct k_timer *dummy);
+    static void up_button_timer_handler     (struct k_timer *dummy);
+    static void down_button_timer_handler   (struct k_timer *dummy);
     static void left_button_timer_handler   (struct k_timer *dummy);
-    static void right_button_timer_handler (struct k_timer *dummy);
+    static void right_button_timer_handler  (struct k_timer *dummy);
+    static void start_button_timer_handler  (struct k_timer *dummy);
+    static void select_button_timer_handler (struct k_timer *dummy);
 
     /* Button handlers */
     static void handle_button             (InputType input);
@@ -64,6 +66,10 @@ private:
     static void left_button_pressed         (const struct device *dev,
                                             struct gpio_callback* cb, uint32_t pins);
     static void right_button_pressed       (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void start_button_pressed         (const struct device *dev,
+                                            struct gpio_callback* cb, uint32_t pins);
+    static void select_button_pressed       (const struct device *dev,
                                             struct gpio_callback* cb, uint32_t pins);
 
 };

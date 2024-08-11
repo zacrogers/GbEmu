@@ -12,8 +12,8 @@ etl::queue<Controls::InputType, Controls::INPUT_QUEUE_SIZE> Controls::input_queu
 Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]  {
     [InputType::A]      = Controls::TriggerType::ONE_SHOT,
     [InputType::B]      = Controls::TriggerType::ONE_SHOT,
-    // [InputType::START]  = Controls::TriggerType::PERIODIC,
-    // [InputType::SELECT] = Controls::TriggerType::PERIODIC,
+    [InputType::START]  = Controls::TriggerType::ONE_SHOT,
+    [InputType::SELECT] = Controls::TriggerType::ONE_SHOT,
     [InputType::UP]     = Controls::TriggerType::PERIODIC,
     [InputType::DOWN]   = Controls::TriggerType::PERIODIC,
     [InputType::LEFT]   = Controls::TriggerType::PERIODIC,
@@ -22,12 +22,14 @@ Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]
 
 
 struct gpio_dt_spec Controls::button[InputType::NUM_INPUTS] {
-    GPIO_DT_SPEC_GET(DT_NODELABEL(a_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(b_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(up_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(down_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(left_button), gpios),
-    GPIO_DT_SPEC_GET(DT_NODELABEL(right_button), gpios)
+    GPIO_DT_SPEC_GET(DT_NODELABEL(a_button),      gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(b_button),      gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(start_button),  gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(select_button), gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(up_button),     gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(down_button),   gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(left_button),   gpios),
+    GPIO_DT_SPEC_GET(DT_NODELABEL(right_button),  gpios)
 };
 
 
@@ -85,6 +87,18 @@ void Controls::right_button_timer_handler(struct k_timer *dummy)
 }
 
 
+void Controls::start_button_timer_handler(struct k_timer *dummy)
+{
+   Controls::timer_handler(InputType::START);
+}
+
+
+void Controls::select_button_timer_handler(struct k_timer *dummy)
+{
+   Controls::timer_handler(InputType::SELECT);
+}
+
+
 void Controls::clear_queue()
 {
 }
@@ -99,8 +113,8 @@ Controls::Controls()
     bool down   = init_gpio_pin(InputType::DOWN,   down_button_timer_handler,   down_button_pressed);
     bool left   = init_gpio_pin(InputType::LEFT,   left_button_timer_handler,   left_button_pressed);
     bool right  = init_gpio_pin(InputType::RIGHT,  right_button_timer_handler,  right_button_pressed);
-    // bool start  = init_gpio_pin(InputType::START,  start_button_timer_handler,  start_button_pressed);
-    // bool select = init_gpio_pin(InputType::SELECT, select_button_timer_handler, select_button_pressed);
+    bool start  = init_gpio_pin(InputType::START,  start_button_timer_handler,  start_button_pressed);
+    bool select = init_gpio_pin(InputType::SELECT, select_button_timer_handler, select_button_pressed);
 
     LOG_INF("|   Button Status   |\n |-------------------|\n | A | B | UP | DOWN | LEFT | RIGHT |\n| %d | %d | %d  |  %d   | %d | %d |",
             //   START | SELECT |\n \
@@ -215,4 +229,18 @@ void Controls::right_button_pressed(const struct device *dev,
                                     uint32_t pins)
 {
     handle_button(InputType::RIGHT);
+}
+
+void Controls::start_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
+{
+    handle_button(InputType::START);
+}
+
+void Controls::select_button_pressed(const struct device *dev,
+                                    struct gpio_callback* cb,
+                                    uint32_t pins)
+{
+    handle_button(InputType::SELECT);
 }

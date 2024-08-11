@@ -157,6 +157,17 @@ void MenuState::handle_right_button()
 
 }
 
+void MenuState::handle_start_button()
+{
+    // handle_a_button();
+}
+
+
+void MenuState::handle_select_button()
+{
+    // handle_b_button();
+}
+
 
 void MenuState::start_game()
 {

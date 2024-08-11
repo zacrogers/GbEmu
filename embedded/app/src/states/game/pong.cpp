@@ -105,17 +105,17 @@ void PongGame::init_pause_screen()
 void PongGame::init_settings_menu()
 {
     settings_menu = lv_menu_create(lv_scr_act());
-    // lv_menu_set_mode_root_back_button(settings_menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
+    lv_menu_set_mode_root_back_btn(settings_menu, LV_MENU_ROOT_BACK_BTN_ENABLED);
     // lv_obj_add_event_cb(settings_menu, back_event_handler, LV_EVENT_CLICKED, settings_menu);
     // lv_obj_set_size(settings_menu, lv_display_get_horizontal_resolution(NULL), lv_display_get_vertical_resolution(NULL));
     lv_obj_center(settings_menu);
 
     /*Create sub pages*/
-    // lv_obj_t * sub_mechanics_page = lv_menu_page_create(settings_menu, NULL);
+    lv_obj_t * sub_mechanics_page = lv_menu_page_create(settings_menu, NULL);
     // lv_obj_set_style_pad_hor(sub_mechanics_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
-    // lv_menu_separator_create(sub_mechanics_page);
-    lv_obj_t * section;// = lv_menu_section_create(sub_mechanics_page);
-    // lv_obj_t * content;
+    lv_menu_separator_create(sub_mechanics_page);
+    lv_obj_t * section = lv_menu_section_create(sub_mechanics_page);
+    lv_obj_t * content;
     // create_slider(section, LV_SYMBOL_SETTINGS, "Velocity", 0, 150, 120);
     // create_slider(section, LV_SYMBOL_SETTINGS, "Acceleration", 0, 150, 50);
     // create_slider(section, LV_SYMBOL_SETTINGS, "Weight limit", 0, 150, 80);
@@ -125,7 +125,7 @@ void PongGame::init_settings_menu()
     // lv_obj_set_style_pad_hor(root_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     section = lv_menu_section_create(root_page);
     // // content = create_text(section, LV_SYMBOL_SETTINGS, "Mechanics", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    // lv_menu_set_load_page_event(settings_menu, content, sub_mechanics_page);
+    lv_menu_set_load_page_event(settings_menu, content, sub_mechanics_page);
 
 }
 
@@ -166,6 +166,8 @@ void PongGame::draw_ready_to_play_state()
 
 void PongGame::draw_playing_state()
 {
+    if(game_paused) return;
+
     if(playing_ai)
     {
         if(ball.pos.y > player_b.pos.y)
@@ -223,7 +225,7 @@ void PongGame::draw()
         case PlayState::READY_TO_PLAY:     draw_ready_to_play_state();  break;
         case PlayState::PLAYING:           draw_playing_state();        break;
         case PlayState::GAME_FINISHED:     draw_game_finished_state();  break;
-        case PlayState::SHOWING_SETTINGS:  draw_game_finished_state();  break;
+        case PlayState::SHOWING_SETTINGS:    break;
         default: break;
     }
 	// lv_task_handler();
@@ -448,15 +450,25 @@ void PongGame::handle_down_button()
 void PongGame::handle_left_button()
 {
 
-    // play_state = PlayState::SHOWING_SETTINGS;
-    // init_settings_menu();
-    handle_down_button();
 }
 
 
 void PongGame::handle_right_button()
 {
-    handle_up_button();
+
+}
+
+
+void PongGame::handle_start_button()
+{
+    game_paused = !game_paused;
+}
+
+
+void PongGame::handle_select_button()
+{
+    play_state = PlayState::SHOWING_SETTINGS;
+    init_settings_menu();
 }
 
 }

@@ -24,12 +24,14 @@ public:
     {
         switch (control)
         {
-        case Controls::InputType::A:     handle_a_button();     break;
-        case Controls::InputType::B:     handle_b_button();     break;
-        case Controls::InputType::UP:    handle_up_button();    break;
-        case Controls::InputType::DOWN:  handle_down_button();  break;
-        case Controls::InputType::LEFT:  handle_left_button();  break;
-        case Controls::InputType::RIGHT: handle_right_button(); break;
+        case Controls::InputType::A:      handle_a_button();      break;
+        case Controls::InputType::B:      handle_b_button();      break;
+        case Controls::InputType::UP:     handle_up_button();     break;
+        case Controls::InputType::DOWN:   handle_down_button();   break;
+        case Controls::InputType::LEFT:   handle_left_button();   break;
+        case Controls::InputType::RIGHT:  handle_right_button();  break;
+        case Controls::InputType::START:  handle_start_button();  break;
+        case Controls::InputType::SELECT: handle_select_button(); break;
 
         // TODO: maybe use a joystick and implement these
         case Controls::InputType::UL:
@@ -49,12 +51,14 @@ public:
 private:
     // virtual void init                () = 0;
     /* Button handlers */
-    virtual void handle_a_button     () = 0;
-    virtual void handle_b_button     () = 0;
-    virtual void handle_up_button    () = 0;
-    virtual void handle_down_button  () = 0;
-    virtual void handle_left_button  () = 0;
-    virtual void handle_right_button () = 0;
+    virtual void handle_a_button      () = 0;
+    virtual void handle_b_button      () = 0;
+    virtual void handle_up_button     () = 0;
+    virtual void handle_down_button   () = 0;
+    virtual void handle_left_button   () = 0;
+    virtual void handle_right_button  () = 0;
+    virtual void handle_start_button  () = 0;
+    virtual void handle_select_button () = 0;
 
     StateBase::State      current_state                                { State::RUNNING };
     Controls::TriggerType trigger_map[Controls::InputType::NUM_INPUTS] { };
