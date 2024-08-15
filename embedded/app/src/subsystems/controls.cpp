@@ -16,8 +16,8 @@ Controls::TriggerType           Controls::trigger_mapping[InputType::NUM_INPUTS]
     [InputType::SELECT] = Controls::TriggerType::ONE_SHOT,
     [InputType::UP]     = Controls::TriggerType::PERIODIC,
     [InputType::DOWN]   = Controls::TriggerType::PERIODIC,
-    [InputType::LEFT]   = Controls::TriggerType::PERIODIC,
-    [InputType::RIGHT]  = Controls::TriggerType::PERIODIC
+    [InputType::LEFT]   = Controls::TriggerType::ONE_SHOT,
+    [InputType::RIGHT]  = Controls::TriggerType::ONE_SHOT
 };
 
 
