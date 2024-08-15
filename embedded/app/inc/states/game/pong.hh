@@ -119,7 +119,10 @@ private:
     lv_group_t* menu_slider_group;// = lv_group_create();
     lv_obj_t* slider;
     lv_obj_t* sliderb;
+    lv_obj_t* sliderc;
     uint32_t slider_val {5};
+    uint32_t slider_valb {5};
+    uint32_t slider_valc {5};
 
     graphics::frame_t    frame          { nullptr };
     int                  n_ticks        { 0 };

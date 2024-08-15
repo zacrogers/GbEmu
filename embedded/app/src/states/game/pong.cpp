@@ -116,10 +116,10 @@ void PongGame::init_settings_menu()
     menu_slider_group = lv_group_create();
 
     cont = lv_menu_cont_create(settings_page);
-    label = lv_label_create(cont);
-    lv_label_set_text(label, "Item 1");
+    // label = lv_label_create(cont);
+    // lv_label_set_text(label, "Item 1");
 
-    slider = lv_slider_create(label);
+    slider = lv_slider_create(cont);
     lv_group_add_obj(menu_slider_group, slider);
     lv_obj_set_flex_grow(slider, 1);
     lv_slider_set_range(slider, 1, 10);
@@ -127,15 +127,26 @@ void PongGame::init_settings_menu()
     lv_obj_add_flag(slider, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
 
     cont = lv_menu_cont_create(settings_page);
-    label = lv_label_create(cont);
+    // label = lv_label_create(cont);
 
-    lv_label_set_text(label, "Item 2");
-    sliderb = lv_slider_create(label);
+    // lv_label_set_text(label, "Item 2");
+    sliderb = lv_slider_create(cont);
     lv_group_add_obj(menu_slider_group, sliderb);
     lv_obj_set_flex_grow(sliderb, 1);
     lv_slider_set_range(sliderb, 1, 10);
-    lv_slider_set_value(sliderb, slider_val, LV_ANIM_OFF);
+    lv_slider_set_value(sliderb, slider_valb, LV_ANIM_OFF);
     lv_obj_add_flag(sliderb, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+
+    cont = lv_menu_cont_create(settings_page);
+    // label = lv_label_create(cont);
+
+    // lv_label_set_text(label, "Item 3");
+    sliderc = lv_slider_create(cont);
+    lv_group_add_obj(menu_slider_group, sliderc);
+    lv_obj_set_flex_grow(sliderc, 1);
+    lv_slider_set_range(sliderc, 1, 10);
+    lv_slider_set_value(sliderc, slider_valc, LV_ANIM_OFF);
+    lv_obj_add_flag(sliderc, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
 
     lv_menu_set_page(settings_menu, settings_page);
     lv_group_focus_obj(slider);
@@ -441,7 +452,7 @@ void PongGame::handle_up_button()
     switch(play_state)
     {
         case PlayState::PLAYING:       move_player_a_up(); break;
-        case PlayState::READY_TO_PLAY: lv_group_focus_next(menu_slider_group); break;
+        case PlayState::READY_TO_PLAY: lv_group_focus_prev(menu_slider_group); break;
         case PlayState::GAME_FINISHED:
         default: break;
     }
@@ -462,14 +473,14 @@ void PongGame::handle_down_button()
 
 void PongGame::handle_left_button()
 {
-    uint32_t t = LV_KEY_DOWN;
+    uint32_t t = LV_KEY_LEFT;
     lv_event_send(lv_group_get_focused(menu_slider_group), LV_EVENT_KEY, &t);
 }
 
 
 void PongGame::handle_right_button()
 {
-    uint32_t t = LV_KEY_UP;
+    uint32_t t = LV_KEY_RIGHT;
     lv_event_send(lv_group_get_focused(menu_slider_group), LV_EVENT_KEY, &t);
 }
 
