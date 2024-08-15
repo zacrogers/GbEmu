@@ -101,9 +101,30 @@ void PongGame::init_pause_screen()
 
 }
 
+static lv_style_t style_base;
+static lv_style_t style_focused;
 
 void PongGame::init_settings_menu()
 {
+    // Initialize base style
+    lv_style_init(&style_base);
+    lv_style_set_bg_color(&style_base, graphics::black);
+    lv_style_set_bg_grad_color(&style_base, graphics::blue);
+    lv_style_set_radius(&style_base, 10);
+    lv_style_set_border_width(&style_base, 2);
+    lv_style_set_border_color(&style_base, graphics::white);
+    lv_style_set_outline_width(&style_base, 0);
+
+    // Initialize focused style
+    lv_style_init(&style_focused);
+    lv_style_set_bg_color(&style_focused, graphics::blue);
+    lv_style_set_bg_grad_color(&style_focused, graphics::purple);
+    lv_style_set_border_width(&style_focused, 3);
+    lv_style_set_border_color(&style_focused, graphics::red);
+    lv_style_set_outline_width(&style_focused, 4);
+    lv_style_set_outline_color(&style_focused, graphics::red);
+
+
     settings_menu = lv_menu_create(start_screen);
     lv_menu_set_mode_root_back_btn(settings_menu, LV_MENU_ROOT_BACK_BTN_ENABLED);
     // lv_obj_add_event_cb(settings_menu, back_event_handler, LV_EVENT_CLICKED, settings_menu);
@@ -125,6 +146,8 @@ void PongGame::init_settings_menu()
     lv_slider_set_range(slider, 1, 10);
     lv_slider_set_value(slider, slider_val, LV_ANIM_OFF);
     lv_obj_add_flag(slider, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    lv_obj_add_style(slider, &style_base, 0);
+    lv_obj_add_style(slider, &style_focused, LV_STATE_FOCUSED);
 
     cont = lv_menu_cont_create(settings_page);
     // label = lv_label_create(cont);
@@ -136,6 +159,8 @@ void PongGame::init_settings_menu()
     lv_slider_set_range(sliderb, 1, 10);
     lv_slider_set_value(sliderb, slider_valb, LV_ANIM_OFF);
     lv_obj_add_flag(sliderb, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    lv_obj_add_style(sliderb, &style_base, 0);
+    lv_obj_add_style(sliderb, &style_focused, LV_STATE_FOCUSED);
 
     cont = lv_menu_cont_create(settings_page);
     // label = lv_label_create(cont);
@@ -147,6 +172,8 @@ void PongGame::init_settings_menu()
     lv_slider_set_range(sliderc, 1, 10);
     lv_slider_set_value(sliderc, slider_valc, LV_ANIM_OFF);
     lv_obj_add_flag(sliderc, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    lv_obj_add_style(sliderc, &style_base, 0);
+    lv_obj_add_style(sliderc, &style_focused, LV_STATE_FOCUSED);
 
     lv_menu_set_page(settings_menu, settings_page);
     lv_group_focus_obj(slider);

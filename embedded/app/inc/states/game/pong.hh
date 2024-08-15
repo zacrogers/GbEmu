@@ -116,10 +116,13 @@ private:
     lv_obj_t * settings_page;
     lv_obj_t* cont;
     lv_obj_t* label;
+
     lv_group_t* menu_slider_group;// = lv_group_create();
+
     lv_obj_t* slider;
     lv_obj_t* sliderb;
     lv_obj_t* sliderc;
+
     uint32_t slider_val {5};
     uint32_t slider_valb {5};
     uint32_t slider_valc {5};

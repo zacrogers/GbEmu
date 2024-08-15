@@ -36,6 +36,9 @@ void Engine::process_frame()
 
 void Engine::process()
 {
+    // if game state changed
+    // get current trigger map from game
+    // set trigger map in controls
     process_input();
     process_frame();
 
