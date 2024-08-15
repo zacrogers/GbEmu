@@ -197,19 +197,17 @@ void PongGame::draw_playing_state()
 
 void PongGame::draw_game_finished_state()
 {
-    // draw_background();
     init();
 
     if(player_won)
     {
         lv_label_set_text(game_over_label,"You won");
-        // graphics::draw_text(frame, 60, 50, "You Won");
     }
     else
     {
         lv_label_set_text(game_over_label,"Game over");
-        // graphics::draw_text(frame, 60, 50, "Game Over");
     }
+
     lv_scr_load(game_over_screen);
 
     game_info.player_a_score = 0;
@@ -326,22 +324,56 @@ void PongGame::handle_collision()
 }
 
 
+/* Player Movement */
+void PongGame::move_player_a_up()
+{
+    if(player_a.pos.y > 0)
+        player_a.pos.y -= player_a.velocity.y;
+}
+
+
+void PongGame::move_player_a_down()
+{
+    if(player_a.pos.y < CANVAS_HEIGHT - paddle_length)
+        player_a.pos.y += player_a.velocity.y;
+}
+
+
+void PongGame::move_player_b_up()
+{
+    if(player_b.pos.y > 15)
+        player_b.pos.y -= player_b.velocity.y;
+}
+
+
+void PongGame::move_player_b_down()
+{
+    if((player_b.pos.y) < (CANVAS_HEIGHT - paddle_length))
+        player_b.pos.y += player_b.velocity.y;
+}
+
+
+
 void check_endgoal_areas()
 {
 
 }
+
 
 /* Button actions */
 void PongGame::init()
 {
     game_info.player_a_score = 0;
     game_info.player_b_score = 0;
-    num_hits = 0;
-    player_won = false;
-    ball.pos.x = PongGame::ball_start.x;
-    ball.pos.y = PongGame::ball_start.y;
-    player_a.pos.x = PongGame::player_a_start.x;
-    player_b.pos.y = PongGame::player_b_start.y;
+
+    num_hits                 = 0;
+    player_won               = false;
+
+    ball.pos.x               = PongGame::ball_start.x;
+    ball.pos.y               = PongGame::ball_start.y;
+
+    player_a.pos.x           = PongGame::player_a_start.x;
+    player_b.pos.y           = PongGame::player_b_start.y;
 }
 
 
@@ -404,47 +436,12 @@ void PongGame::handle_b_button()
 }
 
 
-void PongGame::move_player_a_up()
-{
-    if(player_a.pos.y > 0)
-        player_a.pos.y -= player_a.velocity.y;
-}
-
-
-void PongGame::move_player_a_down()
-{
-    if(player_a.pos.y < CANVAS_HEIGHT - paddle_length)
-        player_a.pos.y += player_a.velocity.y;
-}
-
-
-void PongGame::move_player_b_up()
-{
-    if(player_b.pos.y > 15)
-        player_b.pos.y -= player_b.velocity.y;
-}
-
-
-void PongGame::move_player_b_down()
-{
-    if((player_b.pos.y) < (CANVAS_HEIGHT - paddle_length))
-        player_b.pos.y += player_b.velocity.y;
-}
-
-
 void PongGame::handle_up_button()
 {
     switch(play_state)
     {
-        case PlayState::PLAYING: move_player_a_up(); break;
-        case PlayState::READY_TO_PLAY:
-        {
-                        lv_group_focus_next(menu_slider_group);
-
-            // uint32_t t = LV_KEY_NEXT;
-            // lv_event_send(lv_group_get_focused(menu_slider_group), LV_EVENT_KEY, &t);
-            break;
-        }
+        case PlayState::PLAYING:       move_player_a_up(); break;
+        case PlayState::READY_TO_PLAY: lv_group_focus_next(menu_slider_group); break;
         case PlayState::GAME_FINISHED:
         default: break;
     }
@@ -455,13 +452,8 @@ void PongGame::handle_down_button()
 {
     switch(play_state)
     {
-        case PlayState::PLAYING: move_player_a_down(); break;
-        case PlayState::READY_TO_PLAY:
-        {
-            // uint32_t t = LV_KEY_PREV;
-            lv_group_focus_next(menu_slider_group);
-            break;
-        }
+        case PlayState::PLAYING:       move_player_a_down(); break;
+        case PlayState::READY_TO_PLAY: lv_group_focus_next(menu_slider_group); break;
         case PlayState::GAME_FINISHED:
         default: break;
     }
@@ -472,14 +464,11 @@ void PongGame::handle_left_button()
 {
     uint32_t t = LV_KEY_DOWN;
     lv_event_send(lv_group_get_focused(menu_slider_group), LV_EVENT_KEY, &t);
-
-    // lv_slider_set_value(slider, --slider_val, LV_ANIM_ON);
 }
 
 
 void PongGame::handle_right_button()
 {
-    // lv_slider_set_value(slider, ++slider_val, LV_ANIM_ON);
     uint32_t t = LV_KEY_UP;
     lv_event_send(lv_group_get_focused(menu_slider_group), LV_EVENT_KEY, &t);
 }
